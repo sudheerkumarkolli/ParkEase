@@ -1,0 +1,179 @@
+"use client";
+
+import React, { useState, useEffect, use } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Booking } from "@/types";
+import { api } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import QRCodeDisplay from "@/components/booking/QRCodeDisplay";
+import ReviewList from "@/components/parking/ReviewList";
+import {
+  ArrowLeft,
+  Navigation,
+  Ban,
+  ShieldCheck,
+  CheckCircle2,
+  Calendar,
+  Clock,
+  Car,
+  AlertTriangle,
+  MessageSquare,
+} from "lucide-react";
+
+import { formatDateTime, getStatusBadgeClass, getErrorMessage } from "@/lib/utils";
+
+export default function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const bookingId = parseInt(resolvedParams.id);
+  const router = useRouter();
+  const { refreshUser } = useAuth();
+
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelSuccess, setCancelSuccess] = useState<string | null>(null);
+
+  const fetchBooking = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get<Booking>(`/bookings/${bookingId}`);
+      setBooking(res.data);
+    } catch (err) {
+      console.error("Failed to load booking:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBooking();
+  }, [bookingId]);
+
+  const handleCancel = async () => {
+    if (!confirm("Are you sure you want to cancel this booking? 100% of your credits will be refunded back to your wallet immediately.")) {
+      return;
+    }
+
+    setCancelling(true);
+    try {
+      const res = await api.post(`/bookings/${bookingId}/cancel`);
+      setCancelSuccess(res.data.message);
+      await refreshUser();
+      await fetchBooking();
+    } catch (err: any) {
+      alert(getErrorMessage(err, "Failed to cancel booking"));
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const handleReviewSubmit = async (rating: number, comment: string) => {
+    await api.post("/reviews", {
+      booking_id: bookingId,
+      rating,
+      comment,
+    });
+    alert("Thank you for your feedback! Your review has been published.");
+  };
+
+  if (loading || !booking) {
+    return (
+      <div className="max-w-4xl mx-auto p-8 space-y-6">
+        <div className="h-96 rounded-3xl bg-slate-900/60 animate-pulse border border-slate-800" />
+      </div>
+    );
+  }
+
+  const isCancellable = booking.status === "UPCOMING";
+  const isCompleted = booking.status === "COMPLETED";
+
+  return (
+    <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 max-w-4xl mx-auto space-y-6">
+      
+      {/* Back Link */}
+      <Link
+        href="/bookings"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to All Bookings
+      </Link>
+
+      {cancelSuccess && (
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 font-semibold flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+          <span>{cancelSuccess}</span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Left Column: QR Smart Pass */}
+        <div>
+          <QRCodeDisplay booking={booking} />
+        </div>
+
+        {/* Right Column: Actions & Location Metadata */}
+        <div className="space-y-6">
+          
+          {/* Destination Summary */}
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-2xl space-y-4 shadow-xl">
+            <span className="text-[10px] uppercase font-bold text-emerald-400">Parking Facility</span>
+            <h2 className="text-xl font-extrabold text-white">{booking.parking?.name || "Smart Hub"}</h2>
+            <p className="text-xs text-slate-400 leading-relaxed">{booking.parking?.address}</p>
+
+            {/* Navigation Button */}
+            <a
+              href={`https://www.openstreetmap.org/?mlat=${booking.parking?.latitude || 16.5}&mlon=${booking.parking?.longitude || 80.6}#map=16/${booking.parking?.latitude || 16.5}/${booking.parking?.longitude || 80.6}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 transition border border-slate-700 shadow-md"
+            >
+              <Navigation className="h-4 w-4 text-emerald-400" />
+              Get Turn-by-Turn Directions
+            </a>
+          </div>
+
+          {/* Cancellation Control */}
+          {isCancellable && (
+            <div className="rounded-3xl border border-rose-500/20 bg-rose-500/5 p-6 backdrop-blur-xl space-y-3">
+              <div className="flex items-center gap-2 text-rose-400 font-bold text-xs">
+                <AlertTriangle className="h-4 w-4" />
+                <span>Cancel Reservation</span>
+              </div>
+              <p className="text-xs text-slate-400">
+                Plans changed? Cancel before your session starts for an immediate 100% credit refund ({booking.credits} credits).
+              </p>
+              <button
+                onClick={handleCancel}
+                disabled={cancelling}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 transition disabled:opacity-50"
+              >
+                <Ban className="h-4 w-4" />
+                {cancelling ? "Processing Refund..." : `Cancel & Refund ${booking.credits} Credits`}
+              </button>
+            </div>
+          )}
+
+          {/* Review Module if Completed */}
+          {isCompleted && (
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-amber-400" />
+                Leave Feedback for this Facility
+              </h3>
+              <ReviewList
+                reviews={[]}
+                averageRating={5}
+                totalReviews={1}
+                canReview={true}
+                onAddReview={handleReviewSubmit}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
