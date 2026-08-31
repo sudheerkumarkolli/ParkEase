@@ -1,5 +1,5 @@
 # ParkEase — Smart Parking Availability & Location Platform
-
+this is my website
 > **"Find. Reserve. Park."**
 
 ParkEase is a complete, production-ready full-stack Smart Parking Availability & Location Web Application. It enables drivers to discover parking spots in real-time, view visual slot maps (Car, Bike, SUV, EV), lock reservations with PostgreSQL concurrency row-locking, pay with credit packages in an atomic wallet, and enter/exit through secure QR-code scanning verified by facility managers.
