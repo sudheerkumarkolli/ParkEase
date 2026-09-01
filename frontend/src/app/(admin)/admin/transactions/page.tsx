@@ -48,19 +48,19 @@ export default function AdminTransactionsPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-100 text-xs">
+          <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200 text-xs shadow-sm">
             <button
               onClick={() => setTab("wallet")}
-              className={`px-4 py-1.5 rounded-xl font-semibold transition ${
-                tab === "wallet" ? "bg-purple-500 text-white shadow-md" : "text-slate-500 hover:text-white"
+              className={`px-4 py-1.5 rounded-xl font-bold transition ${
+                tab === "wallet" ? "bg-purple-600 text-white shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               Wallet Transactions ({data.wallet_transactions.length})
             </button>
             <button
               onClick={() => setTab("purchases")}
-              className={`px-4 py-1.5 rounded-xl font-semibold transition ${
-                tab === "purchases" ? "bg-purple-500 text-white shadow-md" : "text-slate-500 hover:text-white"
+              className={`px-4 py-1.5 rounded-xl font-bold transition ${
+                tab === "purchases" ? "bg-purple-600 text-white shadow-sm" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               Gateway Top-ups ({data.payment_purchases.length})
@@ -69,7 +69,7 @@ export default function AdminTransactionsPage() {
         </div>
 
         {tab === "wallet" ? (
-          <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
             {loading ? (
               <div className="p-8 text-center text-xs text-slate-500">Loading ledger...</div>
             ) : data.wallet_transactions.length === 0 ? (
@@ -77,7 +77,7 @@ export default function AdminTransactionsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
+                  <thead className="border-b border-slate-200 bg-slate-50 text-slate-700 uppercase font-bold text-[10px]">
                     <tr>
                       <th className="p-4">Tx ID</th>
                       <th className="p-4">Type</th>
@@ -87,19 +87,23 @@ export default function AdminTransactionsPage() {
                       <th className="p-4 text-right">Timestamp</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {data.wallet_transactions.map((tx) => {
                       const isCredit = tx.credits > 0;
                       return (
-                        <tr key={tx.id} className="hover:bg-slate-50/30 transition">
-                          <td className="p-4 font-mono font-bold text-white">#TX-{tx.id}</td>
+                        <tr key={tx.id} className="hover:bg-slate-50 transition">
                           <td className="p-4">
-                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 border border-slate-100 text-purple-300">
+                            <span className="inline-block px-2.5 py-1 rounded-lg bg-purple-50 border border-purple-200 text-purple-800 font-mono font-black text-xs">
+                              #TX-{tx.id}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-800">
                               {tx.type}
                             </span>
                           </td>
-                          <td className="p-4 text-slate-600 max-w-sm">
-                            <div>{tx.description}</div>
+                          <td className="p-4 text-slate-700 max-w-sm">
+                            <div className="font-medium">{tx.description}</div>
                             {tx.reference_id && (
                               <span className="text-[10px] text-slate-500 font-mono">
                                 Ref: {tx.reference_id}
@@ -109,18 +113,18 @@ export default function AdminTransactionsPage() {
                           <td className="p-4">
                             <span
                               className={`font-black text-sm ${
-                                isCredit ? "text-emerald-400" : "text-rose-400"
+                                isCredit ? "text-emerald-700" : "text-rose-700"
                               }`}
                             >
                               {isCredit ? `+${tx.credits}` : tx.credits} Cr
                             </span>
                           </td>
                           <td className="p-4">
-                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400">
+                            <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                               {tx.status}
                             </span>
                           </td>
-                          <td className="p-4 text-right text-slate-500 text-[11px]">
+                          <td className="p-4 text-right text-slate-700 text-[11px] font-mono">
                             {formatDateTime(tx.created_at)}
                           </td>
                         </tr>
@@ -132,7 +136,7 @@ export default function AdminTransactionsPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
             {loading ? (
               <div className="p-8 text-center text-xs text-slate-500">Loading payments...</div>
             ) : data.payment_purchases.length === 0 ? (
@@ -140,7 +144,7 @@ export default function AdminTransactionsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
+                  <thead className="border-b border-slate-200 bg-slate-50 text-slate-700 uppercase font-bold text-[10px]">
                     <tr>
                       <th className="p-4">Gateway Tx ID</th>
                       <th className="p-4">Package</th>
@@ -150,17 +154,17 @@ export default function AdminTransactionsPage() {
                       <th className="p-4 text-right">Timestamp</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {data.payment_purchases.map((pay) => (
-                      <tr key={pay.id} className="hover:bg-slate-50/30 transition">
-                        <td className="p-4 font-mono font-bold text-teal-400">{pay.transaction_id}</td>
-                        <td className="p-4 font-bold text-white">{pay.package_name}</td>
-                        <td className="p-4 font-extrabold text-emerald-400">+{pay.credits} Cr</td>
-                        <td className="p-4 font-black text-white">{formatINR(pay.amount)}</td>
-                        <td className="p-4 text-slate-500 font-mono text-[11px]">
+                      <tr key={pay.id} className="hover:bg-slate-50 transition">
+                        <td className="p-4 font-mono font-bold text-purple-700">{pay.transaction_id}</td>
+                        <td className="p-4 font-bold text-slate-900">{pay.package_name}</td>
+                        <td className="p-4 font-black text-emerald-700">+{pay.credits} Cr</td>
+                        <td className="p-4 font-black text-slate-900">{formatINR(pay.amount)}</td>
+                        <td className="p-4 text-slate-700 font-mono text-[11px]">
                           {pay.payment_method}
                         </td>
-                        <td className="p-4 text-right text-slate-500 text-[11px]">
+                        <td className="p-4 text-right text-slate-700 text-[11px] font-mono">
                           {formatDateTime(pay.created_at)}
                         </td>
                       </tr>

@@ -67,7 +67,7 @@ export default function WalletPage() {
           <div>
             <h1 className="text-2xl font-black text-[#120D26] flex items-center gap-2">
               <WalletIcon className="h-6 w-6 text-[#5669FF]" />
-              EventHub Credits & Wallet
+              ParkEase Credits & Wallet
             </h1>
             <p className="text-xs text-[#747688] font-medium">
               Zero-friction touchless parking currency with auto-lock and instant refund guarantees

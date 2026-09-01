@@ -28,7 +28,9 @@ from app.core.config import settings
 from app.core.exceptions import BadRequestException, UnauthorizedException, ConflictException
 from app.services.wallet_service import add_welcome_credits, get_or_create_wallet
 from app.services.auth_service import get_current_user
+from app.services.email_service import send_email_otp
 from app.database.mongodb import get_users_collection, get_otps_collection
+
 
 logger = logging.getLogger(__name__)
 
@@ -262,11 +264,15 @@ def send_otp(req: SendOTPRequest, db: Session = Depends(get_db)):
     except Exception as me:
         logger.warning(f"MongoDB OTP sync notice: {me}")
 
+    # Dispatch OTP directly to user's real email inbox
+    email_sent = send_email_otp(email_clean, otp_code)
+
     # High-visibility terminal output for the OTP code
     print("\n" + "#"*64)
     print("  >>> REAL-TIME EMAIL VERIFICATION CODE (OTP) <<<")
     print(f"  Target User Email : {email_clean}")
     print(f"  6-DIGIT OTP CODE  : >>> [ {otp_code} ] <<<")
+    print(f"  Email Delivered   : {'YES (Sent to inbox)' if email_sent else 'NO (Check SMTP config)'}")
     print(f"  Expiration Time   : {expires_at.strftime('%Y-%m-%d %H:%M:%S')} UTC (10 mins)")
     print("#"*64 + "\n", flush=True)
 
@@ -275,6 +281,7 @@ def send_otp(req: SendOTPRequest, db: Session = Depends(get_db)):
         "email": email_clean,
         "dev_otp": None
     }
+
 
 
 

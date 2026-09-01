@@ -30,8 +30,17 @@ class Settings(BaseSettings):
     # Welcome Credits
     WELCOME_CREDITS: int = 100
     
+    # SMTP Email Configuration
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = "kollisudheer6459@gmail.com"
+    SMTP_PASSWORD: str = "dztlynnmrftbjipu"
+    EMAILS_FROM_EMAIL: str = "kollisudheer6459@gmail.com"
+    EMAILS_FROM_NAME: str = "ParkEase Verification"
+
     # Default Radius in KM for Haversine nearby search
     DEFAULT_NEARBY_RADIUS_KM: float = 10.0
+
     
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = [

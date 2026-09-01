@@ -75,7 +75,7 @@ export default function Sidebar({ type }: SidebarProps) {
           </div>
         </div>
 
-        {/* Navigation Items with EventHub Squircle Highlight */}
+        {/* Navigation Items with ParkEase Squircle Highlight */}
         <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;

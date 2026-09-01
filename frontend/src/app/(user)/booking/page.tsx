@@ -200,12 +200,12 @@ function BookingFlow() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* STEP 1: Select Parking Hub */}
-          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
+              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-200">
                 1
               </div>
-              <h3 className="text-sm font-bold text-white">Select Parking Hub</h3>
+              <h3 className="text-sm font-black text-slate-900">Select Parking Hub</h3>
             </div>
 
             <div className="grid grid-cols-1 gap-2">
@@ -213,7 +213,7 @@ function BookingFlow() {
                 value={selectedParkingId || ""}
                 onChange={(e) => setSelectedParkingId(parseInt(e.target.value))}
                 aria-label="Select Parking Location"
-                className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
               >
                 {parkings.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -225,36 +225,36 @@ function BookingFlow() {
           </div>
 
           {/* STEP 2: Vehicle Information */}
-          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
+              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-200">
                 2
               </div>
-              <h3 className="text-sm font-bold text-white">Vehicle Details</h3>
+              <h3 className="text-sm font-black text-slate-900">Vehicle Details</h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Plate Number</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Plate Number</label>
                 <div className="relative">
-                  <Car className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <Car className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
                     required
                     value={vehicleNumber}
                     onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
                     placeholder="AP 16 BQ 7788"
-                    className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs uppercase font-mono font-bold text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-3 text-xs uppercase font-mono font-black text-slate-900 placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vehicle Type</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Vehicle Type</label>
                 <select
                   value={vehicleType}
                   onChange={(e) => setVehicleType(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 px-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                 >
                   <option value="Car">Car</option>
                   <option value="SUV">SUV</option>
@@ -266,15 +266,15 @@ function BookingFlow() {
           </div>
 
           {/* STEP 3: Slot Matrix Selection */}
-          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-200">
                   3
                 </div>
-                <h3 className="text-sm font-bold text-white">Choose Your Parking Bay</h3>
+                <h3 className="text-sm font-black text-slate-900">Choose Your Parking Bay</h3>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-400">
+              <span className="text-xs font-mono font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
                 Selected: {slots.find((s) => s.id === selectedSlotId)?.slot_number || "None"}
               </span>
             </div>
@@ -287,43 +287,43 @@ function BookingFlow() {
           </div>
 
           {/* STEP 4: Date, Time & Duration */}
-          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
+              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-200">
                 4
               </div>
-              <h3 className="text-sm font-bold text-white">Arrival Time & Duration</h3>
+              <h3 className="text-sm font-black text-slate-900">Arrival Time & Duration</h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Date</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Date</label>
                 <input
                   type="date"
                   required
                   value={bookingDate}
                   onChange={(e) => setBookingDate(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Arrival Time</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Arrival Time</label>
                 <input
                   type="time"
                   required
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Duration (Hours)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Duration (Hours)</label>
                 <select
                   value={durationHours}
                   onChange={(e) => setDurationHours(parseFloat(e.target.value))}
-                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                 >
                   {[1, 2, 3, 4, 5, 6, 8, 12, 24].map((h) => (
                     <option key={h} value={h}>
@@ -338,63 +338,63 @@ function BookingFlow() {
 
         {/* Right 1 Column: Checkout & Summary Pass */}
         <div className="space-y-6">
-          <div className="sticky top-24 rounded-3xl border border-slate-100 bg-white/90 p-6 backdrop-blur-2xl shadow-2xl space-y-6">
-            <h3 className="text-base font-bold text-white border-b border-slate-100 pb-3">
+          <div className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl space-y-6">
+            <h3 className="text-base font-black text-slate-900 border-b border-slate-100 pb-3">
               Booking Summary
             </h3>
 
             {/* Parking Location Card */}
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-500">Destination</span>
-              <div className="text-sm font-extrabold text-white">{selectedParking?.name}</div>
-              <p className="text-xs text-slate-500 line-clamp-1">{selectedParking?.address}</p>
+              <div className="text-sm font-black text-slate-900">{selectedParking?.name}</div>
+              <p className="text-xs text-slate-600 line-clamp-1">{selectedParking?.address}</p>
             </div>
 
             {/* Slot & Time */}
-            <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-3 rounded-2xl border border-slate-100">
+            <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-2xl border border-slate-200">
               <div>
-                <div className="text-[10px] text-slate-500">Bay No.</div>
-                <div className="font-mono font-bold text-emerald-400 text-sm">
+                <div className="text-[10px] text-slate-500 font-medium">Bay No.</div>
+                <div className="font-mono font-black text-emerald-700 text-sm">
                   {slots.find((s) => s.id === selectedSlotId)?.slot_number || "Not Selected"}
                 </div>
               </div>
               <div>
-                <div className="text-[10px] text-slate-500">Duration</div>
-                <div className="font-bold text-white text-sm">{durationHours} Hours</div>
+                <div className="text-[10px] text-slate-500 font-medium">Duration</div>
+                <div className="font-black text-slate-900 text-sm">{durationHours} Hours</div>
               </div>
             </div>
 
             {/* Price calculation */}
-            <div className="space-y-2 border-t border-slate-100 pt-4 text-xs">
-              <div className="flex justify-between text-slate-500">
+            <div className="space-y-2 border-t border-slate-100 pt-4 text-xs font-medium text-slate-600">
+              <div className="flex justify-between">
                 <span>Hourly Rate</span>
-                <span>{ratePerHour} Credits / hr</span>
+                <span className="font-bold text-slate-800">{ratePerHour} Credits / hr</span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between">
                 <span>Duration</span>
-                <span>{durationHours} hrs</span>
+                <span className="font-bold text-slate-800">{durationHours} hrs</span>
               </div>
-              <div className="flex justify-between text-sm font-extrabold text-white border-t border-slate-100 pt-2">
+              <div className="flex justify-between text-sm font-black text-slate-900 border-t border-slate-100 pt-2">
                 <span>Total Payable</span>
-                <span className="text-emerald-400">{totalCredits} Credits</span>
+                <span className="text-emerald-700">{totalCredits} Credits</span>
               </div>
             </div>
 
             {/* Wallet Balance Check */}
-            <div className="rounded-2xl bg-slate-950 p-4 border border-slate-100 space-y-2">
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-200 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500">Your Wallet Balance:</span>
-                <span className="font-extrabold text-white">{currentBalance} Credits</span>
+                <span className="text-slate-600 font-semibold">Your Wallet Balance:</span>
+                <span className="font-black text-slate-900">{currentBalance} Credits</span>
               </div>
 
               {!isBalanceSufficient && (
-                <div className="pt-2 border-t border-slate-100/80">
-                  <div className="text-[11px] text-rose-400 font-semibold mb-2">
+                <div className="pt-2 border-t border-slate-200">
+                  <div className="text-[11px] text-rose-700 font-bold mb-2">
                     ⚠️ Short of {totalCredits - currentBalance} Credits
                   </div>
                   <Link
                     href="/wallet"
-                    className="block text-center py-2 px-3 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 transition"
+                    className="block text-center py-2 px-3 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 hover:bg-emerald-200 transition"
                   >
                     Top Up Credits Now →
                   </Link>
@@ -406,14 +406,14 @@ function BookingFlow() {
             <button
               type="submit"
               disabled={submitting || !selectedSlotId || !isBalanceSufficient}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-300 py-4 text-xs font-black text-slate-950 hover:from-emerald-300 transition shadow-xl shadow-emerald-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 py-4 text-xs font-black text-white transition shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {submitting ? "Reserving Slot..." : `Confirm & Pay ${totalCredits} Credits`}
               <ArrowRight className="h-4 w-4" />
             </button>
 
             <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 text-center">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               <span>Full credit refund available prior to start time</span>
             </div>
           </div>

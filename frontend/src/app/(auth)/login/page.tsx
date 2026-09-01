@@ -42,7 +42,7 @@ export default function LoginPage() {
             <Car className="h-8 w-8" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-[#120D26] tracking-tight">
-            Sign In to EventHub
+            Sign In to ParkEase
           </h2>
           <p className="text-xs sm:text-sm text-[#747688] max-w-xs mx-auto font-medium">
             Enter your email and password to access your smart parking passes

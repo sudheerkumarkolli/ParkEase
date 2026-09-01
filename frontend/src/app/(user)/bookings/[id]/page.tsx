@@ -94,15 +94,15 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
       {/* Back Link */}
       <Link
         href="/bookings"
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-white transition"
+        className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to All Bookings
       </Link>
 
       {cancelSuccess && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 font-semibold flex items-center gap-3">
-          <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-bold flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-emerald-600" />
           <span>{cancelSuccess}</span>
         </div>
       )}
@@ -118,37 +118,37 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         <div className="space-y-6">
           
           {/* Destination Summary */}
-          <div className="rounded-3xl border border-slate-100 bg-white/70 p-6 backdrop-blur-2xl space-y-4 shadow-xl">
-            <span className="text-[10px] uppercase font-bold text-emerald-400">Parking Facility</span>
-            <h2 className="text-xl font-extrabold text-white">{booking.parking?.name || "Smart Hub"}</h2>
-            <p className="text-xs text-slate-500 leading-relaxed">{booking.parking?.address}</p>
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+            <span className="text-[10px] uppercase font-bold text-emerald-700">Parking Facility</span>
+            <h2 className="text-xl font-black text-slate-900">{booking.parking?.name || "Smart Hub"}</h2>
+            <p className="text-xs text-slate-600 leading-relaxed">{booking.parking?.address}</p>
 
             {/* Navigation Button */}
             <a
               href={`https://www.openstreetmap.org/?mlat=${booking.parking?.latitude || 16.5}&mlon=${booking.parking?.longitude || 80.6}#map=16/${booking.parking?.latitude || 16.5}/${booking.parking?.longitude || 80.6}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-xs font-bold text-white bg-slate-50 hover:bg-slate-700 transition border border-slate-200 shadow-md"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 transition border border-slate-200 shadow-xs"
             >
-              <Navigation className="h-4 w-4 text-emerald-400" />
+              <Navigation className="h-4 w-4 text-emerald-600" />
               Get Turn-by-Turn Directions
             </a>
           </div>
 
           {/* Cancellation Control */}
           {isCancellable && (
-            <div className="rounded-3xl border border-rose-500/20 bg-rose-500/5 p-6 backdrop-blur-xl space-y-3">
-              <div className="flex items-center gap-2 text-rose-400 font-bold text-xs">
-                <AlertTriangle className="h-4 w-4" />
+            <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 space-y-3 shadow-sm">
+              <div className="flex items-center gap-2 text-rose-800 font-bold text-xs">
+                <AlertTriangle className="h-4 w-4 text-rose-600" />
                 <span>Cancel Reservation</span>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-600">
                 Plans changed? Cancel before your session starts for an immediate 100% credit refund ({booking.credits} credits).
               </p>
               <button
                 onClick={handleCancel}
                 disabled={cancelling}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 transition disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-rose-700 bg-white border border-rose-300 hover:bg-rose-100 transition disabled:opacity-50 shadow-xs"
               >
                 <Ban className="h-4 w-4" />
                 {cancelling ? "Processing Refund..." : `Cancel & Refund ${booking.credits} Credits`}
@@ -158,9 +158,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Review Module if Completed */}
           {isCompleted && (
-            <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-amber-400" />
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 space-y-4 shadow-sm">
+              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-amber-500" />
                 Leave Feedback for this Facility
               </h3>
               <ReviewList

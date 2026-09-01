@@ -45,7 +45,7 @@ export default function LandingPage() {
     fetchLocations();
   }, []);
 
-  // EventHub Category Filter Pills
+  // ParkEase Category Filter Pills
   const categories = [
     { id: "All", label: "All Smart Hubs", icon: Car, bg: "bg-[#5669FF]" },
     { id: "EV", label: "EV Fast Chargers", icon: BatteryCharging, bg: "bg-[#29D697]" },
@@ -58,7 +58,8 @@ export default function LandingPage() {
   return (
     <div className="space-y-10 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      {/* 1. EVENTHUB HERO BANNER WITH SEARCH & SQUIRCLE FILTER */}
+      {/* 1. PARKEASE HERO BANNER WITH SEARCH & FILTER */}
+
       <section className="relative overflow-hidden rounded-3xl bg-[#5669FF] p-6 sm:p-12 text-white shadow-2xl shadow-[#5669FF]/25">
         <div className="relative z-10 max-w-3xl space-y-6">
           
@@ -217,7 +218,7 @@ export default function LandingPage() {
           <span className="text-[11px] font-bold uppercase tracking-widest text-[#5669FF] bg-[#5669FF]/10 px-3.5 py-1 rounded-full">
             Touchless Smart Flow
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#120D26]">How EventHub Parking Works</h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#120D26]">How ParkEase Works</h2>
           <p className="text-xs text-[#747688]">
             Four effortless steps from finding a bay to QR pass smart gate entry
           </p>
