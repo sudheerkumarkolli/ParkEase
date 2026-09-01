@@ -152,6 +152,9 @@ def get_manager_bookings(
     else:
         target_ids = parking_ids
 
+    if not target_ids:
+        return []
+
     q = db.query(Booking).filter(Booking.parking_id.in_(target_ids))
 
     if status and status != "ALL":
@@ -207,6 +210,12 @@ def get_manager_revenue_stats(
 ):
     parking_ids = get_manager_parking_ids(db, current_user)
     
+    if not parking_ids:
+        return {
+            "total_revenue_credits": 0,
+            "parking_breakdown": []
+        }
+
     total_rev = db.query(func.sum(Booking.credits)).filter(
         Booking.parking_id.in_(parking_ids),
         Booking.status.in_([BookingStatus.UPCOMING.value, BookingStatus.ACTIVE.value, BookingStatus.COMPLETED.value])

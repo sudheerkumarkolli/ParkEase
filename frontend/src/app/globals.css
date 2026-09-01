@@ -7,7 +7,7 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  --primary-eventhub: #5669FF;
+  --primary-parkease: #5669FF;
   --primary-dark: #120D26;
   --coral-accent: #F0635A;
   --mint-accent: #29D697;
@@ -25,7 +25,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbar - EventHub Electric Blue */
+/* Custom scrollbar - ParkEase Electric Blue */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

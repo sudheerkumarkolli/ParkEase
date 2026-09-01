@@ -123,13 +123,14 @@ export default function RegisterPage() {
             <span>100 Welcome Credits Included</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-[#120D26] tracking-tight">
-            {step === "details" ? "Create EventHub Account" : "Verify Email"}
+            {step === "details" ? "Create ParkEase Account" : "Verify Email"}
           </h2>
           <p className="text-xs sm:text-sm text-[#747688] max-w-md mx-auto font-medium">
             {step === "details"
-              ? "Join EventHub for guaranteed smart parking reservations and live navigation"
+              ? "Join ParkEase for guaranteed smart parking reservations and live navigation"
               : `Enter the 6-digit verification code sent to ${email}`}
           </p>
+
         </div>
 
         {/* Form Card */}

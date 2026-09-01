@@ -40,22 +40,23 @@ export function getStatusBadgeClass(status: string): string {
   switch (status?.toUpperCase()) {
     case "AVAILABLE":
     case "ACTIVE":
-    case "COMPLETED":
     case "APPROVED":
-      return "bg-violet-500/10 text-violet-400 border-violet-500/30";
+      return "bg-emerald-100 text-emerald-800 border-emerald-300 font-bold";
+    case "COMPLETED":
+      return "bg-purple-100 text-purple-800 border-purple-300 font-bold";
     case "UPCOMING":
     case "RESERVED":
     case "PENDING":
-      return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+      return "bg-amber-100 text-amber-900 border-amber-300 font-bold";
     case "OCCUPIED":
     case "CANCELLED":
     case "EXPIRED":
     case "INACTIVE":
-      return "bg-rose-500/10 text-rose-400 border-rose-500/30";
+      return "bg-rose-100 text-rose-800 border-rose-300 font-bold";
     case "MAINTENANCE":
-      return "bg-zinc-500/10 text-zinc-400 border-zinc-500/30";
+      return "bg-slate-200 text-slate-800 border-slate-300 font-bold";
     default:
-      return "bg-slate-500/10 text-slate-500 border-slate-500/30";
+      return "bg-slate-100 text-slate-700 border-slate-300 font-bold";
   }
 }
 

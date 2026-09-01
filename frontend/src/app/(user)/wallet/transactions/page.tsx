@@ -60,7 +60,7 @@ export default function TransactionsLedgerPage() {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1 bg-white p-1 rounded-2xl border border-slate-100 text-xs">
+          <div className="flex flex-wrap items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200 text-xs shadow-sm">
             {[
               { id: "ALL", label: "All Records" },
               { id: "WELCOME_CREDIT", label: "Welcome Bonus" },
@@ -71,10 +71,10 @@ export default function TransactionsLedgerPage() {
               <button
                 key={f.id}
                 onClick={() => setTypeFilter(f.id)}
-                className={`px-3 py-1.5 rounded-xl font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition ${
                   typeFilter === f.id
-                    ? "bg-emerald-500 text-slate-950 shadow-md"
-                    : "text-slate-500 hover:text-white"
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
                 {f.label}
@@ -84,7 +84,7 @@ export default function TransactionsLedgerPage() {
         </div>
 
         {/* Transactions Table */}
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
             <div className="p-8 text-center text-xs text-slate-500">Loading ledger...</div>
           ) : transactions.length === 0 ? (
@@ -94,7 +94,7 @@ export default function TransactionsLedgerPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
+                <thead className="border-b border-slate-200 bg-slate-50 text-slate-700 uppercase font-bold text-[10px]">
                   <tr>
                     <th className="p-4">Transaction ID</th>
                     <th className="p-4">Type</th>
@@ -104,19 +104,23 @@ export default function TransactionsLedgerPage() {
                     <th className="p-4 text-right">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-100">
                   {transactions.map((tx) => {
                     const isCredit = tx.credits > 0;
                     return (
-                      <tr key={tx.id} className="hover:bg-slate-50/30 transition">
-                        <td className="p-4 font-mono font-bold text-white">#TX-{tx.id}</td>
+                      <tr key={tx.id} className="hover:bg-slate-50 transition">
                         <td className="p-4">
-                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 border border-slate-100 text-slate-600">
+                          <span className="inline-block px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 font-mono font-black text-xs">
+                            #TX-{tx.id}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-800">
                             {tx.type}
                           </span>
                         </td>
-                        <td className="p-4 text-slate-600">
-                          <div className="font-medium">{tx.description}</div>
+                        <td className="p-4 text-slate-700">
+                          <div className="font-semibold text-slate-900">{tx.description}</div>
                           {tx.reference_id && (
                             <span className="text-[10px] text-slate-500 font-mono">
                               Ref: {tx.reference_id}
@@ -126,18 +130,18 @@ export default function TransactionsLedgerPage() {
                         <td className="p-4">
                           <span
                             className={`font-black text-sm ${
-                              isCredit ? "text-emerald-400" : "text-rose-400"
+                              isCredit ? "text-emerald-700" : "text-rose-700"
                             }`}
                           >
                             {isCredit ? `+${tx.credits}` : tx.credits} Cr
                           </span>
                         </td>
                         <td className="p-4">
-                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                             {tx.status}
                           </span>
                         </td>
-                        <td className="p-4 text-right text-slate-500 text-[11px]">
+                        <td className="p-4 text-right text-slate-700 text-[11px] font-mono">
                           {formatDateTime(tx.created_at)}
                         </td>
                       </tr>

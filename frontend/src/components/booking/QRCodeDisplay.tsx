@@ -55,46 +55,46 @@ export default function QRCodeDisplay({ booking }: QRCodeDisplayProps) {
 
       {/* Booking Details Grid */}
       <div className="grid grid-cols-2 gap-3 text-xs">
-        <div className="rounded-xl bg-white/60 p-3 border border-slate-100/80">
-          <div className="text-slate-500 flex items-center gap-1 mb-1">
-            <Car className="h-3.5 w-3.5 text-violet-400" />
+        <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700">
+          <div className="text-slate-300 flex items-center gap-1 mb-1 font-semibold">
+            <Car className="h-3.5 w-3.5 text-indigo-400" />
             <span>Vehicle & Slot</span>
           </div>
           <div className="font-bold text-white">
             {booking.vehicle_number} ({booking.vehicle_type})
           </div>
-          <div className="text-violet-400 font-mono font-bold text-xs mt-0.5">
+          <div className="text-indigo-300 font-mono font-bold text-xs mt-0.5">
             Slot: {booking.slot?.slot_number || "Reserved Bay"}
           </div>
         </div>
 
-        <div className="rounded-xl bg-white/60 p-3 border border-slate-100/80">
-          <div className="text-slate-500 flex items-center gap-1 mb-1">
+        <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700">
+          <div className="text-slate-300 flex items-center gap-1 mb-1 font-semibold">
             <Clock className="h-3.5 w-3.5 text-teal-400" />
             <span>Duration</span>
           </div>
           <div className="font-bold text-white">{booking.duration_hours} Hours</div>
-          <div className="text-slate-600 font-semibold text-xs mt-0.5">
+          <div className="text-emerald-400 font-bold text-xs mt-0.5">
             {booking.credits} Credits Paid
           </div>
         </div>
       </div>
 
       {/* Start / End Time */}
-      <div className="rounded-xl bg-white/40 p-3 border border-slate-100 text-xs space-y-1">
-        <div className="flex justify-between text-slate-500">
+      <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700 text-xs space-y-1">
+        <div className="flex justify-between text-slate-300">
           <span>Valid From:</span>
-          <span className="text-slate-200 font-semibold">{formatDateTime(booking.start_time)}</span>
+          <span className="text-white font-bold">{formatDateTime(booking.start_time)}</span>
         </div>
-        <div className="flex justify-between text-slate-500">
+        <div className="flex justify-between text-slate-300">
           <span>Valid Till:</span>
-          <span className="text-slate-200 font-semibold">{formatDateTime(booking.end_time)}</span>
+          <span className="text-white font-bold">{formatDateTime(booking.end_time)}</span>
         </div>
       </div>
 
       {/* Security Verification Notice */}
-      <div className="flex items-center gap-2 rounded-xl bg-violet-500/10 border border-violet-500/20 p-2.5 text-[11px] text-emerald-300">
-        <ShieldCheck className="h-4 w-4 flex-shrink-0 text-violet-400" />
+      <div className="flex items-center gap-2 rounded-xl bg-indigo-500/20 border border-indigo-500/40 p-2.5 text-[11px] text-indigo-200">
+        <ShieldCheck className="h-4 w-4 flex-shrink-0 text-indigo-400" />
         <span>Cryptographically verified QR token. Automatic entry upon scanning.</span>
       </div>
     </div>

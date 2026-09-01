@@ -51,25 +51,25 @@ export default function AdminBookingsPage() {
         {/* Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by booking number, plate number..."
-              className="w-full rounded-2xl border border-slate-100 bg-white/60 pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+              className="w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:border-purple-500 focus:outline-none shadow-sm"
             />
           </div>
 
-          <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-100 text-xs">
+          <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200 text-xs shadow-sm">
             {["ALL", "UPCOMING", "ACTIVE", "COMPLETED", "CANCELLED"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-xl font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition ${
                   statusFilter === st
-                    ? "bg-purple-500 text-white shadow-md"
-                    : "text-slate-500 hover:text-white"
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
                 {st}
@@ -79,7 +79,7 @@ export default function AdminBookingsPage() {
         </div>
 
         {/* Bookings Table */}
-        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
             <div className="p-8 text-center text-xs text-slate-500">Loading bookings...</div>
           ) : bookings.length === 0 ? (
@@ -87,7 +87,7 @@ export default function AdminBookingsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
+                <thead className="border-b border-slate-200 bg-slate-50 text-slate-700 uppercase font-bold text-[10px]">
                   <tr>
                     <th className="p-4">Pass ID</th>
                     <th className="p-4">Vehicle Plate</th>
@@ -97,15 +97,19 @@ export default function AdminBookingsPage() {
                     <th className="p-4 text-right">Created Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-100">
                   {bookings.map((b) => (
-                    <tr key={b.id} className="hover:bg-slate-50/30 transition">
-                      <td className="p-4 font-mono font-bold text-white">#{b.booking_number}</td>
-                      <td className="p-4 font-mono font-bold text-slate-200">
-                        {b.vehicle_number} ({b.vehicle_type})
+                    <tr key={b.id} className="hover:bg-slate-50 transition">
+                      <td className="p-4">
+                        <span className="inline-block px-2.5 py-1 rounded-lg bg-purple-50 border border-purple-200 text-purple-800 font-mono font-black text-xs shadow-xs">
+                          #{b.booking_number}
+                        </span>
                       </td>
-                      <td className="p-4 text-slate-500">{b.duration_hours} hrs</td>
-                      <td className="p-4 font-bold text-emerald-400">{b.credits} Cr</td>
+                      <td className="p-4 font-mono font-bold text-slate-900">
+                        {b.vehicle_number} <span className="text-slate-500 font-normal">({b.vehicle_type})</span>
+                      </td>
+                      <td className="p-4 text-slate-700 font-semibold">{b.duration_hours} hrs</td>
+                      <td className="p-4 font-black text-emerald-700">{b.credits} Cr</td>
                       <td className="p-4">
                         <span
                           className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${getStatusBadgeClass(
@@ -115,7 +119,7 @@ export default function AdminBookingsPage() {
                           {b.status}
                         </span>
                       </td>
-                      <td className="p-4 text-right text-slate-500 text-[11px]">
+                      <td className="p-4 text-right text-slate-700 text-[11px] font-mono">
                         {formatDateTime(b.created_at)}
                       </td>
                     </tr>

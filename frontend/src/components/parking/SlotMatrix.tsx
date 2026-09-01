@@ -51,20 +51,20 @@ export default function SlotMatrix({
     const isSelected = selectedSlotId === slot.id;
 
     if (isSelected) {
-      return "bg-violet-500 text-slate-950 ring-4 ring-violet-400/40 font-extrabold scale-105 shadow-xl shadow-violet-500/30";
+      return "bg-indigo-600 text-white ring-4 ring-indigo-300 font-black scale-105 shadow-lg";
     }
 
     switch (slot.status) {
       case "AVAILABLE":
-        return "bg-violet-500/10 text-violet-400 border border-violet-500/30 hover:bg-violet-500/20 hover:border-violet-500/60 cursor-pointer shadow-sm";
+        return "bg-emerald-50 text-emerald-800 border-2 border-emerald-300 hover:bg-emerald-100 hover:border-emerald-500 cursor-pointer shadow-xs font-bold";
       case "OCCUPIED":
-        return "bg-rose-500/10 text-rose-400/80 border border-rose-500/20 cursor-not-allowed opacity-75";
+        return "bg-rose-50 text-rose-800 border border-rose-200 cursor-not-allowed opacity-85 font-medium";
       case "RESERVED":
-        return "bg-amber-500/10 text-amber-400/80 border border-amber-500/20 cursor-not-allowed opacity-80";
+        return "bg-amber-50 text-amber-900 border border-amber-300 cursor-not-allowed opacity-90 font-medium";
       case "MAINTENANCE":
-        return "bg-zinc-800/80 text-zinc-500 border border-zinc-700 cursor-not-allowed opacity-60";
+        return "bg-slate-100 text-slate-700 border border-slate-300 cursor-not-allowed opacity-80 font-medium";
       default:
-        return "bg-slate-50 text-slate-500 border border-slate-200";
+        return "bg-slate-50 text-slate-700 border border-slate-200";
     }
   };
 
@@ -72,20 +72,20 @@ export default function SlotMatrix({
     <div className="space-y-6">
       
       {/* Top Filter & Legend */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white/60 border border-slate-100/80">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
         
         {/* Vehicle Filter */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500">Filter Vehicle:</span>
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-100">
+          <span className="text-xs font-bold text-slate-700">Filter Vehicle:</span>
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
             {["ALL", "Car", "Bike", "SUV", "EV"].map((type) => (
               <button
                 key={type}
                 onClick={() => setVehicleFilter(type)}
-                className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
+                className={`px-3 py-1 text-xs font-bold rounded-lg transition ${
                   vehicleFilter === type
-                    ? "bg-violet-500 text-slate-950 font-bold shadow-md"
-                    : "text-slate-500 hover:text-white"
+                    ? "bg-indigo-600 text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200"
                 }`}
               >
                 {type}
@@ -95,21 +95,21 @@ export default function SlotMatrix({
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5 text-violet-400">
-            <span className="h-3 w-3 rounded bg-violet-500/30 border border-violet-500" />
+        <div className="flex flex-wrap items-center gap-3 text-xs font-bold">
+          <div className="flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+            <span className="h-3 w-3 rounded bg-emerald-500" />
             <span>Available</span>
           </div>
-          <div className="flex items-center gap-1.5 text-rose-400">
-            <span className="h-3 w-3 rounded bg-rose-500/30 border border-rose-500" />
+          <div className="flex items-center gap-1.5 text-rose-800 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200">
+            <span className="h-3 w-3 rounded bg-rose-500" />
             <span>Occupied</span>
           </div>
-          <div className="flex items-center gap-1.5 text-amber-400">
-            <span className="h-3 w-3 rounded bg-amber-500/30 border border-amber-500" />
+          <div className="flex items-center gap-1.5 text-amber-900 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+            <span className="h-3 w-3 rounded bg-amber-500" />
             <span>Reserved</span>
           </div>
-          <div className="flex items-center gap-1.5 text-zinc-400">
-            <span className="h-3 w-3 rounded bg-zinc-700 border border-zinc-600" />
+          <div className="flex items-center gap-1.5 text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
+            <span className="h-3 w-3 rounded bg-slate-400" />
             <span>Maintenance</span>
           </div>
         </div>
@@ -117,21 +117,21 @@ export default function SlotMatrix({
 
       {/* Grid of Sections */}
       {Object.keys(groupedSlots).length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-slate-100 rounded-2xl">
-          <Ban className="h-8 w-8 text-slate-600 mx-auto mb-2" />
-          <p className="text-slate-500 text-sm">No slots match the selected vehicle filter.</p>
+        <div className="text-center py-12 border border-dashed border-slate-300 rounded-2xl bg-white shadow-sm">
+          <Ban className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+          <p className="text-slate-600 text-sm font-semibold">No slots match the selected vehicle filter.</p>
         </div>
       ) : (
         Object.entries(groupedSlots).map(([section, sectionSlots]) => (
-          <div key={section} className="rounded-2xl border border-slate-100 bg-slate-950/40 p-5">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-100/80 pb-2">
-              <span className="text-sm font-extrabold text-slate-200 tracking-wider flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400 text-xs">
+          <div key={section} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+              <span className="text-sm font-black text-slate-900 tracking-wider flex items-center gap-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-800 font-black text-xs border border-indigo-200">
                   {section}
                 </span>
                 Section {section} Bays
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs font-bold text-slate-600">
                 {sectionSlots.filter((s) => s.status === "AVAILABLE").length} Available / {sectionSlots.length} Total
               </span>
             </div>
@@ -157,7 +157,7 @@ export default function SlotMatrix({
                   >
                     {/* Header Slot Number */}
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-xs font-mono font-bold tracking-tight">
+                      <span className="text-xs font-mono font-black tracking-tight">
                         {slot.slot_number}
                       </span>
                       {getVehicleIcon(slot.vehicle_type)}
@@ -166,26 +166,26 @@ export default function SlotMatrix({
                     {/* Status Text / Icon */}
                     <div className="my-2 flex flex-col items-center">
                       {isSelected ? (
-                        <CheckCircle2 className="h-5 w-5 text-slate-950" />
+                        <CheckCircle2 className="h-5 w-5 text-white" />
                       ) : slot.status === "OCCUPIED" ? (
-                        <Lock className="h-4 w-4 text-rose-400/80" />
+                        <Lock className="h-4 w-4 text-rose-700" />
                       ) : slot.status === "RESERVED" ? (
-                        <span className="text-[10px] uppercase font-bold text-amber-400">Reserved</span>
+                        <span className="text-[10px] uppercase font-black text-amber-900">Reserved</span>
                       ) : slot.status === "MAINTENANCE" ? (
-                        <ShieldAlert className="h-4 w-4 text-zinc-500" />
+                        <ShieldAlert className="h-4 w-4 text-slate-500" />
                       ) : (
-                        <span className="text-[10px] uppercase font-bold text-violet-400">Select</span>
+                        <span className="text-[10px] uppercase font-black text-emerald-800">Select</span>
                       )}
                     </div>
 
                     {/* Vehicle Type Label */}
-                    <span className="text-[10px] opacity-75 font-medium">
+                    <span className="text-[10px] font-bold opacity-90">
                       {slot.vehicle_type}
                     </span>
 
                     {/* Manager Mode Quick Badge */}
                     {isManager && (
-                      <span className="mt-1 text-[9px] underline text-slate-600">Toggle</span>
+                      <span className="mt-1 text-[9px] underline font-bold text-slate-600 hover:text-slate-900">Toggle</span>
                     )}
                   </div>
                 );

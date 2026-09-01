@@ -36,7 +36,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-[#EBEAEE] bg-white/95 backdrop-blur-md transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* EventHub Brand Logo & Location */}
+        {/* ParkEase Brand Logo & Location */}
         <div className="flex items-center gap-4">
           <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2.5 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#5669FF] text-white shadow-md shadow-[#5669FF]/25 group-hover:scale-105 transition-transform">
@@ -44,13 +44,14 @@ export default function Navbar() {
             </div>
             <div>
               <span className="text-xl font-black tracking-tight text-[#120D26] flex items-center gap-0.5">
-                Event<span className="text-[#5669FF]">Hub</span>
+                Park<span className="text-[#5669FF]">Ease</span>
               </span>
               <span className="hidden sm:block text-[9px] uppercase tracking-widest text-[#5669FF] font-extrabold -mt-1">
-                Smart Parking Passes
+                Smart Parking Platform
               </span>
             </div>
           </Link>
+
 
           {/* Quick Location Chip */}
           <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F1F7] text-[11px] font-bold text-[#120D26]">
@@ -126,7 +127,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              {/* Wallet Credits Chip (EventHub Style) */}
+              {/* Wallet Credits Chip */}
               <Link
                 href="/wallet"
                 className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-[#5669FF]/10 border border-[#5669FF]/25 hover:bg-[#5669FF]/20 transition shadow-sm"
