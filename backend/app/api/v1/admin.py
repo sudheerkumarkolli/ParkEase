@@ -280,3 +280,26 @@ def get_all_transactions_admin(
         "wallet_transactions": txs,
         "payment_purchases": payments
     }
+
+
+@router.get("/analytics")
+def get_admin_analytics(
+    days: int = Query(30, ge=7, le=365),
+    current_user: User = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    total_users = db.query(func.count(User.id)).scalar() or 0
+    total_bookings = db.query(func.count(Booking.id)).scalar() or 0
+    total_credits = db.query(func.sum(Booking.credits)).scalar() or 0
+    active_facilities = db.query(func.count(ParkingLocation.id)).filter(ParkingLocation.status == ParkingStatus.ACTIVE.value).scalar() or 0
+
+    return {
+        "summary": {
+            "total_users": total_users,
+            "total_bookings": total_bookings,
+            "total_revenue_credits": total_credits,
+            "active_facilities": active_facilities
+        },
+        "period_days": days
+    }
+

@@ -20,6 +20,8 @@ import {
   Car,
   CheckCircle2,
   Sparkles,
+  Search,
+  Bookmark,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -30,368 +32,260 @@ export default function Navbar() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const pathname = usePathname();
 
-  const isPublicPage = pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password" || pathname === "/reset-password";
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-xl transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-[#EBEAEE] bg-white/95 backdrop-blur-md transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* Brand Logo */}
-        <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-            <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-white">
-              <Car className="h-5 w-5 text-emerald-400" />
+        {/* EventHub Brand Logo & Location */}
+        <div className="flex items-center gap-4">
+          <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2.5 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#5669FF] text-white shadow-md shadow-[#5669FF]/25 group-hover:scale-105 transition-transform">
+              <Car className="h-5 w-5" />
             </div>
+            <div>
+              <span className="text-xl font-black tracking-tight text-[#120D26] flex items-center gap-0.5">
+                Event<span className="text-[#5669FF]">Hub</span>
+              </span>
+              <span className="hidden sm:block text-[9px] uppercase tracking-widest text-[#5669FF] font-extrabold -mt-1">
+                Smart Parking Passes
+              </span>
+            </div>
+          </Link>
+
+          {/* Quick Location Chip */}
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F1F7] text-[11px] font-bold text-[#120D26]">
+            <MapPin className="h-3.5 w-3.5 text-[#5669FF]" />
+            <span>Vijayawada & Hyderabad</span>
           </div>
-          <div>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1">
-              Park<span className="text-emerald-600">Ease</span>
-            </span>
-            <span className="hidden sm:block text-[10px] uppercase tracking-widest text-emerald-600/80 font-semibold -mt-1">
-              Find · Reserve · Park
-            </span>
-          </div>
-        </Link>
+        </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1.5 lg:gap-3">
+        <nav className="hidden md:flex items-center gap-1.5">
           <Link
-            href="/parking"
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+            href={isAuthenticated ? "/parking" : "/login?redirect=/parking"}
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               pathname.startsWith("/parking")
-                ? "bg-emerald-50 text-emerald-600"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-[#5669FF] text-white shadow-md shadow-[#5669FF]/20"
+                : "text-[#747688] hover:text-[#120D26] hover:bg-[#F0F1F7]"
             }`}
           >
             <Compass className="h-4 w-4" />
-            Find Parking
+            <span>Explore Hubs</span>
           </Link>
+
           <Link
-            href="/map"
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+            href={isAuthenticated ? "/map" : "/login?redirect=/map"}
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               pathname === "/map"
-                ? "bg-emerald-50 text-emerald-600"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-[#5669FF] text-white shadow-md shadow-[#5669FF]/20"
+                : "text-[#747688] hover:text-[#120D26] hover:bg-[#F0F1F7]"
             }`}
           >
             <MapPin className="h-4 w-4" />
-            Live Map
+            <span>Live GPS Map</span>
           </Link>
 
           {isAuthenticated && (
             <>
               <Link
                 href="/bookings"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   pathname.startsWith("/bookings")
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    ? "bg-[#5669FF] text-white shadow-md shadow-[#5669FF]/20"
+                    : "text-[#747688] hover:text-[#120D26] hover:bg-[#F0F1F7]"
                 }`}
               >
                 <CheckCircle2 className="h-4 w-4" />
-                My Bookings
+                <span>My Passes</span>
               </Link>
 
               {user?.role === "PARKING_MANAGER" && (
                 <Link
                   href="/manager/dashboard"
-                  className="px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 text-teal-600 hover:bg-teal-50"
+                  className="px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 text-[#29D697] bg-[#29D697]/10 hover:bg-[#29D697]/20"
                 >
                   <Briefcase className="h-4 w-4" />
-                  Manager Hub
+                  <span>Manager Hub</span>
                 </Link>
               )}
 
               {user?.role === "ADMIN" && (
                 <Link
                   href="/admin/dashboard"
-                  className="px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 text-purple-600 hover:bg-purple-50"
+                  className="px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 text-[#F0635A] bg-[#F0635A]/10 hover:bg-[#F0635A]/20"
                 >
                   <Shield className="h-4 w-4" />
-                  Admin Center
+                  <span>Admin Console</span>
                 </Link>
               )}
             </>
           )}
         </nav>
 
-        {/* Right Side Actions */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Right Actions & User Area */}
+        <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              {/* Wallet Credits Chip */}
+              {/* Wallet Credits Chip (EventHub Style) */}
               <Link
                 href="/wallet"
-                className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 transition-all shadow-sm"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-[#5669FF]/10 border border-[#5669FF]/25 hover:bg-[#5669FF]/20 transition shadow-sm"
               >
-                <Wallet className="h-4 w-4 text-emerald-400" />
-                <span>{user?.wallet_balance ?? 0} Credits</span>
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <Wallet className="h-4 w-4 text-[#5669FF]" />
+                <span className="text-xs font-black text-[#5669FF]">
+                  {user?.wallet_balance ?? 0} <span className="text-[10px] font-bold">Credits</span>
+                </span>
               </Link>
 
-              {/* Notification Popover */}
+              {/* User Dropdown */}
               <div className="relative">
                 <button
-                  onClick={() => {
-                    setNotifDropdownOpen(!notifDropdownOpen);
-                    setProfileDropdownOpen(false);
-                  }}
-                  className="relative p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                  aria-label="Notifications"
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center gap-2 rounded-2xl p-1.5 bg-[#F0F1F7] hover:bg-[#EBEAEE] transition"
                 >
-                  <Bell className="h-5 w-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">
-                      {unreadCount > 9 ? "9+" : unreadCount}
-                    </span>
-                  )}
-                </button>
-
-                {notifDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Notifications ({unreadCount} unread)
-                      </span>
-                      <Link
-                        href="/notifications"
-                        onClick={() => setNotifDropdownOpen(false)}
-                        className="text-xs text-emerald-600 hover:underline"
-                      >
-                        View all
-                      </Link>
-                    </div>
-
-                    <div className="max-h-64 overflow-y-auto space-y-2">
-                      {notifications.length === 0 ? (
-                        <p className="text-xs text-slate-500 text-center py-4">No notifications yet.</p>
-                      ) : (
-                        notifications.slice(0, 4).map((n) => (
-                          <div
-                            key={n.id}
-                            onClick={() => {
-                              if (!n.is_read) markAsRead(n.id);
-                            }}
-                            className={`p-2.5 rounded-xl text-left text-xs transition cursor-pointer ${
-                              n.is_read ? "bg-slate-50 text-slate-500" : "bg-emerald-50 text-slate-700 border border-emerald-200"
-                            }`}
-                          >
-                            <div className="font-semibold text-slate-800">{n.title}</div>
-                            <div className="line-clamp-2 text-slate-500 mt-0.5">{n.message}</div>
-                          </div>
-                        ))
-                      )}
-                    </div>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#5669FF] text-white text-xs font-extrabold">
+                    {user?.full_name?.charAt(0).toUpperCase() || "U"}
                   </div>
-                )}
-              </div>
-
-              {/* Profile Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setProfileDropdownOpen(!profileDropdownOpen);
-                    setNotifDropdownOpen(false);
-                  }}
-                  className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-1.5 hover:border-slate-300 hover:bg-slate-50 transition shadow-sm"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 font-bold text-xs">
-                    {user?.full_name?.charAt(0) || "U"}
-                  </div>
-                  <span className="text-sm font-medium text-slate-700 max-w-[100px] truncate">
-                    {user?.full_name?.split(" ")[0]}
-                  </span>
                 </button>
 
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-3 py-2 border-b border-slate-100">
-                      <p className="text-xs font-semibold text-slate-800">{user?.full_name}</p>
-                      <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
-                      <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 uppercase">
+                  <div className="absolute right-0 mt-2 w-56 rounded-3xl border border-[#EBEAEE] bg-white p-2 shadow-2xl space-y-1 animate-in fade-in slide-in-from-top-2">
+                    <div className="p-3 border-b border-[#F0F1F7]">
+                      <div className="text-xs font-bold text-[#120D26]">{user?.full_name}</div>
+                      <div className="text-[11px] text-[#747688] font-mono">{user?.email}</div>
+                      <span className="inline-block mt-1 text-[9px] uppercase font-extrabold px-2 py-0.5 rounded bg-[#5669FF]/10 text-[#5669FF]">
                         {user?.role}
                       </span>
                     </div>
 
-                    <div className="py-1">
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900"
-                      >
-                        <LayoutDashboard className="h-4 w-4" />
-                        Dashboard
-                      </Link>
-                      <Link
-                        href="/profile"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900"
-                      >
-                        <User className="h-4 w-4" />
-                        Profile Settings
-                      </Link>
-                      <Link
-                        href="/wallet"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900"
-                      >
-                        <Wallet className="h-4 w-4" />
-                        Wallet & Credits
-                      </Link>
-                    </div>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-2xl text-xs font-semibold text-[#120D26] hover:bg-[#F0F1F7]"
+                    >
+                      <LayoutDashboard className="h-4 w-4 text-[#5669FF]" />
+                      Dashboard
+                    </Link>
 
-                    <div className="border-t border-slate-100 pt-1">
-                      <button
-                        onClick={() => {
-                          setProfileDropdownOpen(false);
-                          logout();
-                        }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs font-medium text-rose-600 rounded-lg hover:bg-rose-50"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
-                      </button>
-                    </div>
+                    <Link
+                      href="/wallet"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-2xl text-xs font-semibold text-[#120D26] hover:bg-[#F0F1F7]"
+                    >
+                      <Wallet className="h-4 w-4 text-[#5669FF]" />
+                      Credits & Wallet
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2 rounded-2xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </button>
                   </div>
                 )}
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+                className="px-4 py-2 rounded-2xl text-xs font-extrabold text-[#120D26] hover:bg-[#F0F1F7] transition"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition transform active:scale-95"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-xs font-extrabold text-white bg-[#5669FF] hover:bg-[#4657E5] shadow-md shadow-[#5669FF]/25 active:scale-95 transition"
               >
-                <Sparkles className="h-4 w-4" />
-                Get Started
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Get Started</span>
               </Link>
             </div>
           )}
-        </div>
 
-        {/* Mobile menu button */}
-        <div className="flex md:hidden items-center gap-2">
-          {isAuthenticated && (
-            <Link
-              href="/wallet"
-              className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700"
-            >
-              <Wallet className="h-3.5 w-3.5" />
-              <span>{user?.wallet_balance ?? 0}</span>
-            </Link>
-          )}
-
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+            className="md:hidden flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F0F1F7] text-[#120D26]"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-6 space-y-3 shadow-sm">
-          <div className="space-y-1">
-            <Link
-              href="/parking"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-100"
-            >
-              Find Parking
-            </Link>
-            <Link
-              href="/map"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-100"
-            >
-              Live Map
-            </Link>
-
-            {isAuthenticated ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-base font-medium text-slate-200 hover:bg-slate-900"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/bookings"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-base font-medium text-slate-200 hover:bg-slate-900"
-                >
-                  My Bookings
-                </Link>
-                <Link
-                  href="/wallet"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-base font-medium text-slate-200 hover:bg-slate-900"
-                >
-                  Wallet & Credits ({user?.wallet_balance} Credits)
-                </Link>
-                <Link
-                  href="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-base font-medium text-slate-200 hover:bg-slate-900"
-                >
-                  Profile
-                </Link>
-                {user?.role === "PARKING_MANAGER" && (
-                  <Link
-                    href="/manager/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 rounded-xl text-base font-medium text-teal-400 hover:bg-slate-900"
-                  >
-                    Manager Hub
-                  </Link>
-                )}
-                {user?.role === "ADMIN" && (
-                  <Link
-                    href="/admin/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 rounded-xl text-base font-medium text-purple-400 hover:bg-slate-900"
-                  >
-                    Admin Center
-                  </Link>
-                )}
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    logout();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl text-base font-medium text-rose-600 hover:bg-rose-50"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <div className="pt-4 space-y-2">
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700"
-                >
-                  Get Started (100 Free Credits)
-                </Link>
-              </div>
-            )}
-          </div>
+        <div className="md:hidden border-b border-[#EBEAEE] bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-4">
+          <Link
+            href={isAuthenticated ? "/parking" : "/login?redirect=/parking"}
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-[#120D26] hover:bg-[#F0F1F7]"
+          >
+            Explore Parking Hubs
+          </Link>
+          <Link
+            href={isAuthenticated ? "/map" : "/login?redirect=/map"}
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-[#120D26] hover:bg-[#F0F1F7]"
+          >
+            Live GPS Map
+          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-[#120D26] hover:bg-[#F0F1F7]"
+              >
+                My Dashboard
+              </Link>
+              <Link
+                href="/bookings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-[#120D26] hover:bg-[#F0F1F7]"
+              >
+                My Passes & QR Tickets
+              </Link>
+              <Link
+                href="/wallet"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-[#5669FF] hover:bg-[#5669FF]/10"
+              >
+                Wallet ({user?.wallet_balance} Credits)
+              </Link>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  logout();
+                }}
+                className="block w-full text-left px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 hover:bg-rose-50"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <div className="pt-2 grid grid-cols-2 gap-2">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2.5 rounded-2xl text-xs font-bold text-[#120D26] bg-[#F0F1F7]"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2.5 rounded-2xl text-xs font-bold text-white bg-[#5669FF]"
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>

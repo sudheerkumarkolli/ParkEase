@@ -104,13 +104,13 @@ function SlotManagementContent() {
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
-            <h1 className="text-2xl font-black text-white flex items-center gap-2">
+            <h1 className="text-2xl font-black text-slate-800 flex items-center gap-2">
               <Layers className="h-6 w-6 text-teal-400" />
               Parking Slot Grid & Bay Control
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Click on any bay to toggle between Available and Maintenance state
             </p>
           </div>
@@ -127,14 +127,14 @@ function SlotManagementContent() {
         </div>
 
         {/* Facility Selector Dropdown */}
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/60 border border-slate-100">
           <Building className="h-4 w-4 text-teal-400" />
-          <span className="text-xs font-semibold text-slate-300">Active Facility:</span>
+          <span className="text-xs font-semibold text-slate-600">Active Facility:</span>
           <select
             value={selectedParkingId || ""}
             onChange={(e) => setSelectedParkingId(parseInt(e.target.value))}
             aria-label="Active Parking Facility"
-            className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-teal-500 focus:outline-none flex-1 max-w-md"
+            className="rounded-xl border border-slate-100 bg-slate-950 px-3 py-2 text-xs text-white focus:border-teal-500 focus:outline-none flex-1 max-w-md"
           >
             {parkings.map((p) => (
               <option key={p.id} value={p.id}>
@@ -154,10 +154,10 @@ function SlotManagementContent() {
         {/* Batch Add Modal */}
         {showAddModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md animate-in fade-in">
-            <div className="max-w-md w-full rounded-3xl border border-slate-800 bg-slate-900 p-6 space-y-4 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="max-w-md w-full rounded-3xl border border-slate-100 bg-white p-6 space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 className="text-sm font-bold text-white">Batch Add Parking Bays</h3>
-                <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white">
+                <button onClick={() => setShowAddModal(false)} className="text-slate-500 hover:text-white">
                   ✕
                 </button>
               </div>
@@ -165,7 +165,7 @@ function SlotManagementContent() {
               <form onSubmit={handleBatchCreate} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Section Prefix</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">Section Prefix</label>
                     <input
                       type="text"
                       maxLength={2}
@@ -173,12 +173,12 @@ function SlotManagementContent() {
                       value={batchPrefix}
                       onChange={(e) => setBatchPrefix(e.target.value.toUpperCase())}
                       placeholder="C"
-                      className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs uppercase font-bold text-white focus:border-teal-500 focus:outline-none"
+                      className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs uppercase font-bold text-white focus:border-teal-500 focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Number of Bays</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">Number of Bays</label>
                     <input
                       type="number"
                       min={1}
@@ -186,17 +186,17 @@ function SlotManagementContent() {
                       required
                       value={batchCount}
                       onChange={(e) => setBatchCount(parseInt(e.target.value))}
-                      className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-teal-500 focus:outline-none"
+                      className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-teal-500 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Vehicle Type</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vehicle Type</label>
                   <select
                     value={batchVehicle}
                     onChange={(e) => setBatchVehicle(e.target.value)}
-                    className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-teal-500 focus:outline-none"
+                    className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-teal-500 focus:outline-none"
                   >
                     <option value="Car">Car</option>
                     <option value="SUV">SUV</option>
@@ -209,7 +209,7 @@ function SlotManagementContent() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="flex-1 py-2.5 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+                    className="flex-1 py-2.5 rounded-xl bg-slate-50 text-xs font-semibold text-slate-600 hover:bg-slate-700"
                   >
                     Cancel
                   </button>
@@ -232,7 +232,7 @@ function SlotManagementContent() {
 
 export default function ManagerSlotsPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-xs text-slate-400">Loading slot matrix...</div>}>
+    <Suspense fallback={<div className="text-center py-20 text-xs text-slate-500">Loading slot matrix...</div>}>
       <SlotManagementContent />
     </Suspense>
   );

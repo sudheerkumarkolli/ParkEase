@@ -11,8 +11,10 @@ class CreditPackage(BaseModel):
     badge: Optional[str] = None
 
 class AddCreditsRequest(BaseModel):
-    package_name: str
+    package_name: Optional[str] = None
+    amount: Optional[int] = None
     payment_method: str = "SIMULATED_RAZORPAY"
+
 
 class WalletTransactionResponse(BaseModel):
     id: int

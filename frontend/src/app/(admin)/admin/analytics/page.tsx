@@ -43,12 +43,12 @@ export default function AdminAnalyticsPage() {
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl">
         
-        <div className="border-b border-slate-800 pb-4">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
+        <div className="border-b border-slate-100 pb-4">
+          <h1 className="text-2xl font-black text-slate-800 flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-purple-400" />
             Platform Telemetry & Analytics
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             System performance trends, peak occupancy heatmaps, and demand forecasting
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function AdminAnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             {/* Chart 1: Daily Revenue */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">
+            <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-emerald-400" />
                 Revenue Trajectory (Credits)
@@ -90,7 +90,7 @@ export default function AdminAnalyticsPage() {
             </div>
 
             {/* Chart 2: Occupancy Rate */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">
+            <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <Activity className="h-4 w-4 text-purple-400" />
                 Network Occupancy Utilization (%)

@@ -45,22 +45,22 @@ export default function TransactionsLedgerPage() {
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <Link
               href="/wallet"
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition"
+              className="p-2 rounded-xl bg-white border border-slate-100 text-slate-500 hover:text-white transition"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div>
-              <h1 className="text-2xl font-black text-white">Wallet Transaction Ledger</h1>
-              <p className="text-xs text-slate-400">Complete immutable record of credits added, used, and refunded</p>
+              <h1 className="text-2xl font-black text-slate-800">Wallet Transaction Ledger</h1>
+              <p className="text-xs text-slate-500">Complete immutable record of credits added, used, and refunded</p>
             </div>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-800 text-xs">
+          <div className="flex flex-wrap items-center gap-1 bg-white p-1 rounded-2xl border border-slate-100 text-xs">
             {[
               { id: "ALL", label: "All Records" },
               { id: "WELCOME_CREDIT", label: "Welcome Bonus" },
@@ -74,7 +74,7 @@ export default function TransactionsLedgerPage() {
                 className={`px-3 py-1.5 rounded-xl font-semibold transition ${
                   typeFilter === f.id
                     ? "bg-emerald-500 text-slate-950 shadow-md"
-                    : "text-slate-400 hover:text-white"
+                    : "text-slate-500 hover:text-white"
                 }`}
               >
                 {f.label}
@@ -84,7 +84,7 @@ export default function TransactionsLedgerPage() {
         </div>
 
         {/* Transactions Table */}
-        <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl shadow-xl">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
           {loading ? (
             <div className="p-8 text-center text-xs text-slate-500">Loading ledger...</div>
           ) : transactions.length === 0 ? (
@@ -94,7 +94,7 @@ export default function TransactionsLedgerPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase font-semibold text-[10px]">
+                <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
                   <tr>
                     <th className="p-4">Transaction ID</th>
                     <th className="p-4">Type</th>
@@ -108,14 +108,14 @@ export default function TransactionsLedgerPage() {
                   {transactions.map((tx) => {
                     const isCredit = tx.credits > 0;
                     return (
-                      <tr key={tx.id} className="hover:bg-slate-800/30 transition">
+                      <tr key={tx.id} className="hover:bg-slate-50/30 transition">
                         <td className="p-4 font-mono font-bold text-white">#TX-{tx.id}</td>
                         <td className="p-4">
-                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300">
+                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 border border-slate-100 text-slate-600">
                             {tx.type}
                           </span>
                         </td>
-                        <td className="p-4 text-slate-300">
+                        <td className="p-4 text-slate-600">
                           <div className="font-medium">{tx.description}</div>
                           {tx.reference_id && (
                             <span className="text-[10px] text-slate-500 font-mono">
@@ -137,7 +137,7 @@ export default function TransactionsLedgerPage() {
                             {tx.status}
                           </span>
                         </td>
-                        <td className="p-4 text-right text-slate-400 text-[11px]">
+                        <td className="p-4 text-right text-slate-500 text-[11px]">
                           {formatDateTime(tx.created_at)}
                         </td>
                       </tr>

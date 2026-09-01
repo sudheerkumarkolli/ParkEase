@@ -11,10 +11,10 @@ import Link from "next/link";
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full min-h-[600px] flex items-center justify-center bg-slate-950 rounded-2xl border border-slate-800">
+    <div className="w-full h-full min-h-[600px] flex items-center justify-center bg-slate-950 rounded-2xl border border-slate-100">
       <div className="flex flex-col items-center gap-3">
         <span className="h-8 w-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
-        <span className="text-xs text-slate-400 font-semibold">Initializing OpenStreetMap & Leaflet...</span>
+        <span className="text-xs text-slate-500 font-semibold">Initializing OpenStreetMap & Leaflet...</span>
       </div>
     </div>
   ),
@@ -54,16 +54,16 @@ export default function LiveMapPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/parking"
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-2 rounded-xl bg-white border border-slate-100 text-slate-500 hover:text-white hover:bg-slate-50 transition"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-800 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-emerald-400" />
               Live Interactive Map
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Visualizing {parkings.length} parking hubs with real-time occupancy
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function LiveMapPage() {
           <button
             onClick={fetchParkings}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 hover:bg-slate-800 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-100 hover:bg-slate-50 transition"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
             Refresh Pins

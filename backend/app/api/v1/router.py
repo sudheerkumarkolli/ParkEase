@@ -29,6 +29,8 @@ api_router.include_router(bookings.router, prefix="/bookings", tags=["Bookings"]
 
 # Wallet & Credit routes
 api_router.include_router(wallet.router, prefix="/wallet", tags=["Wallet & Credits"])
+api_router.include_router(wallet.router, prefix="/wallets", tags=["Wallet & Credits"])
+
 
 # Notifications
 api_router.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])

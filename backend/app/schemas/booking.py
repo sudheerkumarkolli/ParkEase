@@ -6,11 +6,13 @@ from app.schemas.slot import SlotResponse
 
 class BookingCreate(BaseModel):
     parking_id: int
-    slot_id: int
+    slot_id: Optional[int] = None
     vehicle_number: str = Field(..., min_length=2, max_length=20)
     vehicle_type: str = Field("Car", max_length=20)
     start_time: datetime
     duration_hours: float = Field(..., gt=0, le=72)
+    notes: Optional[str] = None
+
 
 class BookingResponse(BaseModel):
     id: int

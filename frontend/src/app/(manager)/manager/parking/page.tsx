@@ -58,13 +58,13 @@ export default function ManagerParkingListPage() {
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
-            <h1 className="text-2xl font-black text-white flex items-center gap-2">
+            <h1 className="text-2xl font-black text-slate-800 flex items-center gap-2">
               <Building2 className="h-6 w-6 text-teal-400" />
               Manage Parking Facilities
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Configure rates, operating hours, amenities, and slot counts for your facilities
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function ManagerParkingListPage() {
               Loading facilities...
             </div>
           ) : parkings.length === 0 ? (
-            <div className="col-span-full p-12 text-center rounded-3xl border border-dashed border-slate-800 bg-slate-900/30 space-y-3">
+            <div className="col-span-full p-12 text-center rounded-3xl border border-dashed border-slate-100 bg-white/30 space-y-3">
               <Building2 className="h-10 w-10 text-slate-600 mx-auto" />
               <h3 className="text-base font-bold text-white">No facilities registered</h3>
               <Link
@@ -99,7 +99,7 @@ export default function ManagerParkingListPage() {
             parkings.map((p) => (
               <div
                 key={p.id}
-                className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-xl space-y-4"
+                className="flex flex-col justify-between rounded-3xl border border-slate-100 bg-white/60 p-5 backdrop-blur-xl space-y-4"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -119,10 +119,10 @@ export default function ManagerParkingListPage() {
 
                   <div>
                     <h3 className="text-base font-bold text-white">{p.name}</h3>
-                    <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{p.address}</p>
+                    <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{p.address}</p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-100">
                     <div>
                       <span className="text-[10px] text-slate-500 block">Total Bays</span>
                       <span className="font-bold text-white">{p.total_slots} Slots</span>
@@ -133,13 +133,13 @@ export default function ManagerParkingListPage() {
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                  <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-slate-500" />
                     <span>Operating Hours: {p.opening_time} - {p.closing_time}</span>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   <Link
                     href={`/manager/slots?parking_id=${p.id}`}
                     className="flex items-center gap-1 text-xs font-bold text-teal-400 hover:underline"

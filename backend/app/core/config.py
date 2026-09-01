@@ -21,9 +21,11 @@ class Settings(BaseSettings):
     
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/parkease"
+    MONGODB_URL: str = "mongodb://localhost:27017/parkease"
     
     # Fallback to SQLite if PostgreSQL connection fails locally during dev
     SQLITE_FALLBACK_URL: str = "sqlite:///./parkease.db"
+
     
     # Welcome Credits
     WELCOME_CREDITS: int = 100
@@ -40,13 +42,16 @@ class Settings(BaseSettings):
         "*"
     ]
     
-    # Default Admin & Manager credentials for seeder
-    SEED_ADMIN_EMAIL: str = "admin@parkease.local"
-    SEED_ADMIN_PASSWORD: str = "Admin@12345"
-    SEED_MANAGER_EMAIL: str = "manager@parkease.local"
-    SEED_MANAGER_PASSWORD: str = "Manager@12345"
-    SEED_USER_EMAIL: str = "user@parkease.local"
-    SEED_USER_PASSWORD: str = "User@12345"
+    # Default Admin & Manager credentials
+    SEED_ADMIN_EMAIL: str = "admin@gmail.com"
+    SEED_ADMIN_PASSWORD: str = "12345678"
+    SEED_MANAGER_EMAIL: str = "manager1@gmail.com"
+    SEED_MANAGER_PASSWORD: str = "12345678"
+    SEED_MANAGER2_EMAIL: str = "manager2@gmail.com"
+    SEED_MANAGER2_PASSWORD: str = "12345678"
+    SEED_USER_EMAIL: str = "user@gmail.com"
+    SEED_USER_PASSWORD: str = "12345678"
+
 
     class Config:
         env_file = ".env"

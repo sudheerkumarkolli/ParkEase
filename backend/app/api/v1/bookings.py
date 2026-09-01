@@ -36,6 +36,8 @@ def make_booking(
     return booking
 
 @router.get("", response_model=List[BookingResponse])
+@router.get("/my-bookings", response_model=List[BookingResponse])
+@router.get("/user", response_model=List[BookingResponse])
 def get_user_bookings(
     status: Optional[str] = Query(None, description="Filter by booking status: UPCOMING, ACTIVE, COMPLETED, CANCELLED"),
     limit: int = Query(50, ge=1, le=100),
@@ -48,6 +50,7 @@ def get_user_bookings(
 
     bookings = q.order_by(desc(Booking.created_at)).limit(limit).all()
     return bookings
+
 
 @router.get("/{booking_id}", response_model=BookingResponse)
 def get_booking_details(
