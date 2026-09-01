@@ -9,7 +9,9 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<User>;
+  login: (email: string, password?: string) => Promise<User>;
+  sendOtp: (email: string) => Promise<{ message: string; email: string; dev_otp?: string }>;
+  verifyOtp: (email: string, otp: string) => Promise<User>;
   register: (data: any) => Promise<User>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -47,8 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fetchProfile();
   }, []);
 
-  const login = async (email: string, password: string): Promise<User> => {
-    const res = await api.post("/auth/login", { email, password });
+  const sendOtp = async (email: string) => {
+    const res = await api.post("/auth/send-otp", { email });
+    return res.data;
+  };
+
+  const verifyOtp = async (email: string, otp: string): Promise<User> => {
+    const res = await api.post("/auth/verify-otp", { email, otp });
     const { access_token, refresh_token, user: loggedUser } = res.data;
     localStorage.setItem("parkease_access_token", access_token);
     localStorage.setItem("parkease_refresh_token", refresh_token);
@@ -66,6 +73,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return loggedUser;
   };
 
+  const login = async (email: string, password?: string): Promise<User> => {
+    const res = await api.post("/auth/login", { email, password });
+    const { access_token, refresh_token, user: loggedUser } = res.data;
+    localStorage.setItem("parkease_access_token", access_token);
+    localStorage.setItem("parkease_refresh_token", refresh_token);
+    localStorage.setItem("parkease_user", JSON.stringify(loggedUser));
+    setUser(loggedUser);
+
+    // Redirect based on role
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const redirectUrl = searchParams?.get("redirect");
+
+    if (loggedUser.role === "ADMIN") {
+      router.push(redirectUrl || "/admin/dashboard");
+    } else if (loggedUser.role === "PARKING_MANAGER") {
+      router.push(redirectUrl || "/manager/dashboard");
+    } else {
+      router.push(redirectUrl || "/dashboard");
+    }
+    return loggedUser;
+  };
+
   const register = async (data: any): Promise<User> => {
     const res = await api.post("/auth/register", data);
     const { access_token, refresh_token, user: registeredUser } = res.data;
@@ -73,9 +102,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("parkease_refresh_token", refresh_token);
     localStorage.setItem("parkease_user", JSON.stringify(registeredUser));
     setUser(registeredUser);
-    router.push("/dashboard");
+
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const redirectUrl = searchParams?.get("redirect");
+    router.push(redirectUrl || "/dashboard");
     return registeredUser;
   };
+
 
   const logout = () => {
     const refreshToken = localStorage.getItem("parkease_refresh_token");
@@ -100,6 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loading,
         isAuthenticated: !!user,
         login,
+        sendOtp,
+        verifyOtp,
         register,
         logout,
         refreshUser,

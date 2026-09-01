@@ -22,6 +22,7 @@ from app.services.wallet_service import (
 router = APIRouter()
 
 @router.get("", response_model=WalletResponse)
+@router.get("/me", response_model=WalletResponse)
 def get_user_wallet(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
@@ -39,6 +40,7 @@ def get_user_wallet(
         "updated_at": wallet.updated_at,
         "recent_transactions": recent_txs
     }
+
 
 @router.get("/packages", response_model=List[CreditPackage])
 def list_credit_packages():
@@ -60,6 +62,7 @@ def get_wallet_transactions(
     return transactions
 
 @router.post("/add-credits")
+@router.post("/top-up")
 def add_credits_to_wallet(
     req: AddCreditsRequest,
     current_user: User = Depends(get_current_active_user),
@@ -69,6 +72,7 @@ def add_credits_to_wallet(
         db=db,
         user_id=current_user.id,
         package_name=req.package_name,
+        amount=req.amount,
         payment_method=req.payment_method
     )
     return {
@@ -77,3 +81,4 @@ def add_credits_to_wallet(
         "transaction_id": result["payment"].transaction_id,
         "amount_paid": result["payment"].amount
     }
+

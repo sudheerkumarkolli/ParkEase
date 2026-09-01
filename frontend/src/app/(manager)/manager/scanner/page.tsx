@@ -16,6 +16,9 @@ import {
   Coins,
   ShieldCheck,
   RotateCw,
+  ArrowRight,
+  LogOut,
+  LogIn,
 } from "lucide-react";
 
 export default function ManagerScannerPage() {
@@ -97,21 +100,21 @@ export default function ManagerScannerPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)]">
+    <div className="flex min-h-[calc(100vh-4rem)] bg-slate-50">
       <Sidebar type="manager" />
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-4xl">
         
         {/* Header */}
-        <div className="border-b border-slate-800 pb-4">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-teal-400">
+        <div className="border-b border-slate-200 pb-4">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-teal-600">
             Access Control Verification
           </span>
-          <h1 className="text-2xl font-black text-white flex items-center gap-2 mt-1">
-            <QrCode className="h-6 w-6 text-teal-400" />
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2 mt-1">
+            <QrCode className="h-7 w-7 text-teal-600" />
             Gate Entry & Exit QR Scanner
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Verify driver booking passes, validate gate permits, and transition slot occupancies in real-time
           </p>
         </div>
@@ -119,51 +122,51 @@ export default function ManagerScannerPage() {
         {/* Verification Result Banner */}
         {scanResult && (
           <div
-            className={`p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-4 animate-in fade-in slide-in-from-top-4 ${
+            className={`p-6 rounded-3xl border shadow-lg space-y-4 animate-in fade-in slide-in-from-top-4 ${
               scanResult.action === "ENTRY_APPROVED"
-                ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300"
+                ? "bg-emerald-50 border-emerald-300 text-emerald-950"
                 : scanResult.action === "EXIT_APPROVED"
-                ? "bg-teal-950/40 border-teal-500/50 text-teal-300"
-                : "bg-rose-950/40 border-rose-500/50 text-rose-300"
+                ? "bg-teal-50 border-teal-300 text-teal-950"
+                : "bg-rose-50 border-rose-300 text-rose-950"
             }`}
           >
             <div className="flex items-center gap-3">
               {scanResult.success ? (
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400">
-                  <CheckCircle2 className="h-8 w-8" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md">
+                  <CheckCircle2 className="h-7 w-7" />
                 </div>
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/20 text-rose-400">
-                  <AlertOctagon className="h-8 w-8" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-600 text-white shadow-md">
+                  <AlertOctagon className="h-7 w-7" />
                 </div>
               )}
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider block">
-                  Gate Verification Status
+                <span className="text-[10px] font-black uppercase tracking-wider block text-slate-500">
+                  Gate Verification Result
                 </span>
-                <h3 className="text-xl font-black text-white">{scanResult.action}</h3>
+                <h3 className="text-xl font-black text-slate-900">{scanResult.action}</h3>
               </div>
             </div>
 
-            <p className="text-sm font-semibold">{scanResult.message}</p>
+            <p className="text-sm font-bold text-slate-800">{scanResult.message}</p>
 
             {scanResult.booking && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs text-white">
-                <div className="bg-slate-950/60 p-3 rounded-2xl">
-                  <span className="text-[10px] text-slate-400 block">Pass No.</span>
-                  <span className="font-mono font-bold">{scanResult.booking.booking_number}</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-200 text-xs">
+                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-400 font-semibold block">Pass No.</span>
+                  <span className="font-mono font-bold text-slate-900">{scanResult.booking.booking_number}</span>
                 </div>
-                <div className="bg-slate-950/60 p-3 rounded-2xl">
-                  <span className="text-[10px] text-slate-400 block">Vehicle Plate</span>
-                  <span className="font-mono font-bold">{scanResult.booking.vehicle_number}</span>
+                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-400 font-semibold block">Vehicle Plate</span>
+                  <span className="font-mono font-bold text-slate-900">{scanResult.booking.vehicle_number}</span>
                 </div>
-                <div className="bg-slate-950/60 p-3 rounded-2xl">
-                  <span className="text-[10px] text-slate-400 block">Duration</span>
-                  <span className="font-bold">{scanResult.booking.duration_hours} hrs</span>
+                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-400 font-semibold block">Duration</span>
+                  <span className="font-bold text-slate-900">{scanResult.booking.duration_hours} hrs</span>
                 </div>
-                <div className="bg-slate-950/60 p-3 rounded-2xl">
-                  <span className="text-[10px] text-slate-400 block">Updated State</span>
-                  <span className="font-bold text-emerald-400">{scanResult.booking.status}</span>
+                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                  <span className="text-[10px] text-slate-400 font-semibold block">Status</span>
+                  <span className="font-extrabold text-emerald-600">{scanResult.booking.status}</span>
                 </div>
               </div>
             )}
@@ -174,12 +177,12 @@ export default function ManagerScannerPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Camera Scanner Box */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Camera className="h-4 w-4 text-teal-400" />
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+            <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+              <Camera className="h-4 w-4 text-teal-600" />
               Live Device Camera Scanner
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Point your smartphone or web camera at the driver's QR Smart Pass.
             </p>
 
@@ -188,38 +191,38 @@ export default function ManagerScannerPage() {
                 <div id="qr-reader" className="w-full rounded-2xl overflow-hidden bg-slate-950" />
                 <button
                   onClick={stopCameraScanner}
-                  className="w-full py-2.5 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+                  className="w-full py-3 rounded-xl bg-rose-600 text-xs font-bold text-white hover:bg-rose-700 shadow-md transition"
                 >
-                  Stop Camera
+                  Stop Camera Scanner
                 </button>
               </div>
             ) : (
               <button
                 onClick={startCameraScanner}
-                className="w-full py-12 rounded-2xl border-2 border-dashed border-slate-700 bg-slate-950/60 hover:border-teal-500/50 hover:bg-teal-500/5 transition flex flex-col items-center justify-center gap-2 group"
+                className="w-full py-12 rounded-2xl border-2 border-dashed border-teal-300 bg-teal-50/50 hover:border-teal-500 hover:bg-teal-50 transition flex flex-col items-center justify-center gap-2 group shadow-sm cursor-pointer"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-500/10 text-teal-400 group-hover:scale-110 transition">
-                  <Camera className="h-6 w-6" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-600 text-white group-hover:scale-105 shadow-md shadow-teal-600/20 transition">
+                  <Camera className="h-7 w-7" />
                 </div>
-                <span className="text-xs font-bold text-slate-200">Start Camera Scanner</span>
-                <span className="text-[10px] text-slate-500">Requires camera permissions</span>
+                <span className="text-xs font-extrabold text-teal-900">Launch Camera Scanner</span>
+                <span className="text-[11px] text-teal-600 font-medium">Auto-detects QR Smart Passes</span>
               </button>
             )}
           </div>
 
           {/* Manual Token Verification Box */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4 flex flex-col justify-between">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Search className="h-4 w-4 text-emerald-400" />
+              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                <Search className="h-4 w-4 text-emerald-600" />
                 Manual Token Verification
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Enter or paste the token string shown on the driver's pass (e.g., QR-XXXXX)
               </p>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   QR Token String
                 </label>
                 <input
@@ -227,7 +230,7 @@ export default function ManagerScannerPage() {
                   value={qrInput}
                   onChange={(e) => setQrInput(e.target.value)}
                   placeholder="Paste QR-xxxxxxxx-xxxx..."
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs font-mono text-white placeholder-slate-600 focus:border-teal-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-xs font-mono font-bold text-slate-900 placeholder-slate-400 focus:border-teal-500 focus:outline-none shadow-inner"
                 />
               </div>
             </div>
@@ -238,22 +241,24 @@ export default function ManagerScannerPage() {
                   type="button"
                   disabled={processing || !qrInput.trim()}
                   onClick={() => handleScanSubmit(qrInput, "entry")}
-                  className="w-full py-3.5 rounded-2xl text-xs font-black text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 transition shadow-lg shadow-emerald-500/20 active:scale-95 disabled:opacity-50"
+                  className="flex items-center justify-center gap-1.5 w-full py-3.5 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-md shadow-emerald-600/25 transition disabled:opacity-40 cursor-pointer"
                 >
-                  {processing ? "Checking..." : "Approve ENTRY"}
+                  <LogIn className="h-4 w-4" />
+                  <span>{processing ? "Verifying..." : "Approve ENTRY"}</span>
                 </button>
 
                 <button
                   type="button"
                   disabled={processing || !qrInput.trim()}
                   onClick={() => handleScanSubmit(qrInput, "exit")}
-                  className="w-full py-3.5 rounded-2xl text-xs font-black text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition active:scale-95 disabled:opacity-50"
+                  className="flex items-center justify-center gap-1.5 w-full py-3.5 rounded-2xl text-xs font-black text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 shadow-md shadow-indigo-600/25 transition disabled:opacity-40 cursor-pointer"
                 >
-                  {processing ? "Checking..." : "Approve EXIT"}
+                  <LogOut className="h-4 w-4" />
+                  <span>{processing ? "Verifying..." : "Approve EXIT"}</span>
                 </button>
               </div>
-              <span className="text-[10px] text-slate-500 text-center block">
-                Automatic slot state transition in database
+              <span className="text-[10px] text-slate-400 text-center block font-medium">
+                Automatic slot state transition & database update
               </span>
             </div>
           </div>

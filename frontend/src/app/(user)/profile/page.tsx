@@ -71,12 +71,12 @@ export default function ProfilePage() {
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-3xl">
         
-        <div className="border-b border-slate-800 pb-4">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
+        <div className="border-b border-slate-100 pb-4">
+          <h1 className="text-2xl font-black text-slate-800 flex items-center gap-2">
             <User className="h-6 w-6 text-emerald-400" />
             Profile & Vehicle Settings
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Manage your personal profile, primary vehicle registration, and credentials
           </p>
         </div>
@@ -96,14 +96,14 @@ export default function ProfilePage() {
         )}
 
         {/* User Card Summary */}
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 flex items-center justify-between backdrop-blur-xl">
+        <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-slate-950 font-black text-xl">
               {user?.full_name?.charAt(0) || "U"}
             </div>
             <div>
               <h3 className="text-base font-bold text-white">{user?.full_name}</h3>
-              <p className="text-xs text-slate-400">{user?.email}</p>
+              <p className="text-xs text-slate-500">{user?.email}</p>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 uppercase">
                   {user?.role}
@@ -117,10 +117,10 @@ export default function ProfilePage() {
         </div>
 
         {/* Edit Form */}
-        <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 backdrop-blur-xl">
+        <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-100 bg-white/60 p-6 space-y-4 backdrop-blur-xl">
           
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Full Name</label>
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Full Name</label>
             <div className="relative">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <input
@@ -128,42 +128,42 @@ export default function ProfilePage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email (Read Only)</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Email (Read Only)</label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
                 <input
                   type="email"
                   disabled
                   value={user?.email || ""}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950/40 pl-10 pr-4 py-3 text-xs text-slate-500 cursor-not-allowed"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950/40 pl-10 pr-4 py-3 text-xs text-slate-500 cursor-not-allowed"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Phone Number</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Phone Number</label>
               <div className="relative">
                 <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800/80">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100/80">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Vehicle License Plate</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vehicle License Plate</label>
               <div className="relative">
                 <Car className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                 <input
@@ -171,17 +171,17 @@ export default function ProfilePage() {
                   value={vehicleNumber}
                   onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
                   placeholder="AP 16 BQ 7788"
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-3 text-xs font-mono uppercase font-bold text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs font-mono uppercase font-bold text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Vehicle Category</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vehicle Category</label>
               <select
                 value={vehicleType}
                 onChange={(e) => setVehicleType(e.target.value)}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950 px-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-2xl border border-slate-100 bg-slate-950 px-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
               >
                 <option value="Car">Car</option>
                 <option value="SUV">SUV</option>
@@ -191,8 +191,8 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-800/80">
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+          <div className="pt-2 border-t border-slate-100/80">
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5">
               Change Password (Leave blank to keep current)
             </label>
             <div className="relative">
@@ -202,7 +202,7 @@ export default function ProfilePage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="New password (min 6 chars)"
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
               />
             </div>
           </div>

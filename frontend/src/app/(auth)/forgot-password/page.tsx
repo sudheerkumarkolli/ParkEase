@@ -33,22 +33,22 @@ export default function ForgotPasswordPage() {
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 border border-slate-800 text-emerald-400 shadow-lg">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-100 text-emerald-400 shadow-lg">
             <KeyRound className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white">Reset Password</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-2xl font-extrabold text-slate-800">Reset Password</h2>
+          <p className="text-xs text-slate-500">
             Enter your email to receive a secure password reset token
           </p>
         </div>
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl space-y-5">
+        <div className="rounded-3xl border border-slate-100 bg-white/70 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl space-y-5">
           {submitted ? (
             <div className="space-y-4 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mx-auto">
                 <CheckCircle2 className="h-6 w-6" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-600">
                 Password reset token generated!
               </p>
               {devToken && (
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Registered Email</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Registered Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <input
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full rounded-2xl border border-slate-800 bg-slate-950/90 pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full rounded-2xl border border-slate-100 bg-slate-950/90 pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>
               </div>
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
             </form>
           )}
 
-          <div className="text-center text-xs text-slate-400 pt-2">
+          <div className="text-center text-xs text-slate-500 pt-2">
             Remembered your password?{" "}
             <Link href="/login" className="font-bold text-emerald-400 hover:underline">
               Back to Sign In

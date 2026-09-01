@@ -37,10 +37,10 @@ The database seed script automatically populates the following accounts:
 
 | Role | Email | Password | Initial Balance |
 | :--- | :--- | :--- | :--- |
-| **System Admin** | `admin@parkease.local` | `Admin@12345` | 5,000 Credits |
-| **Facility Manager 1** | `manager@parkease.local` | `Manager@12345` | 100 Credits |
-| **Facility Manager 2** | `manager2@parkease.local` | `Manager@12345` | 100 Credits |
-| **Default User** | `user@parkease.local` | `User@12345` | 450 Credits |
+| **System Admin** | `admin@parkease.com` | `Admin@12345` | 5,000 Credits |
+| **Facility Manager 1** | `manager@parkease.com` | `Manager@12345` | 100 Credits |
+| **Facility Manager 2** | `manager2@parkease.com` | `Manager@12345` | 100 Credits |
+| **Default User** | `user@parkease.com` | `User@12345` | 450 Credits |
 
 ---
 

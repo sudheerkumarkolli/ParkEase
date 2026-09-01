@@ -2,35 +2,40 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 import { ParkingLocation } from "@/types";
 import { api } from "@/lib/api";
 import ParkingCard from "@/components/parking/ParkingCard";
 import {
-  Compass,
+  Search,
+  SlidersHorizontal,
   MapPin,
-  QrCode,
-  Wallet,
-  ShieldCheck,
-  Zap,
   Sparkles,
   Car,
   ChevronRight,
-  Clock,
-  Star,
-  Users,
+  ArrowRight,
+  ShieldCheck,
+  Zap,
+  BatteryCharging,
+  Layers,
+  Award,
+  Calendar,
+  Flame,
   CheckCircle2,
-  HelpCircle,
+  Users,
 } from "lucide-react";
 
 export default function LandingPage() {
+  const { isAuthenticated } = useAuth();
   const [featuredParkings, setFeaturedParkings] = useState<ParkingLocation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
         const res = await api.get<ParkingLocation[]>("/parking?sort_by=rating_desc");
-        setFeaturedParkings(res.data.slice(0, 4));
+        setFeaturedParkings(res.data.slice(0, 8));
       } catch (err) {
         console.error("Failed to load featured parking:", err);
       } finally {
@@ -40,150 +45,137 @@ export default function LandingPage() {
     fetchLocations();
   }, []);
 
+  // EventHub Category Filter Pills
+  const categories = [
+    { id: "All", label: "All Smart Hubs", icon: Car, bg: "bg-[#5669FF]" },
+    { id: "EV", label: "EV Fast Chargers", icon: BatteryCharging, bg: "bg-[#29D697]" },
+    { id: "SUV", label: "SUV & Heavy Bays", icon: Layers, bg: "bg-[#F0635A]" },
+    { id: "Bike", label: "Two-Wheeler / Bike", icon: Zap, bg: "bg-[#9353B1]" },
+    { id: "Valet", label: "VIP Covered Valet", icon: Award, bg: "bg-[#F59E0B]" },
+    { id: "Secure", label: "24/7 CCTV Guarded", icon: ShieldCheck, bg: "bg-[#00F8FF]" },
+  ];
+
   return (
-    <div className="space-y-24 pb-20">
+    <div className="space-y-10 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-12 md:pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
-        {/* Tagline Badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-bold text-slate-600 shadow-sm mb-6">
-          <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-          <span>Next-Gen Smart Parking Availability Platform</span>
-        </div>
-
-        {/* Hero Title */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight">
-          Find. Reserve. <span className="text-emerald-600">Park.</span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="mt-6 text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
-          Discover available parking spaces near you in real time and reserve your spot before you arrive. Guaranteed parking bay with instant QR access.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/parking"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/20 active:scale-95"
-          >
-            <Compass className="h-5 w-5" />
-            Find Parking Near Me
-          </Link>
-          <Link
-            href="/register"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition"
-          >
-            <Sparkles className="h-4 w-4 text-emerald-600" />
-            Get Started (100 Free Credits)
-          </Link>
-        </div>
-
-        {/* Hero Stats Ribbon */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto p-4 rounded-3xl border border-slate-200 bg-white shadow-sm">
-          <div className="p-3 text-center">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900">99.8%</div>
-            <div className="text-xs text-slate-500 mt-1">Guaranteed Bay Lock</div>
+      {/* 1. EVENTHUB HERO BANNER WITH SEARCH & SQUIRCLE FILTER */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#5669FF] p-6 sm:p-12 text-white shadow-2xl shadow-[#5669FF]/25">
+        <div className="relative z-10 max-w-3xl space-y-6">
+          
+          {/* Location & Badge */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1 text-xs font-bold text-white backdrop-blur-md border border-white/20">
+              <MapPin className="h-3.5 w-3.5 text-white" />
+              <span>Vijayawada, MG Road & Hyderabad Hubs</span>
+            </div>
+            <div className="inline-flex items-center gap-1 rounded-full bg-[#F0635A] px-3 py-1 text-[11px] font-black text-white shadow-md">
+              <Sparkles className="h-3 w-3" />
+              <span>100 Welcome Credits</span>
+            </div>
           </div>
-          <div className="p-3 text-center border-l border-slate-100">
-            <div className="text-2xl sm:text-3xl font-black text-emerald-600">&lt; 3 Sec</div>
-            <div className="text-xs text-slate-500 mt-1">Instant QR Pass</div>
-          </div>
-          <div className="p-3 text-center border-l border-slate-100">
-            <div className="text-2xl sm:text-3xl font-black text-emerald-600">100+</div>
-            <div className="text-xs text-slate-500 mt-1">Smart Hubs</div>
-          </div>
-          <div className="p-3 text-center border-l border-slate-100">
-            <div className="text-2xl sm:text-3xl font-black text-emerald-600">4.9 ⭐</div>
-            <div className="text-xs text-slate-500 mt-1">Driver Rating</div>
+
+          {/* Heading */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+            Reserve Your Smart <br />
+            Parking Bay In Seconds.
+          </h1>
+
+          <p className="text-xs sm:text-sm text-white/80 max-w-xl font-medium leading-relaxed">
+            Real-time live multi-level parking availability, touchless QR gate passes, and guaranteed slot bookings across the city.
+          </p>
+
+          {/* EventHub Integrated Search Bar + Squircle Filter */}
+          <div className="pt-2">
+            <div className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-xl max-w-xl">
+              <div className="flex flex-1 items-center gap-3 pl-3">
+                <Search className="h-5 w-5 text-[#5669FF]" />
+                <input
+                  type="text"
+                  placeholder="Search parking facilities, malls, metro stations..."
+                  className="w-full bg-transparent text-xs sm:text-sm text-[#120D26] placeholder-[#747688] font-semibold focus:outline-none"
+                  readOnly
+                  onClick={() => {
+                    window.location.href = isAuthenticated ? "/parking" : "/login?redirect=/parking";
+                  }}
+                />
+              </div>
+
+              <Link
+                href={isAuthenticated ? "/parking" : "/login?redirect=/parking"}
+                className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#5669FF] text-white shadow-md hover:bg-[#4657E5] transition shrink-0"
+                title="Filters"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Decorative Background Elements */}
+        <div className="absolute -right-16 -bottom-16 h-80 w-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+        <div className="absolute right-1/4 -top-20 h-64 w-64 rounded-full bg-[#F0635A]/20 blur-3xl pointer-events-none" />
       </section>
 
-      {/* 2. HOW IT WORKS */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-600">Seamless Flow</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">How ParkEase Works</h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-2">
-            Eliminate circling for parking spots with our four-step precision booking engine.
-          </p>
+      {/* 2. EVENTHUB HORIZONTAL CATEGORY PILLS */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-black text-[#120D26]">Explore by Bay Category</h2>
+          <Link
+            href={isAuthenticated ? "/parking" : "/login?redirect=/parking"}
+            className="text-xs font-bold text-[#5669FF] hover:underline flex items-center gap-1"
+          >
+            See All <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            {
-              step: "01",
-              title: "Discover Nearby Hubs",
-              desc: "Use live GPS or search destination to find active parking locations with real-time occupancy counts.",
-              icon: MapPin,
-            },
-            {
-              step: "02",
-              title: "Choose Your Slot",
-              desc: "Select your exact bay (A01, B05) customized for Cars, Bikes, SUVs, or EV chargers with transparent pricing.",
-              icon: Car,
-            },
-            {
-              step: "03",
-              title: "Instant Wallet Lock",
-              desc: "Confirm with your credits wallet. The database locks the slot instantly, eliminating double bookings.",
-              icon: Wallet,
-            },
-            {
-              step: "04",
-              title: "Scan & Park",
-              desc: "Show your encrypted QR Smart Pass at the gate for touchless, approved entry and exit.",
-              icon: QrCode,
-            },
-          ].map((item) => {
-            const Icon = item.icon;
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+          {categories.map((c) => {
+            const Icon = c.icon;
+            const isSelected = activeCategory === c.id;
             return (
-              <div
-                key={item.step}
-                className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-300 hover:shadow-md group"
+              <Link
+                key={c.id}
+                href={isAuthenticated ? `/parking?type=${c.id}` : `/login?redirect=/parking?type=${c.id}`}
+                onClick={() => setActiveCategory(c.id)}
+                className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black shrink-0 transition-all duration-200 cursor-pointer ${
+                  isSelected
+                    ? "bg-[#5669FF] text-white shadow-lg shadow-[#5669FF]/30 scale-105"
+                    : "bg-white text-[#747688] border border-[#EBEAEE] hover:border-[#5669FF]/40 hover:text-[#120D26]"
+                }`}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 group-hover:scale-110 transition">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="text-2xl font-mono font-black text-slate-200">{item.step}</span>
+                <div className={`flex h-7 w-7 items-center justify-center rounded-xl ${isSelected ? "bg-white/20 text-white" : "bg-[#F0F1F7] text-[#5669FF]"}`}>
+                  <Icon className="h-4 w-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
-              </div>
+                <span>{c.label}</span>
+              </Link>
             );
           })}
         </div>
       </section>
 
-      {/* 3. FEATURED LIVE PARKING LOCATIONS */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-600">Live Inventory</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-1">Popular Smart Parking Hubs</h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Real-time slot availability from verified commercial multi-level locations.
-            </p>
+      {/* 3. UPCOMING & POPULAR SMART FACILITIES (EventHub Grid) */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Flame className="h-5 w-5 text-[#F0635A]" />
+            <h2 className="text-xl sm:text-2xl font-black text-[#120D26]">Featured Smart Parking Hubs</h2>
           </div>
           <Link
-            href="/parking"
-            className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:underline"
+            href={isAuthenticated ? "/parking" : "/login?redirect=/parking"}
+            className="text-xs font-bold text-[#5669FF] hover:underline flex items-center gap-1"
           >
-            Explore All Locations
-            <ChevronRight className="h-4 w-4" />
+            View All <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-80 rounded-3xl bg-slate-100 animate-pulse border border-slate-200" />
+              <div key={i} className="h-80 rounded-3xl bg-white border border-[#EBEAEE] shadow-sm animate-pulse" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {featuredParkings.map((p) => (
               <ParkingCard key={p.id} parking={p} />
             ))}
@@ -191,124 +183,125 @@ export default function LandingPage() {
         )}
       </section>
 
-      {/* 4. PLATFORM FEATURES */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 sm:p-12 shadow-sm">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">Why Choose ParkEase?</h2>
-            <p className="text-slate-500 mt-2 text-sm">
-              We provide enterprise-grade infrastructure built for everyday drivers.
+      {/* 4. EVENTHUB PROMO / VIP PASS CARD */}
+      <section className="relative overflow-hidden rounded-3xl border border-[#EBEAEE] bg-gradient-to-r from-[#5669FF]/10 via-[#F8F9FE] to-[#F0635A]/10 p-6 sm:p-10 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#5669FF] px-3.5 py-1 text-[11px] font-extrabold text-white">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Smart Driver Pass</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black text-[#120D26]">
+              Claim 100 Free Credits on Signup
+            </h3>
+            <p className="text-xs sm:text-sm text-[#747688] font-medium">
+              Start reserving prime multi-level parking slots instantly. No card required for initial test reservations.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "Live GPS & Leaflet Map", desc: "High-accuracy Haversine proximity calculations dynamically display available spots.", icon: MapPin },
-              { title: "Row-Locked Concurrency", desc: "PostgreSQL transactional row locking prevents race conditions.", icon: ShieldCheck },
-              { title: "Credit Wallet & Top-ups", desc: "100 welcome credits upon registration with seamless checkout.", icon: Wallet },
-              { title: "Encrypted QR Smart Pass", desc: "Cryptographically signed QR tokens for authorized entry.", icon: QrCode },
-              { title: "Multi-Role Dashboards", desc: "Dedicated portals for drivers, facility managers, and admins.", icon: Users },
-              { title: "Hassle-free Cancellation", desc: "Cancel upcoming bookings for instant credit refunds.", icon: Zap },
-            ].map((f, idx) => {
-              const Icon = f.icon;
-              return (
-                <div key={idx} className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <h3 className="font-bold text-slate-900 text-sm">{f.title}</h3>
+
+          <Link
+            href={isAuthenticated ? "/dashboard" : "/register"}
+            className="flex items-center gap-2 px-6 py-3.5 rounded-2xl text-xs font-black text-white bg-[#5669FF] hover:bg-[#4657E5] shadow-lg shadow-[#5669FF]/30 active:scale-95 transition-all shrink-0"
+          >
+            <span>{isAuthenticated ? "My Dashboard" : "Register Now"}</span>
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
+              <ArrowRight className="h-3 w-3" />
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* 5. HOW EVENTHUB PARKING WORKS */}
+      <section className="rounded-3xl border border-[#EBEAEE] bg-white p-6 sm:p-10 shadow-sm space-y-8">
+        <div className="text-center max-w-xl mx-auto space-y-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[#5669FF] bg-[#5669FF]/10 px-3.5 py-1 rounded-full">
+            Touchless Smart Flow
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#120D26]">How EventHub Parking Works</h2>
+          <p className="text-xs text-[#747688]">
+            Four effortless steps from finding a bay to QR pass smart gate entry
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            {
+              step: "01",
+              title: "Discover Nearby",
+              desc: "Locate live parking facilities with real-time bay counters on the map.",
+              icon: MapPin,
+              color: "text-[#5669FF]",
+              bg: "bg-[#5669FF]/10",
+            },
+            {
+              step: "02",
+              title: "Select Slot & Time",
+              desc: "Choose Car, SUV, EV, or Bike bays and set your arrival duration.",
+              icon: Car,
+              color: "text-[#F0635A]",
+              bg: "bg-[#F0635A]/10",
+            },
+            {
+              step: "03",
+              title: "Instant Wallet Lock",
+              desc: "Confirm using your credits wallet. The database locks your bay immediately.",
+              icon: Zap,
+              color: "text-[#29D697]",
+              bg: "bg-[#29D697]/10",
+            },
+            {
+              step: "04",
+              title: "Scan Digital QR Pass",
+              desc: "Show your digital pass to the facility manager at entry and exit gates.",
+              icon: ShieldCheck,
+              color: "text-[#9353B1]",
+              bg: "bg-[#9353B1]/10",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.step} className="p-5 rounded-2xl bg-[#F8F9FE] border border-[#EBEAEE] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${item.bg} ${item.color}`}>
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
+                  <span className="font-mono font-black text-xl text-[#EBEAEE]">{item.step}</span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. TESTIMONIALS */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-600">Driver Reviews</span>
-          <h2 className="text-3xl font-extrabold text-slate-900 mt-1">Loved by Commuters</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              name: "Vikram R.",
-              city: "Vijayawada",
-              comment: "No more driving around MG Road hunting for space during shopping hours. The QR code opened the gate instantly!",
-              rating: 5,
-            },
-            {
-              name: "Sneha Reddy",
-              city: "Hyderabad",
-              comment: "Booking my EV parking spot at HITEC City saves me 25 minutes every morning. The credit wallet is super smooth.",
-              rating: 5,
-            },
-            {
-              name: "Anand M.",
-              city: "Visakhapatnam",
-              comment: "Clean multi-level bays and exact slot selection (A04). Parking managers verified my entry in seconds.",
-              rating: 5,
-            },
-          ].map((t, idx) => (
-            <div key={idx} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-3">
-              <div className="flex items-center gap-1 text-amber-400">
-                {[...Array(t.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                ))}
+                <h4 className="text-sm font-extrabold text-[#120D26]">{item.title}</h4>
+                <p className="text-xs text-[#747688] leading-relaxed">{item.desc}</p>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed italic">"{t.comment}"</p>
-              <div className="border-t border-slate-100 pt-3">
-                <div className="text-xs font-bold text-slate-900">{t.name}</div>
-                <div className="text-[10px] text-slate-500">{t.city}</div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
-      {/* 6. FAQ */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <div className="text-center mb-10">
-          <HelpCircle className="h-8 w-8 text-slate-400 mx-auto mb-3" />
-          <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+      {/* 6. CALL TO ACTION FOOTER */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#120D26] p-8 sm:p-12 text-white shadow-2xl text-center space-y-4">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5669FF]/20 border border-[#5669FF]/30 text-xs font-bold text-[#5669FF]">
+          <ShieldCheck className="h-4 w-4" />
+          <span>Real-time Smart Hub Network</span>
         </div>
+        <h2 className="text-2xl sm:text-4xl font-black text-white max-w-2xl mx-auto">
+          Ready for Seamless Parking Bookings?
+        </h2>
+        <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto font-medium">
+          Join thousands of drivers, facility managers, and parking operations across the city.
+        </p>
 
-        <div className="space-y-4">
-          {[
-            { q: "How do I get my 100 free welcome credits?", a: "Simply create an account on ParkEase. 100 welcome credits are automatically deposited into your wallet instantly upon registration." },
-            { q: "How do I pay for parking?", a: "We use a digital Credits system. You can purchase credit packages using our simulated payment gateway in your Wallet. 1 Credit = ₹1 INR." },
-            { q: "Can I cancel my reservation?", a: "Yes, you can cancel any UPCOMING reservation with 1-click before the start time. 100% of your credits will be instantly refunded to your wallet." },
-            { q: "How do I enter the parking facility?", a: "Once your booking is confirmed, you'll receive a cryptographically signed QR Smart Pass. Simply show this QR code to the facility manager or scanner at the gate." },
-          ].map((faq, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <h4 className="font-bold text-slate-900 text-sm">{faq.q}</h4>
-              <p className="text-slate-500 text-xs mt-2 leading-relaxed">{faq.a}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. CTA BANNER */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="rounded-3xl bg-emerald-600 p-8 sm:p-12 text-center shadow-lg">
-          <div className="max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-black text-white">Stop Circling. Start Parking.</h2>
-            <p className="text-xs sm:text-sm text-emerald-50">
-              Join thousands of smart drivers enjoying guaranteed parking reservations and seamless QR check-ins.
-            </p>
-            <div className="flex justify-center mt-8">
-              <Link
-                href="/register"
-                className="px-8 py-4 rounded-2xl text-sm font-bold text-emerald-700 bg-white hover:bg-slate-50 transition shadow-sm active:scale-95"
-              >
-                Create Free Account
-              </Link>
-            </div>
-          </div>
+        <div className="pt-4 flex flex-wrap justify-center gap-3">
+          <Link
+            href={isAuthenticated ? "/dashboard" : "/register"}
+            className="flex items-center gap-2 px-8 py-3.5 rounded-2xl text-xs font-extrabold text-white bg-[#5669FF] hover:bg-[#4657E5] shadow-lg shadow-[#5669FF]/30 active:scale-95 transition-all"
+          >
+            <span>{isAuthenticated ? "Open My Dashboard" : "Claim 100 Free Credits"}</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href={isAuthenticated ? "/map" : "/login?redirect=/map"}
+            className="px-8 py-3.5 rounded-2xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/20 transition"
+          >
+            View Live GPS Map
+          </Link>
         </div>
       </section>
     </div>

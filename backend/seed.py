@@ -68,7 +68,7 @@ def seed_database():
         )
         mgr2 = User(
             full_name="Rajesh Varma (Hyderabad & Vizag Manager)",
-            email="manager2@parkease.local",
+            email="manager2@parkease.com",
             phone="+91 98480 11223",
             password_hash=get_password_hash("Manager@12345"),
             role=UserRole.PARKING_MANAGER.value,

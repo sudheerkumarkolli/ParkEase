@@ -38,12 +38,12 @@ export default function AdminBookingsPage() {
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl">
         
-        <div className="border-b border-slate-800 pb-4">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
+        <div className="border-b border-slate-100 pb-4">
+          <h1 className="text-2xl font-black text-slate-800 flex items-center gap-2">
             <CalendarCheck2 className="h-6 w-6 text-purple-400" />
             Global Bookings Master Ledger
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Audit all customer reservations, slot assignments, and status transitions system-wide
           </p>
         </div>
@@ -57,11 +57,11 @@ export default function AdminBookingsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by booking number, plate number..."
-              className="w-full rounded-2xl border border-slate-800 bg-slate-900/60 pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+              className="w-full rounded-2xl border border-slate-100 bg-white/60 pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
             />
           </div>
 
-          <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-800 text-xs">
+          <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-100 text-xs">
             {["ALL", "UPCOMING", "ACTIVE", "COMPLETED", "CANCELLED"].map((st) => (
               <button
                 key={st}
@@ -69,7 +69,7 @@ export default function AdminBookingsPage() {
                 className={`px-3 py-1.5 rounded-xl font-semibold transition ${
                   statusFilter === st
                     ? "bg-purple-500 text-white shadow-md"
-                    : "text-slate-400 hover:text-white"
+                    : "text-slate-500 hover:text-white"
                 }`}
               >
                 {st}
@@ -79,7 +79,7 @@ export default function AdminBookingsPage() {
         </div>
 
         {/* Bookings Table */}
-        <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl shadow-xl">
+        <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white/60 backdrop-blur-xl shadow-xl">
           {loading ? (
             <div className="p-8 text-center text-xs text-slate-500">Loading bookings...</div>
           ) : bookings.length === 0 ? (
@@ -87,7 +87,7 @@ export default function AdminBookingsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-800 bg-slate-950/70 text-slate-400 uppercase font-semibold text-[10px]">
+                <thead className="border-b border-slate-100 bg-slate-950/70 text-slate-500 uppercase font-semibold text-[10px]">
                   <tr>
                     <th className="p-4">Pass ID</th>
                     <th className="p-4">Vehicle Plate</th>
@@ -99,12 +99,12 @@ export default function AdminBookingsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
                   {bookings.map((b) => (
-                    <tr key={b.id} className="hover:bg-slate-800/30 transition">
+                    <tr key={b.id} className="hover:bg-slate-50/30 transition">
                       <td className="p-4 font-mono font-bold text-white">#{b.booking_number}</td>
                       <td className="p-4 font-mono font-bold text-slate-200">
                         {b.vehicle_number} ({b.vehicle_type})
                       </td>
-                      <td className="p-4 text-slate-400">{b.duration_hours} hrs</td>
+                      <td className="p-4 text-slate-500">{b.duration_hours} hrs</td>
                       <td className="p-4 font-bold text-emerald-400">{b.credits} Cr</td>
                       <td className="p-4">
                         <span
@@ -115,7 +115,7 @@ export default function AdminBookingsPage() {
                           {b.status}
                         </span>
                       </td>
-                      <td className="p-4 text-right text-slate-400 text-[11px]">
+                      <td className="p-4 text-right text-slate-500 text-[11px]">
                         {formatDateTime(b.created_at)}
                       </td>
                     </tr>

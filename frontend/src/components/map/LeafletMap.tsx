@@ -114,8 +114,8 @@ export default function LeafletMap({
         className: "custom-user-marker",
         html: `
           <div class="relative flex items-center justify-center">
-            <div class="absolute h-8 w-8 rounded-full bg-emerald-500/30 animate-ping"></div>
-            <div class="h-5 w-5 rounded-full bg-emerald-500 border-2 border-white shadow-xl flex items-center justify-center">
+            <div class="absolute h-8 w-8 rounded-full bg-violet-500/30 animate-ping"></div>
+            <div class="h-5 w-5 rounded-full bg-violet-500 border-2 border-white shadow-xl flex items-center justify-center">
               <div class="h-2 w-2 rounded-full bg-white"></div>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function LeafletMap({
   }, [mapReady, parkings, userLocation, radiusKm]);
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
+    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-slate-100 bg-slate-950 shadow-2xl">
       {/* Leaflet DOM container */}
       <div id="leaflet-map-container" className="w-full h-full min-h-[500px] z-10" />
 
@@ -197,7 +197,7 @@ export default function LeafletMap({
         <button
           onClick={detectLocation}
           disabled={locating}
-          className="pointer-events-auto flex items-center gap-2 rounded-xl bg-slate-900/90 border border-emerald-500/40 px-4 py-2.5 text-sm font-semibold text-emerald-400 backdrop-blur-xl shadow-xl hover:bg-emerald-500/20 transition transform active:scale-95"
+          className="pointer-events-auto flex items-center gap-2 rounded-xl bg-white/90 border border-violet-500/40 px-4 py-2.5 text-sm font-semibold text-violet-400 backdrop-blur-xl shadow-xl hover:bg-violet-500/20 transition transform active:scale-95"
         >
           <Navigation className={`h-4 w-4 ${locating ? "animate-spin" : ""}`} />
           {locating ? "Locating You..." : "Find Parking Near Me"}
@@ -205,14 +205,14 @@ export default function LeafletMap({
 
         {/* Radius Filter Pills */}
         {onRadiusChange && (
-          <div className="pointer-events-auto flex items-center gap-1.5 rounded-xl bg-slate-900/90 border border-slate-800 p-1 backdrop-blur-xl shadow-xl text-xs font-semibold text-slate-300">
-            <span className="px-2 text-slate-400 hidden sm:inline">Radius:</span>
+          <div className="pointer-events-auto flex items-center gap-1.5 rounded-xl bg-white/90 border border-slate-100 p-1 backdrop-blur-xl shadow-xl text-xs font-semibold text-slate-600">
+            <span className="px-2 text-slate-500 hidden sm:inline">Radius:</span>
             {[5, 10, 20, 50].map((r) => (
               <button
                 key={r}
                 onClick={() => onRadiusChange(r)}
                 className={`px-2.5 py-1 rounded-lg transition ${
-                  radiusKm === r ? "bg-emerald-500 text-slate-950 font-bold" : "hover:text-white"
+                  radiusKm === r ? "bg-violet-500 text-slate-950 font-bold" : "hover:text-white"
                 }`}
               >
                 {r} km
@@ -223,9 +223,9 @@ export default function LeafletMap({
       </div>
 
       {/* Status Legend Overlay */}
-      <div className="absolute bottom-4 left-4 z-20 hidden sm:flex items-center gap-3 rounded-xl bg-slate-900/90 border border-slate-800 px-3 py-2 text-xs font-medium text-slate-300 backdrop-blur-xl shadow-lg">
+      <div className="absolute bottom-4 left-4 z-20 hidden sm:flex items-center gap-3 rounded-xl bg-white/90 border border-slate-100 px-3 py-2 text-xs font-medium text-slate-600 backdrop-blur-xl shadow-lg">
         <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          <span className="h-2.5 w-2.5 rounded-full bg-violet-500" />
           <span>Available (&gt;30%)</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -240,36 +240,36 @@ export default function LeafletMap({
 
       {/* Floating Selected Parking Modal Card */}
       {activePopup && (
-        <div className="absolute bottom-4 right-4 max-w-sm w-[calc(100%-2rem)] z-30 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-4">
+        <div className="absolute bottom-4 right-4 max-w-sm w-[calc(100%-2rem)] z-30 rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-4">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-violet-400">
                 {activePopup.city || "Smart Parking"}
               </span>
               <h3 className="text-base font-bold text-white leading-tight">{activePopup.name}</h3>
-              <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{activePopup.address}</p>
+              <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{activePopup.address}</p>
             </div>
             <button
               onClick={() => setActivePopup(null)}
-              className="text-slate-400 hover:text-white p-1"
+              className="text-slate-500 hover:text-white p-1"
             >
               ✕
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 my-3 rounded-xl bg-slate-950/60 p-2.5 border border-slate-800/80 text-center">
+          <div className="grid grid-cols-3 gap-2 my-3 rounded-xl bg-slate-950/60 p-2.5 border border-slate-100/80 text-center">
             <div>
-              <div className="text-[10px] text-slate-400">Available</div>
-              <div className="text-sm font-extrabold text-emerald-400">
+              <div className="text-[10px] text-slate-500">Available</div>
+              <div className="text-sm font-extrabold text-violet-400">
                 {activePopup.available_slots} / {activePopup.total_slots}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-400">Rate/hr</div>
+              <div className="text-[10px] text-slate-500">Rate/hr</div>
               <div className="text-sm font-extrabold text-white">{activePopup.price_per_hour} Cr</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-400">Rating</div>
+              <div className="text-[10px] text-slate-500">Rating</div>
               <div className="text-sm font-extrabold text-amber-400">⭐ {activePopup.rating}</div>
             </div>
           </div>
@@ -277,13 +277,13 @@ export default function LeafletMap({
           <div className="flex items-center gap-2">
             <Link
               href={`/parking/${activePopup.id}`}
-              className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition"
+              className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-semibold text-slate-600 bg-slate-50 hover:bg-slate-700 hover:text-white transition"
             >
               View Details
             </Link>
             <Link
               href={`/booking?parking_id=${activePopup.id}`}
-              className="flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 transition shadow-md shadow-emerald-500/20"
+              className="flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-violet-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 transition shadow-md shadow-violet-500/20"
             >
               Book Now
               <ChevronRight className="h-3.5 w-3.5" />

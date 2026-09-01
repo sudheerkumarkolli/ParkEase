@@ -181,8 +181,8 @@ function BookingFlow() {
         <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400">
           Precision Reservation
         </span>
-        <h1 className="text-3xl font-black text-white">Reserve Your Smart Parking Bay</h1>
-        <p className="text-xs text-slate-400">
+        <h1 className="text-3xl font-black text-slate-800">Reserve Your Smart Parking Bay</h1>
+        <p className="text-xs text-slate-500">
           Locked directly in our database with guaranteed arrival access and instant QR pass
         </p>
       </div>
@@ -200,8 +200,8 @@ function BookingFlow() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* STEP 1: Select Parking Hub */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
               <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                 1
               </div>
@@ -213,7 +213,7 @@ function BookingFlow() {
                 value={selectedParkingId || ""}
                 onChange={(e) => setSelectedParkingId(parseInt(e.target.value))}
                 aria-label="Select Parking Location"
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               >
                 {parkings.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -225,8 +225,8 @@ function BookingFlow() {
           </div>
 
           {/* STEP 2: Vehicle Information */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
               <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                 2
               </div>
@@ -235,7 +235,7 @@ function BookingFlow() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Plate Number</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Plate Number</label>
                 <div className="relative">
                   <Car className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <input
@@ -244,17 +244,17 @@ function BookingFlow() {
                     value={vehicleNumber}
                     onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
                     placeholder="AP 16 BQ 7788"
-                    className="w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-3 text-xs uppercase font-mono font-bold text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-2xl border border-slate-100 bg-slate-950 pl-10 pr-4 py-3 text-xs uppercase font-mono font-bold text-white focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Vehicle Type</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vehicle Type</label>
                 <select
                   value={vehicleType}
                   onChange={(e) => setVehicleType(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 px-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 px-4 py-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="Car">Car</option>
                   <option value="SUV">SUV</option>
@@ -266,8 +266,8 @@ function BookingFlow() {
           </div>
 
           {/* STEP 3: Slot Matrix Selection */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                   3
@@ -287,8 +287,8 @@ function BookingFlow() {
           </div>
 
           {/* STEP 4: Date, Time & Duration */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <div className="rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl space-y-4">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
               <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                 4
               </div>
@@ -297,33 +297,33 @@ function BookingFlow() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Date</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Date</label>
                 <input
                   type="date"
                   required
                   value={bookingDate}
                   onChange={(e) => setBookingDate(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Arrival Time</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Arrival Time</label>
                 <input
                   type="time"
                   required
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Duration (Hours)</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Duration (Hours)</label>
                 <select
                   value={durationHours}
                   onChange={(e) => setDurationHours(parseFloat(e.target.value))}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white focus:border-emerald-500 focus:outline-none"
                 >
                   {[1, 2, 3, 4, 5, 6, 8, 12, 24].map((h) => (
                     <option key={h} value={h}>
@@ -338,57 +338,57 @@ function BookingFlow() {
 
         {/* Right 1 Column: Checkout & Summary Pass */}
         <div className="space-y-6">
-          <div className="sticky top-24 rounded-3xl border border-slate-800 bg-slate-900/90 p-6 backdrop-blur-2xl shadow-2xl space-y-6">
-            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">
+          <div className="sticky top-24 rounded-3xl border border-slate-100 bg-white/90 p-6 backdrop-blur-2xl shadow-2xl space-y-6">
+            <h3 className="text-base font-bold text-white border-b border-slate-100 pb-3">
               Booking Summary
             </h3>
 
             {/* Parking Location Card */}
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400">Destination</span>
+              <span className="text-[10px] uppercase font-bold text-slate-500">Destination</span>
               <div className="text-sm font-extrabold text-white">{selectedParking?.name}</div>
-              <p className="text-xs text-slate-400 line-clamp-1">{selectedParking?.address}</p>
+              <p className="text-xs text-slate-500 line-clamp-1">{selectedParking?.address}</p>
             </div>
 
             {/* Slot & Time */}
-            <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-3 rounded-2xl border border-slate-800">
+            <div className="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-3 rounded-2xl border border-slate-100">
               <div>
-                <div className="text-[10px] text-slate-400">Bay No.</div>
+                <div className="text-[10px] text-slate-500">Bay No.</div>
                 <div className="font-mono font-bold text-emerald-400 text-sm">
                   {slots.find((s) => s.id === selectedSlotId)?.slot_number || "Not Selected"}
                 </div>
               </div>
               <div>
-                <div className="text-[10px] text-slate-400">Duration</div>
+                <div className="text-[10px] text-slate-500">Duration</div>
                 <div className="font-bold text-white text-sm">{durationHours} Hours</div>
               </div>
             </div>
 
             {/* Price calculation */}
-            <div className="space-y-2 border-t border-slate-800 pt-4 text-xs">
-              <div className="flex justify-between text-slate-400">
+            <div className="space-y-2 border-t border-slate-100 pt-4 text-xs">
+              <div className="flex justify-between text-slate-500">
                 <span>Hourly Rate</span>
                 <span>{ratePerHour} Credits / hr</span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-slate-500">
                 <span>Duration</span>
                 <span>{durationHours} hrs</span>
               </div>
-              <div className="flex justify-between text-sm font-extrabold text-white border-t border-slate-800 pt-2">
+              <div className="flex justify-between text-sm font-extrabold text-white border-t border-slate-100 pt-2">
                 <span>Total Payable</span>
                 <span className="text-emerald-400">{totalCredits} Credits</span>
               </div>
             </div>
 
             {/* Wallet Balance Check */}
-            <div className="rounded-2xl bg-slate-950 p-4 border border-slate-800 space-y-2">
+            <div className="rounded-2xl bg-slate-950 p-4 border border-slate-100 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">Your Wallet Balance:</span>
+                <span className="text-slate-500">Your Wallet Balance:</span>
                 <span className="font-extrabold text-white">{currentBalance} Credits</span>
               </div>
 
               {!isBalanceSufficient && (
-                <div className="pt-2 border-t border-slate-800/80">
+                <div className="pt-2 border-t border-slate-100/80">
                   <div className="text-[11px] text-rose-400 font-semibold mb-2">
                     ⚠️ Short of {totalCredits - currentBalance} Credits
                   </div>
@@ -412,7 +412,7 @@ function BookingFlow() {
               <ArrowRight className="h-4 w-4" />
             </button>
 
-            <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 text-center">
+            <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 text-center">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
               <span>Full credit refund available prior to start time</span>
             </div>
@@ -425,7 +425,7 @@ function BookingFlow() {
 
 export default function BookingPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-xs text-slate-400">Loading booking engine...</div>}>
+    <Suspense fallback={<div className="text-center py-20 text-xs text-slate-500">Loading booking engine...</div>}>
       <BookingFlow />
     </Suspense>
   );

@@ -42,7 +42,7 @@ export function getStatusBadgeClass(status: string): string {
     case "ACTIVE":
     case "COMPLETED":
     case "APPROVED":
-      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+      return "bg-violet-500/10 text-violet-400 border-violet-500/30";
     case "UPCOMING":
     case "RESERVED":
     case "PENDING":
@@ -55,12 +55,15 @@ export function getStatusBadgeClass(status: string): string {
     case "MAINTENANCE":
       return "bg-zinc-500/10 text-zinc-400 border-zinc-500/30";
     default:
-      return "bg-slate-500/10 text-slate-400 border-slate-500/30";
+      return "bg-slate-500/10 text-slate-500 border-slate-500/30";
   }
 }
 
 export function getErrorMessage(err: any, fallback = "An unexpected error occurred"): string {
   if (!err) return fallback;
+  if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
+    return "Unable to connect to backend server. Please verify the backend service is running on port 8000.";
+  }
   const detail = err.response?.data?.detail;
   if (typeof detail === "string") return detail;
   if (Array.isArray(detail)) {
@@ -71,3 +74,4 @@ export function getErrorMessage(err: any, fallback = "An unexpected error occurr
   }
   return err.message || fallback;
 }
+

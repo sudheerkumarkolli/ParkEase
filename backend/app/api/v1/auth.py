@@ -1,17 +1,21 @@
 import uuid
+import random
 import logging
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database.session import get_db
-from app.models.user import User, RefreshToken, UserRole
+from app.models.user import User, RefreshToken, EmailOTP, UserRole
 from app.schemas.auth import (
     RegisterRequest,
     LoginRequest,
     TokenResponse,
     RefreshRequest,
     ForgotPasswordRequest,
-    ResetPasswordRequest
+    ResetPasswordRequest,
+    SendOTPRequest,
+    SendOTPResponse,
+    VerifyOTPRequest
 )
 from app.core.security import (
     verify_password,
@@ -24,9 +28,12 @@ from app.core.config import settings
 from app.core.exceptions import BadRequestException, UnauthorizedException, ConflictException
 from app.services.wallet_service import add_welcome_credits, get_or_create_wallet
 from app.services.auth_service import get_current_user
+from app.database.mongodb import get_users_collection, get_otps_collection
 
 logger = logging.getLogger(__name__)
+
 router = APIRouter()
+
 
 # In-memory token store for dev password resets (or can use DB/Redis)
 PASSWORD_RESET_TOKENS = {}
@@ -36,14 +43,34 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if req.password != req.confirm_password:
         raise BadRequestException("Passwords do not match")
     
-    existing = db.query(User).filter(User.email == req.email.lower()).first()
+    email_clean = req.email.lower().strip()
+    existing = db.query(User).filter(User.email == email_clean).first()
     if existing:
         raise ConflictException("An account with this email already exists")
+
+    # If OTP is provided, verify it against the EmailOTP table
+    if req.otp:
+        otp_record = db.query(EmailOTP).filter(
+            EmailOTP.email == email_clean,
+            EmailOTP.otp_code == req.otp.strip(),
+            EmailOTP.is_used == False
+        ).order_by(EmailOTP.created_at.desc()).first()
+
+        if not otp_record:
+            raise UnauthorizedException("Invalid email verification code. Please check and try again.")
+
+        if otp_record.expires_at < datetime.utcnow():
+            otp_record.is_used = True
+            db.commit()
+            raise UnauthorizedException("Verification code has expired. Please request a new code.")
+
+        otp_record.is_used = True
+        db.commit()
 
     # Create User
     new_user = User(
         full_name=req.full_name,
-        email=req.email.lower(),
+        email=email_clean,
         phone=req.phone,
         password_hash=get_password_hash(req.password),
         role=UserRole.USER.value,
@@ -52,6 +79,7 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         is_active=True
     )
     db.add(new_user)
+
     db.commit()
     db.refresh(new_user)
 
@@ -167,7 +195,7 @@ def forgot_password(req: ForgotPasswordRequest, db: Session = Depends(get_db)):
     }
 
     print("\n" + "="*60)
-    print(f"🔑 [DEV PASSWORD RESET] Email: {req.email} | Token: {token}")
+    print(f"[DEV PASSWORD RESET] Email: {req.email} | Token: {token}")
     print("="*60 + "\n")
 
     return {
@@ -194,3 +222,155 @@ def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
 
     del PASSWORD_RESET_TOKENS[req.email.lower()]
     return {"message": "Password reset successfully. You can now log in with your new password."}
+
+@router.post("/send-otp", response_model=SendOTPResponse)
+def send_otp(req: SendOTPRequest, db: Session = Depends(get_db)):
+    email_clean = req.email.lower().strip()
+    
+    # Generate 6-digit numeric OTP code
+    otp_code = f"{random.randint(100000, 999999)}"
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+
+    # Invalidate prior unused OTPs for this email
+    db.query(EmailOTP).filter(
+        EmailOTP.email == email_clean,
+        EmailOTP.is_used == False
+    ).update({"is_used": True})
+
+    # Store OTP in database
+    otp_record = EmailOTP(
+        email=email_clean,
+        otp_code=otp_code,
+        expires_at=expires_at,
+        is_used=False
+    )
+    db.add(otp_record)
+    db.commit()
+
+    # Sync to MongoDB database
+    try:
+        mongo_otps = get_otps_collection()
+        if mongo_otps is not None:
+            mongo_otps.update_many({"email": email_clean, "is_used": False}, {"$set": {"is_used": True}})
+            mongo_otps.insert_one({
+                "email": email_clean,
+                "otp_code": otp_code,
+                "expires_at": expires_at,
+                "is_used": False,
+                "created_at": datetime.utcnow()
+            })
+    except Exception as me:
+        logger.warning(f"MongoDB OTP sync notice: {me}")
+
+    # High-visibility terminal output for the OTP code
+    print("\n" + "#"*64)
+    print("  >>> REAL-TIME EMAIL VERIFICATION CODE (OTP) <<<")
+    print(f"  Target User Email : {email_clean}")
+    print(f"  6-DIGIT OTP CODE  : >>> [ {otp_code} ] <<<")
+    print(f"  Expiration Time   : {expires_at.strftime('%Y-%m-%d %H:%M:%S')} UTC (10 mins)")
+    print("#"*64 + "\n", flush=True)
+
+    return {
+        "message": f"Verification code sent to {email_clean}",
+        "email": email_clean,
+        "dev_otp": None
+    }
+
+
+
+@router.post("/verify-otp", response_model=TokenResponse)
+def verify_otp(req: VerifyOTPRequest, db: Session = Depends(get_db)):
+    email_clean = req.email.lower().strip()
+    code_clean = req.otp.strip()
+
+    # Verify against Database
+    otp_record = db.query(EmailOTP).filter(
+        EmailOTP.email == email_clean,
+        EmailOTP.otp_code == code_clean,
+        EmailOTP.is_used == False
+    ).order_by(EmailOTP.created_at.desc()).first()
+
+    if not otp_record:
+        raise UnauthorizedException("Invalid verification code. Please check and try again.")
+
+    if otp_record.expires_at < datetime.utcnow():
+        otp_record.is_used = True
+        db.commit()
+        raise UnauthorizedException("Verification code has expired. Please request a new code.")
+
+    # Mark OTP as used
+    otp_record.is_used = True
+    db.commit()
+
+    # Look up user or auto-provision if not existing
+    user = db.query(User).filter(User.email == email_clean).first()
+    if not user:
+        # Auto-provision user account for email-first login
+        name_part = email_clean.split("@")[0].replace(".", " ").replace("_", " ").title()
+        user = User(
+            full_name=name_part or "ParkEase User",
+            email=email_clean,
+            password_hash=get_password_hash(uuid.uuid4().hex),
+            role=UserRole.USER.value,
+            vehicle_type="Car",
+            is_active=True
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        # Give welcome credits & wallet
+        wallet = add_welcome_credits(db, user.id, credits=settings.WELCOME_CREDITS)
+    else:
+        if not user.is_active:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is disabled. Please contact support.")
+        wallet = get_or_create_wallet(db, user.id)
+
+    # Issue JWT tokens
+    access_token = create_access_token(subject=user.id, role=user.role)
+    refresh_token = create_refresh_token(subject=user.id)
+
+    expires_at = datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    db_refresh = RefreshToken(user_id=user.id, token=refresh_token, expires_at=expires_at)
+    db.add(db_refresh)
+    db.commit()
+
+    user_data = {
+        "id": user.id,
+        "full_name": user.full_name,
+        "email": user.email,
+        "role": user.role,
+        "phone": user.phone,
+        "vehicle_number": user.vehicle_number,
+        "vehicle_type": user.vehicle_type,
+        "wallet_balance": wallet.balance
+    }
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": user_data
+    }
+
+
+@router.get("/me")
+def get_current_authenticated_user(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    wallet = get_or_create_wallet(db, current_user.id)
+    return {
+        "id": current_user.id,
+        "full_name": current_user.full_name,
+        "email": current_user.email,
+        "role": current_user.role,
+        "phone": current_user.phone,
+        "vehicle_number": current_user.vehicle_number,
+        "vehicle_type": current_user.vehicle_type,
+        "is_active": current_user.is_active,
+        "wallet_balance": wallet.balance,
+        "created_at": current_user.created_at
+    }
+
+

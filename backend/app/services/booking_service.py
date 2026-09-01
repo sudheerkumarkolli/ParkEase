@@ -22,7 +22,7 @@ def create_booking(
     db: Session,
     user_id: int,
     parking_id: int,
-    slot_id: int,
+    slot_id: Optional[int],
     vehicle_number: str,
     vehicle_type: str,
     start_time: datetime,
@@ -40,25 +40,36 @@ def create_booking(
     if parking.status != ParkingStatus.ACTIVE.value:
         raise BadRequestException(f"Parking location is currently {parking.status.lower()} and not accepting bookings")
 
-    # 3. Lock and Verify Slot
-    try:
-        # Use with_for_update() if supported by DB (Postgres), fallback gracefully if SQLite
-        slot_query = db.query(ParkingSlot).filter(
-            ParkingSlot.id == slot_id,
-            ParkingSlot.parking_id == parking_id
-        )
-        if db.bind.dialect.name == "postgresql":
-            slot = slot_query.with_for_update().first()
-        else:
-            slot = slot_query.first()
-    except Exception:
-        slot = db.query(ParkingSlot).filter(
-            ParkingSlot.id == slot_id,
-            ParkingSlot.parking_id == parking_id
+    # 3. Auto-allocate slot if not explicitly provided
+    if not slot_id or slot_id == 0:
+        available_slot = db.query(ParkingSlot).filter(
+            ParkingSlot.parking_id == parking_id,
+            ParkingSlot.status == SlotStatus.AVAILABLE.value
         ).first()
+        if not available_slot:
+            raise BadRequestException("No available parking slots in this location")
+        slot = available_slot
+        slot_id = slot.id
+    else:
+        # Lock and Verify Slot
+        try:
+            slot_query = db.query(ParkingSlot).filter(
+                ParkingSlot.id == slot_id,
+                ParkingSlot.parking_id == parking_id
+            )
+            if db.bind.dialect.name == "postgresql":
+                slot = slot_query.with_for_update().first()
+            else:
+                slot = slot_query.first()
+        except Exception:
+            slot = db.query(ParkingSlot).filter(
+                ParkingSlot.id == slot_id,
+                ParkingSlot.parking_id == parking_id
+            ).first()
 
     if not slot:
-        raise NotFoundException("Selected parking slot not found in this location")
+        raise NotFoundException("Selected parking slot was not found in this location")
+
 
     if slot.status == SlotStatus.MAINTENANCE.value:
         raise BadRequestException("This parking slot is currently under maintenance")

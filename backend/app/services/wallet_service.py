@@ -51,16 +51,37 @@ def add_welcome_credits(db: Session, user_id: int, credits: int = 100) -> Wallet
 def purchase_credits(
     db: Session,
     user_id: int,
-    package_name: str,
+    package_name: Optional[str] = None,
+    amount: Optional[int] = None,
     payment_method: str = "SIMULATED_RAZORPAY"
 ) -> dict:
-    package = next((p for p in CREDIT_PACKAGES if p["name"].lower() == package_name.lower() or p["id"] == package_name.lower()), None)
-    if not package:
-        raise BadRequestException(f"Invalid credit package: {package_name}")
+    if amount and amount > 0:
+        credits_to_add = int(amount)
+        amount_paid = float(amount)
+        pkg_display_name = f"Custom Recharge ({credits_to_add} Credits)"
+    elif package_name:
+        package = next((p for p in CREDIT_PACKAGES if p["name"].lower() == package_name.lower() or p["id"] == package_name.lower()), None)
+        if not package:
+            # Fallback if package_name is a numeric amount
+            try:
+                num_amt = int(package_name)
+                credits_to_add = num_amt
+                amount_paid = float(num_amt)
+                pkg_display_name = f"Custom Recharge ({credits_to_add} Credits)"
+            except ValueError:
+                raise BadRequestException(f"Invalid credit package: {package_name}")
+        else:
+            credits_to_add = package["credits"]
+            amount_paid = package["price_inr"]
+            pkg_display_name = package["name"]
+    else:
+        # Default top-up 100 credits
+        credits_to_add = 100
+        amount_paid = 100.0
+        pkg_display_name = "Starter Top-Up"
 
     wallet = get_or_create_wallet(db, user_id)
-    credits_to_add = package["credits"]
-    amount_paid = package["price_inr"]
+
     
     tx_id = f"PAY-{uuid.uuid4().hex[:10].upper()}"
     
@@ -69,7 +90,7 @@ def purchase_credits(
         user_id=user_id,
         amount=amount_paid,
         credits=credits_to_add,
-        package_name=package["name"],
+        package_name=pkg_display_name,
         payment_method=payment_method,
         transaction_id=tx_id,
         status=TransactionStatus.COMPLETED.value
@@ -84,11 +105,12 @@ def purchase_credits(
         wallet_id=wallet.id,
         type=TransactionType.CREDIT_PURCHASE.value,
         credits=credits_to_add,
-        description=f"Purchased {package['name']} package ({credits_to_add} Credits for ₹{amount_paid})",
+        description=f"Purchased {pkg_display_name} ({credits_to_add} Credits for ₹{amount_paid})",
         reference_id=tx_id,
         status=TransactionStatus.COMPLETED.value
     )
     db.add(tx)
+
     
     # Create notification
     notif = Notification(

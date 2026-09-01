@@ -51,12 +51,12 @@ export default function SlotMatrix({
     const isSelected = selectedSlotId === slot.id;
 
     if (isSelected) {
-      return "bg-emerald-500 text-slate-950 ring-4 ring-emerald-400/40 font-extrabold scale-105 shadow-xl shadow-emerald-500/30";
+      return "bg-violet-500 text-slate-950 ring-4 ring-violet-400/40 font-extrabold scale-105 shadow-xl shadow-violet-500/30";
     }
 
     switch (slot.status) {
       case "AVAILABLE":
-        return "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-500/60 cursor-pointer shadow-sm";
+        return "bg-violet-500/10 text-violet-400 border border-violet-500/30 hover:bg-violet-500/20 hover:border-violet-500/60 cursor-pointer shadow-sm";
       case "OCCUPIED":
         return "bg-rose-500/10 text-rose-400/80 border border-rose-500/20 cursor-not-allowed opacity-75";
       case "RESERVED":
@@ -64,7 +64,7 @@ export default function SlotMatrix({
       case "MAINTENANCE":
         return "bg-zinc-800/80 text-zinc-500 border border-zinc-700 cursor-not-allowed opacity-60";
       default:
-        return "bg-slate-800 text-slate-400 border border-slate-700";
+        return "bg-slate-50 text-slate-500 border border-slate-200";
     }
   };
 
@@ -72,20 +72,20 @@ export default function SlotMatrix({
     <div className="space-y-6">
       
       {/* Top Filter & Legend */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white/60 border border-slate-100/80">
         
         {/* Vehicle Filter */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400">Filter Vehicle:</span>
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <span className="text-xs font-semibold text-slate-500">Filter Vehicle:</span>
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-100">
             {["ALL", "Car", "Bike", "SUV", "EV"].map((type) => (
               <button
                 key={type}
                 onClick={() => setVehicleFilter(type)}
                 className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
                   vehicleFilter === type
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-violet-500 text-slate-950 font-bold shadow-md"
+                    : "text-slate-500 hover:text-white"
                 }`}
               >
                 {type}
@@ -96,8 +96,8 @@ export default function SlotMatrix({
 
         {/* Legend */}
         <div className="flex flex-wrap items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5 text-emerald-400">
-            <span className="h-3 w-3 rounded bg-emerald-500/30 border border-emerald-500" />
+          <div className="flex items-center gap-1.5 text-violet-400">
+            <span className="h-3 w-3 rounded bg-violet-500/30 border border-violet-500" />
             <span>Available</span>
           </div>
           <div className="flex items-center gap-1.5 text-rose-400">
@@ -117,21 +117,21 @@ export default function SlotMatrix({
 
       {/* Grid of Sections */}
       {Object.keys(groupedSlots).length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-slate-800 rounded-2xl">
+        <div className="text-center py-12 border border-dashed border-slate-100 rounded-2xl">
           <Ban className="h-8 w-8 text-slate-600 mx-auto mb-2" />
-          <p className="text-slate-400 text-sm">No slots match the selected vehicle filter.</p>
+          <p className="text-slate-500 text-sm">No slots match the selected vehicle filter.</p>
         </div>
       ) : (
         Object.entries(groupedSlots).map(([section, sectionSlots]) => (
-          <div key={section} className="rounded-2xl border border-slate-800 bg-slate-950/40 p-5">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-800/80 pb-2">
+          <div key={section} className="rounded-2xl border border-slate-100 bg-slate-950/40 p-5">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-100/80 pb-2">
               <span className="text-sm font-extrabold text-slate-200 tracking-wider flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 text-xs">
+                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400 text-xs">
                   {section}
                 </span>
                 Section {section} Bays
               </span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500">
                 {sectionSlots.filter((s) => s.status === "AVAILABLE").length} Available / {sectionSlots.length} Total
               </span>
             </div>
@@ -174,7 +174,7 @@ export default function SlotMatrix({
                       ) : slot.status === "MAINTENANCE" ? (
                         <ShieldAlert className="h-4 w-4 text-zinc-500" />
                       ) : (
-                        <span className="text-[10px] uppercase font-bold text-emerald-400">Select</span>
+                        <span className="text-[10px] uppercase font-bold text-violet-400">Select</span>
                       )}
                     </div>
 
@@ -185,7 +185,7 @@ export default function SlotMatrix({
 
                     {/* Manager Mode Quick Badge */}
                     {isManager && (
-                      <span className="mt-1 text-[9px] underline text-slate-300">Toggle</span>
+                      <span className="mt-1 text-[9px] underline text-slate-600">Toggle</span>
                     )}
                   </div>
                 );
