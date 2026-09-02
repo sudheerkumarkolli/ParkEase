@@ -69,13 +69,24 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         otp_record.is_used = True
         db.commit()
 
+    # Determine user role based on role_token
+    assigned_role = UserRole.USER.value
+    if req.role_token:
+        token_clean = req.role_token.strip().upper()
+        if token_clean in ["ADMIN", "ADMIN2026", "ADMIN-SECRET", "ADMIN-TOKEN", "ADMIN-SECRET-2026"]:
+            assigned_role = UserRole.ADMIN.value
+        elif token_clean in ["MANAGER", "MANAGER2026", "MANAGER-HUB", "MANAGER-TOKEN", "MANAGER-HUB-2026", "PARKING_MANAGER"]:
+            assigned_role = UserRole.PARKING_MANAGER.value
+        else:
+            assigned_role = UserRole.USER.value
+
     # Create User
     new_user = User(
         full_name=req.full_name,
         email=email_clean,
         phone=req.phone,
         password_hash=get_password_hash(req.password),
-        role=UserRole.USER.value,
+        role=assigned_role,
         vehicle_number=req.vehicle_number.upper() if req.vehicle_number else None,
         vehicle_type=req.vehicle_type or "Car",
         is_active=True

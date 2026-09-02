@@ -52,7 +52,13 @@ class Payment(Base):
     package_name = Column(String(50), nullable=False)
     payment_method = Column(String(50), default="SIMULATED_RAZORPAY", nullable=False)
     transaction_id = Column(String(100), unique=True, index=True, nullable=False)
-    status = Column(String(50), default="COMPLETED", nullable=False)
+    qr_token = Column(String(255), unique=True, index=True, nullable=True)
+    status = Column(String(50), default="COMPLETED", nullable=False)  # PENDING_APPROVAL, COMPLETED, REJECTED
+    manager_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    parking_id = Column(Integer, ForeignKey("parking_locations.id", ondelete="SET NULL"), nullable=True)
+    approved_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    user = relationship("User", back_populates="payments")
+    user = relationship("User", foreign_keys=[user_id], back_populates="payments")
+    manager = relationship("User", foreign_keys=[manager_id])
+    parking = relationship("ParkingLocation")

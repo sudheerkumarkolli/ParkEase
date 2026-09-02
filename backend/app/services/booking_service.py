@@ -153,6 +153,8 @@ def create_booking(
     return booking
 
 def cancel_booking(db: Session, booking_id: int, user_id: int) -> dict:
+    from app.models.user import UserRole
+
     booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not booking:
         raise NotFoundException("Booking not found")
@@ -162,6 +164,14 @@ def cancel_booking(db: Session, booking_id: int, user_id: int) -> dict:
 
     if booking.status != BookingStatus.UPCOMING.value:
         raise BadRequestException(f"Cannot cancel a booking with status '{booking.status}'. Only UPCOMING bookings can be cancelled.")
+
+    # Calculate time elapsed since booking creation
+    now_utc = datetime.utcnow()
+    created_at = booking.created_at
+    if created_at.tzinfo is not None:
+        created_at = created_at.replace(tzinfo=None)
+    time_elapsed_seconds = (now_utc - created_at).total_seconds()
+    time_elapsed_minutes = time_elapsed_seconds / 60.0
 
     # Mark booking as cancelled
     booking.status = BookingStatus.CANCELLED.value
@@ -176,32 +186,88 @@ def cancel_booking(db: Session, booking_id: int, user_id: int) -> dict:
     if parking and parking.available_slots < parking.total_slots:
         parking.available_slots += 1
 
-    # Full refund of credits
-    refund_credits(
-        db=db,
-        user_id=user_id,
-        credits=booking.credits,
-        description=f"Refund for cancelled booking #{booking.booking_number}",
-        reference_id=booking.booking_number
-    )
+    user = db.query(User).filter(User.id == user_id).first()
+    user_name = user.full_name if user else f"Driver #{user_id}"
+    parking_name = parking.name if parking else "Parking Facility"
+    slot_num = slot.slot_number if slot else "N/A"
 
-    # Create Notification
-    notif = Notification(
-        user_id=user_id,
-        title="Booking Cancelled",
-        message=f"Booking #{booking.booking_number} has been cancelled. {booking.credits} credits have been refunded to your wallet.",
-        type="BOOKING"
-    )
-    db.add(notif)
+    # RULE: Cancellation within 5 minutes -> FULL REFUND + MESSAGE TO MANAGER
+    if time_elapsed_minutes <= 5.0:
+        refund_credits(
+            db=db,
+            user_id=user_id,
+            credits=booking.credits,
+            description=f"Refund for cancelled booking #{booking.booking_number} (Within 5-min window)",
+            reference_id=booking.booking_number
+        )
 
-    db.commit()
-    db.refresh(booking)
+        # Notify User
+        notif_user = Notification(
+            user_id=user_id,
+            title="Booking Cancelled (Full Refund)",
+            message=f"✅ Booking #{booking.booking_number} was cancelled within the 5-minute refund window. {booking.credits} credits have been refunded to your wallet.",
+            type="BOOKING"
+        )
+        db.add(notif_user)
 
-    return {
-        "message": f"Booking #{booking.booking_number} cancelled successfully. {booking.credits} credits refunded.",
-        "refunded_credits": booking.credits,
-        "booking": booking
-    }
+        # Send notification to the assigned Facility Manager(s)
+        manager_ids = []
+        if parking and parking.manager_id:
+            manager_ids.append(parking.manager_id)
+        else:
+            managers = db.query(User).filter(User.role == UserRole.PARKING_MANAGER.value).all()
+            manager_ids = [m.id for m in managers]
+
+        for m_id in set(manager_ids):
+            notif_mgr = Notification(
+                user_id=m_id,
+                title="🔄 Slot Cancellation & Refund Processed",
+                message=f"Booking #{booking.booking_number} at {parking_name} (Slot {slot_num}) was cancelled within 5 minutes by {user_name}. Full refund of {booking.credits} credits was issued.",
+                type="REFUND"
+            )
+            db.add(notif_mgr)
+
+        db.commit()
+        db.refresh(booking)
+
+        return {
+            "message": f"Booking #{booking.booking_number} cancelled within 5 minutes. {booking.credits} credits refunded to your wallet. Hub Manager notified.",
+            "refunded_credits": booking.credits,
+            "within_5_mins": True,
+            "booking": booking
+        }
+
+    # RULE: Cancellation AFTER 5 minutes -> NO REFUND + MESSAGE TO ADMIN
+    else:
+        # Notify User that no refund was issued due to the 5-minute policy
+        notif_user = Notification(
+            user_id=user_id,
+            title="Booking Cancelled (Non-Refundable)",
+            message=f"Booking #{booking.booking_number} was cancelled {int(time_elapsed_minutes)} mins after booking (exceeding the 5-minute refund window). No credits refunded as per policy.",
+            type="BOOKING"
+        )
+        db.add(notif_user)
+
+        # Send notification to all Admins about the cancelled booking
+        admins = db.query(User).filter(User.role == UserRole.ADMIN.value).all()
+        for admin in admins:
+            notif_admin = Notification(
+                user_id=admin.id,
+                title="⚠️ Non-Refundable Cancellation Alert",
+                message=f"Booking #{booking.booking_number} for {parking_name} (Slot {slot_num}, Driver: {user_name}) was cancelled after {int(time_elapsed_minutes)} mins (exceeded 5-min limit). {booking.credits} credits retained.",
+                type="SYSTEM"
+            )
+            db.add(notif_admin)
+
+        db.commit()
+        db.refresh(booking)
+
+        return {
+            "message": f"Booking #{booking.booking_number} cancelled. As cancellation occurred after the 5-minute refund window, no credits were refunded. Admin notified.",
+            "refunded_credits": 0,
+            "within_5_mins": False,
+            "booking": booking
+        }
 
 def process_qr_scan(
     db: Session,

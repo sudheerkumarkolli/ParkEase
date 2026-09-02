@@ -51,8 +51,8 @@ export default function Sidebar({ type }: SidebarProps) {
   const adminNav = [
     { name: "Master Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "User Management", href: "/admin/users", icon: Users },
+    { name: "Regional Users", href: "/admin/regional-users", icon: MapPin },
     { name: "Facility Approvals", href: "/admin/parking", icon: Building2 },
-    { name: "Global Bookings", href: "/admin/bookings", icon: CalendarCheck2 },
     { name: "Financial Ledger", href: "/admin/transactions", icon: CreditCard },
     { name: "Platform Analytics", href: "/admin/analytics", icon: BarChart3 },
   ];

@@ -54,16 +54,16 @@ export default function LiveMapPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/parking"
-            className="p-2 rounded-xl bg-white border border-slate-100 text-slate-500 hover:text-white hover:bg-slate-50 transition"
+            className="p-2.5 rounded-2xl bg-white border border-[#EBEAEE] text-[#120D26] hover:bg-[#F0F1F7] transition shadow-xs"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-800 flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-emerald-400" />
+            <h1 className="text-xl sm:text-2xl font-black text-[#120D26] flex items-center gap-2">
+              <MapPin className="h-6 w-6 text-[#5669FF]" />
               Live Interactive Map
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#747688] font-medium">
               Visualizing {parkings.length} parking hubs with real-time occupancy
             </p>
           </div>
@@ -73,16 +73,16 @@ export default function LiveMapPage() {
           <button
             onClick={fetchParkings}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-100 hover:bg-slate-50 transition"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-black text-[#120D26] bg-white border border-[#EBEAEE] hover:bg-[#F0F1F7] transition shadow-xs cursor-pointer"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            Refresh Pins
+            <RefreshCw className={`h-3.5 w-3.5 text-[#5669FF] ${loading ? "animate-spin" : ""}`} />
+            <span>Refresh Pins</span>
           </button>
         </div>
       </div>
 
       {/* Map Canvas Container */}
-      <div className="w-full h-[calc(100vh-14rem)] min-h-[550px]">
+      <div className="w-full h-[calc(100vh-14rem)] min-h-[550px] rounded-3xl overflow-hidden border border-[#EBEAEE] shadow-[0_10px_35px_rgba(86,105,255,0.06)]">
         <LeafletMap
           parkings={parkings}
           userLocation={userLocation}

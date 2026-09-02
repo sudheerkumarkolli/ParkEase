@@ -43,4 +43,5 @@ class BookingResponse(BaseModel):
 class BookingCancelResponse(BaseModel):
     message: str
     refunded_credits: int
+    within_5_mins: bool = True
     booking: BookingResponse

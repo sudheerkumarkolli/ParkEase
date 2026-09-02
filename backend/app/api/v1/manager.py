@@ -17,6 +17,10 @@ from app.services.auth_service import require_manager_or_admin
 from app.services.booking_service import process_qr_scan
 from app.core.exceptions import NotFoundException, BadRequestException
 
+from app.models.wallet import Payment
+from app.schemas.wallet import VerifyPaymentRequest, VerifyPaymentResponse, PaymentResponse
+from app.services.wallet_service import verify_manager_payment
+
 router = APIRouter()
 
 def get_manager_parking_ids(db: Session, current_user: User) -> List[int]:
@@ -202,6 +206,32 @@ def scan_and_approve_exit(
         parking_id=req.parking_id
     )
     return result
+
+@router.post("/verify-payment", response_model=VerifyPaymentResponse)
+def manager_verify_payment(
+    req: VerifyPaymentRequest,
+    current_user: User = Depends(require_manager_or_admin),
+    db: Session = Depends(get_db)
+):
+    return verify_manager_payment(
+        db=db,
+        qr_token=req.qr_token,
+        manager_id=current_user.id,
+        manager_role=current_user.role,
+        action=req.action,
+        parking_id=req.parking_id
+    )
+
+@router.get("/pending-payments", response_model=List[PaymentResponse])
+def get_pending_payments(
+    current_user: User = Depends(require_manager_or_admin),
+    db: Session = Depends(get_db)
+):
+    parking_ids = get_manager_parking_ids(db, current_user)
+    q = db.query(Payment).filter(Payment.status == "PENDING_APPROVAL")
+    if current_user.role != UserRole.ADMIN.value:
+        q = q.filter(or_(Payment.parking_id.in_(parking_ids), Payment.parking_id.is_(None)))
+    return q.order_by(desc(Payment.created_at)).limit(50).all()
 
 @router.get("/revenue")
 def get_manager_revenue_stats(

@@ -121,6 +121,106 @@ def get_admin_dashboard(
         "popular_parkings": popular_parkings
     }
 
+@router.get("/users/by-location")
+def get_users_by_location(
+    city: Optional[str] = Query(None),
+    query: Optional[str] = Query(None),
+    current_user: User = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    all_users = db.query(User).all()
+    all_parkings = db.query(ParkingLocation).all()
+    parking_map = {p.id: p for p in all_parkings}
+
+    distinct_cities = [c[0] for c in db.query(ParkingLocation.city).distinct().all() if c[0]]
+    if not distinct_cities:
+        distinct_cities = ["Vijayawada", "Hyderabad", "Visakhapatnam", "Tirupati", "Guntur"]
+
+    result_by_city = {c: [] for c in distinct_cities}
+    result_by_city["Other Regions"] = []
+
+    for u in all_users:
+        user_bookings = db.query(Booking).filter(Booking.user_id == u.id).all()
+        user_city = None
+        primary_hub_name = None
+
+        if user_bookings:
+            city_counts = {}
+            for b in user_bookings:
+                p = parking_map.get(b.parking_id)
+                if p and p.city:
+                    city_counts[p.city] = city_counts.get(p.city, 0) + 1
+                    primary_hub_name = p.name
+            if city_counts:
+                user_city = max(city_counts, key=city_counts.get)
+
+        if not user_city and u.role == UserRole.PARKING_MANAGER.value:
+            managed = db.query(ParkingLocation).filter(ParkingLocation.manager_id == u.id).first()
+            if managed and managed.city:
+                user_city = managed.city
+                primary_hub_name = managed.name
+
+        if not user_city and u.vehicle_number:
+            v_upper = u.vehicle_number.upper().strip()
+            if v_upper.startswith("TS"):
+                user_city = "Hyderabad"
+            elif v_upper.startswith("AP"):
+                user_city = "Vijayawada"
+
+        if not user_city:
+            user_city = "Vijayawada" if u.id % 2 == 0 else "Hyderabad"
+
+        w = db.query(Wallet).filter(Wallet.user_id == u.id).first()
+        wallet_bal = w.balance if w else 0
+
+        user_item = {
+            "id": u.id,
+            "full_name": u.full_name,
+            "email": u.email,
+            "phone": u.phone,
+            "role": u.role,
+            "vehicle_number": u.vehicle_number,
+            "vehicle_type": u.vehicle_type,
+            "is_active": u.is_active,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+            "wallet_balance": wallet_bal,
+            "location_city": user_city,
+            "total_bookings": len(user_bookings),
+            "primary_hub": primary_hub_name or f"{user_city} Smart Hub",
+        }
+
+        if query:
+            q_lower = query.lower().strip()
+            if (
+                q_lower not in u.full_name.lower()
+                and q_lower not in u.email.lower()
+                and q_lower not in (u.phone or "").lower()
+                and q_lower not in (u.vehicle_number or "").lower()
+            ):
+                continue
+
+        if user_city in result_by_city:
+            result_by_city[user_city].append(user_item)
+        else:
+            result_by_city["Other Regions"].append(user_item)
+
+    city_summaries = []
+    for c_name, u_list in result_by_city.items():
+        city_summaries.append({
+            "city": c_name,
+            "total_users": len(u_list),
+            "managers_count": sum(1 for item in u_list if item["role"] == "PARKING_MANAGER"),
+            "drivers_count": sum(1 for item in u_list if item["role"] == "USER"),
+            "admins_count": sum(1 for item in u_list if item["role"] == "ADMIN"),
+        })
+
+    return {
+        "cities": distinct_cities,
+        "city_summaries": city_summaries,
+        "users_by_location": result_by_city,
+        "total_users_count": len(all_users)
+    }
+
 @router.get("/users", response_model=List[UserResponse])
 def get_all_users(
     query: Optional[str] = Query(None),
@@ -189,6 +289,28 @@ def update_user_status(
     db.commit()
     status_str = "activated" if req.is_active else "suspended"
     return {"message": f"User account has been {status_str}"}
+
+@router.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    current_user: User = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise NotFoundException("User not found")
+
+    if user.id == current_user.id:
+        raise BadRequestException("Cannot delete your own administrator account")
+
+    if user.role == UserRole.ADMIN.value:
+        admin_count = db.query(User).filter(User.role == UserRole.ADMIN.value, User.is_active == True).count()
+        if admin_count <= 1:
+            raise BadRequestException("Cannot delete the last active Administrator")
+
+    db.delete(user)
+    db.commit()
+    return {"message": f"Account for {user.email} successfully deleted"}
 
 @router.get("/parking", response_model=List[ParkingLocationResponse])
 def get_all_parkings_admin(

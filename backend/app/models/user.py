@@ -34,7 +34,7 @@ class User(Base):
     wallet = relationship("Wallet", back_populates="user", uselist=False, cascade="all, delete-orphan")
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
     bookings = relationship("Booking", back_populates="user", cascade="all, delete-orphan")
-    payments = relationship("Payment", back_populates="user", cascade="all, delete-orphan")
+    payments = relationship("Payment", foreign_keys="[Payment.user_id]", back_populates="user", cascade="all, delete-orphan")
     notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
     reviews = relationship("Review", back_populates="user", cascade="all, delete-orphan")
     managed_parkings = relationship("ParkingLocation", back_populates="manager")

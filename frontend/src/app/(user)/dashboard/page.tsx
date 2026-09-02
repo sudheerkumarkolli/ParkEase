@@ -23,13 +23,25 @@ import {
   Plus,
   ShieldCheck,
   Zap,
+  Navigation,
 } from "lucide-react";
+import GPSPromptModal from "@/components/location/GPSPromptModal";
 
 export default function UserDashboard() {
   const { user } = useAuth();
   const [activeBookings, setActiveBookings] = useState<Booking[]>([]);
   const [nearbyParkings, setNearbyParkings] = useState<ParkingLocation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [gpsLocation, setGpsLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  useEffect(() => {
+    const savedCoords = localStorage.getItem("parkease_gps_coords");
+    if (savedCoords) {
+      try {
+        setGpsLocation(JSON.parse(savedCoords));
+      } catch (e) {}
+    }
+  }, []);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -52,17 +64,41 @@ export default function UserDashboard() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] bg-[#F8F9FE]">
+      {/* GPS Location Prompt on Login */}
+      <GPSPromptModal onLocationDetected={(coords) => setGpsLocation(coords)} />
+
       <Sidebar type="user" />
 
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl">
         
-        {/* Welcome Banner (EventHub Style) */}
+        {/* Welcome Header Banner */}
         <div className="relative overflow-hidden rounded-3xl bg-[#5669FF] p-6 sm:p-8 text-white shadow-xl shadow-[#5669FF]/20">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-0.5 text-xs font-bold text-white backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Driver Smart Pass Portal</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-0.5 text-xs font-bold text-white backdrop-blur-md">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Driver Smart Pass Portal</span>
+                </div>
+                {gpsLocation ? (
+                  <div className="inline-flex items-center gap-1 rounded-full bg-emerald-400 px-3 py-0.5 text-[11px] font-black text-slate-950 shadow-sm">
+                    <Navigation className="h-3 w-3 fill-slate-950" />
+                    <span>GPS Active 🟢</span>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sessionStorage.removeItem("parkease_gps_prompted");
+                      localStorage.removeItem("parkease_gps_status");
+                      window.location.reload();
+                    }}
+                    className="inline-flex items-center gap-1 rounded-full bg-amber-300 hover:bg-amber-400 px-3 py-0.5 text-[11px] font-black text-slate-950 shadow-sm cursor-pointer transition"
+                  >
+                    <Navigation className="h-3 w-3" />
+                    <span>Enable GPS 🛰️</span>
+                  </button>
+                )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
                 Welcome Back, {user?.full_name?.split(" ")[0] || "Driver"}!
@@ -90,6 +126,7 @@ export default function UserDashboard() {
             </div>
           </div>
 
+          {/* Glowing Background Ring */}
           <div className="absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-white/10 blur-xl pointer-events-none" />
         </div>
 

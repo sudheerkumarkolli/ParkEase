@@ -10,12 +10,18 @@ from app.schemas.wallet import (
     WalletTransactionResponse,
     AddCreditsRequest,
     CreditPackage,
-    PaymentResponse
+    PaymentResponse,
+    InitiatePaymentRequest,
+    InitiatePaymentResponse,
+    VerifyPaymentRequest,
+    VerifyPaymentResponse
 )
-from app.services.auth_service import get_current_active_user
+from app.services.auth_service import get_current_active_user, require_manager_or_admin
 from app.services.wallet_service import (
     get_or_create_wallet,
     purchase_credits,
+    initiate_payment,
+    verify_manager_payment,
     CREDIT_PACKAGES
 )
 
@@ -60,6 +66,69 @@ def get_wallet_transactions(
 
     transactions = q.order_by(desc(WalletTransaction.created_at)).limit(limit).all()
     return transactions
+
+@router.post("/initiate", response_model=InitiatePaymentResponse)
+def initiate_wallet_payment(
+    req: InitiatePaymentRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    res = initiate_payment(
+        db=db,
+        user_id=current_user.id,
+        package_name=req.package_name,
+        amount=req.amount,
+        payment_method=req.payment_method,
+        parking_id=req.parking_id
+    )
+    p = res["payment"]
+    return {
+        "payment_id": p.id,
+        "transaction_id": p.transaction_id,
+        "qr_token": p.qr_token,
+        "amount": p.amount,
+        "credits": p.credits,
+        "package_name": p.package_name,
+        "payment_method": p.payment_method,
+        "status": p.status,
+        "created_at": p.created_at
+    }
+
+@router.post("/verify", response_model=VerifyPaymentResponse)
+def verify_payment_route(
+    req: VerifyPaymentRequest,
+    current_user: User = Depends(require_manager_or_admin),
+    db: Session = Depends(get_db)
+):
+    return verify_manager_payment(
+        db=db,
+        qr_token=req.qr_token,
+        manager_id=current_user.id,
+        manager_role=current_user.role,
+        action=req.action,
+        parking_id=req.parking_id
+    )
+
+@router.get("/status/{tx_or_token}")
+def check_payment_status(
+    tx_or_token: str,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    payment = db.query(Payment).filter(
+        (Payment.transaction_id == tx_or_token) | (Payment.qr_token == tx_or_token)
+    ).first()
+    if not payment:
+        return {"status": "NOT_FOUND"}
+    
+    return {
+        "transaction_id": payment.transaction_id,
+        "qr_token": payment.qr_token,
+        "status": payment.status,
+        "amount": payment.amount,
+        "credits": payment.credits,
+        "approved_at": payment.approved_at
+    }
 
 @router.post("/add-credits")
 @router.post("/top-up")
