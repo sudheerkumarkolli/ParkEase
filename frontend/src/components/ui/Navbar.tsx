@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
+import { Notification } from "@/types";
 import {
   MapPin,
   Compass,
@@ -29,13 +30,16 @@ import {
   BarChart3,
   CreditCard,
   TrendingUp,
+  ArrowRight,
 } from "lucide-react";
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
-  const { unreadCount, notifications, markAsRead } = useNotifications();
+  const { unreadCount, notifications, markAsRead, markAllAsRead } = useNotifications();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const pathname = usePathname();
 
   const role = user?.role;
@@ -323,10 +327,76 @@ export default function Navbar() {
                 </Link>
               )}
 
+              {/* Notification Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setNotificationDropdownOpen(!notificationDropdownOpen);
+                    setProfileDropdownOpen(false);
+                  }}
+                  className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F0F1F7] hover:bg-[#EBEAEE] transition cursor-pointer"
+                >
+                  <Bell className="h-5 w-5 text-[#120D26]" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {notificationDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-80 rounded-3xl border border-[#EBEAEE] bg-white shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
+                    <div className="p-3 border-b border-[#F0F1F7] flex items-center justify-between">
+                      <h3 className="text-sm font-black text-[#120D26]">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={() => markAllAsRead()}
+                          className="text-[10px] font-bold text-[#5669FF] hover:underline"
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-72 overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-[#747688]">
+                          No notifications yet.
+                        </div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <div
+                            key={notif.id}
+                            onClick={() => {
+                              if (!notif.is_read) markAsRead(notif.id);
+                              setSelectedNotification(notif);
+                              setNotificationDropdownOpen(false);
+                            }}
+                            className={`p-3 border-b border-[#F0F1F7] last:border-0 cursor-pointer transition ${
+                              notif.is_read ? "opacity-70 bg-white hover:bg-[#F0F1F7]" : "bg-[#5669FF]/5 hover:bg-[#5669FF]/10"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-1">
+                              <span className="text-xs font-bold text-[#120D26]">{notif.title}</span>
+                              {!notif.is_read && (
+                                <span className="h-2 w-2 rounded-full bg-[#5669FF] mt-1 flex-shrink-0" />
+                              )}
+                            </div>
+                            <p className="text-[10px] text-[#747688] line-clamp-2">{notif.message}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* User Dropdown */}
               <div className="relative">
                 <button
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  onClick={() => {
+                    setProfileDropdownOpen(!profileDropdownOpen);
+                    setNotificationDropdownOpen(false);
+                  }}
                   className="flex items-center gap-2 rounded-2xl p-1.5 bg-[#F0F1F7] hover:bg-[#EBEAEE] transition cursor-pointer"
                 >
                   <div
@@ -626,6 +696,58 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Selected Notification Full Screen Modal */}
+      {selectedNotification && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#120D26]/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[#EBEAEE] flex justify-between items-start bg-[#F0F1F7]/50">
+              <div className="flex gap-3 items-center">
+                <div className={`h-10 w-10 flex items-center justify-center rounded-2xl text-white ${
+                  selectedNotification.type === 'REQUEST' ? 'bg-purple-600' : 'bg-[#5669FF]'
+                }`}>
+                  <Bell className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-[#120D26] leading-tight">{selectedNotification.title}</h2>
+                  <span className="text-[10px] text-[#747688] font-bold uppercase tracking-wider">{new Date(selectedNotification.created_at).toLocaleString()}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedNotification(null)}
+                className="p-2 -mr-2 -mt-2 rounded-full hover:bg-[#EBEAEE] text-[#747688] transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="p-8">
+              <p className="text-[15px] text-[#424453] font-medium leading-relaxed whitespace-pre-wrap">
+                {selectedNotification.message}
+              </p>
+              
+              <div className="mt-10 flex flex-col sm:flex-row justify-end gap-3">
+                <button
+                  onClick={() => setSelectedNotification(null)}
+                  className="px-6 py-3 rounded-2xl text-xs font-bold text-[#747688] hover:text-[#120D26] hover:bg-[#F0F1F7] transition"
+                >
+                  Dismiss
+                </button>
+                {selectedNotification.type === "REQUEST" && isAdmin && (
+                  <Link
+                    href="/admin/parking"
+                    onClick={() => setSelectedNotification(null)}
+                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 transition shadow-lg shadow-purple-600/30"
+                  >
+                    Check & Update Location
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </header>

@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { ParkingSlot, VehicleType, SlotStatus } from "@/types";
-import { Car, Bike, Zap, ShieldAlert, CheckCircle2, Lock, Ban } from "lucide-react";
+import { Car, Bike, Zap, ShieldAlert, CheckCircle2, Lock, Ban, Eye } from "lucide-react";
+import BayPreviewModal from "@/components/parking/BayPreviewModal";
 
 interface SlotMatrixProps {
   slots: ParkingSlot[];
@@ -10,6 +11,8 @@ interface SlotMatrixProps {
   onSelectSlot?: (slot: ParkingSlot) => void;
   isManager?: boolean;
   onToggleStatus?: (slotId: number, currentStatus: SlotStatus) => void;
+  facilityName?: string;
+  facilityPrice?: number;
 }
 
 export default function SlotMatrix({
@@ -18,8 +21,11 @@ export default function SlotMatrix({
   onSelectSlot,
   isManager = false,
   onToggleStatus,
+  facilityName,
+  facilityPrice,
 }: SlotMatrixProps) {
   const [vehicleFilter, setVehicleFilter] = useState<string>("ALL");
+  const [previewingSlot, setPreviewingSlot] = useState<ParkingSlot | null>(null);
 
   const filteredSlots = slots.filter((s) => {
     if (vehicleFilter === "ALL") return true;
@@ -151,16 +157,30 @@ export default function SlotMatrix({
                         onSelectSlot(slot);
                       }
                     }}
-                    className={`relative flex flex-col items-center justify-between p-3 rounded-2xl transition-all duration-200 ${getSlotStyle(
+                    className={`group relative flex flex-col items-center justify-between p-3 rounded-2xl transition-all duration-200 ${getSlotStyle(
                       slot
                     )}`}
                   >
-                    {/* Header Slot Number */}
+                    {/* Header Slot Number & View Image Icon */}
                     <div className="flex items-center justify-between w-full">
                       <span className="text-xs font-mono font-black tracking-tight">
                         {slot.slot_number}
                       </span>
-                      {getVehicleIcon(slot.vehicle_type)}
+                      
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPreviewingSlot(slot);
+                          }}
+                          title="View Internal Image & Details"
+                          className="p-1 rounded-md bg-black/10 hover:bg-black/20 text-slate-800 transition cursor-pointer hover:scale-115"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                        {getVehicleIcon(slot.vehicle_type)}
+                      </div>
                     </div>
 
                     {/* Status Text / Icon */}
@@ -179,9 +199,10 @@ export default function SlotMatrix({
                     </div>
 
                     {/* Vehicle Type Label */}
-                    <span className="text-[10px] font-bold opacity-90">
-                      {slot.vehicle_type}
-                    </span>
+                    <div className="flex items-center justify-between w-full text-[10px] font-bold opacity-90">
+                      <span>{slot.vehicle_type}</span>
+                      <span className="text-[9px] font-medium opacity-75">{slot.floor_level || "L1"}</span>
+                    </div>
 
                     {/* Manager Mode Quick Badge */}
                     {isManager && (
@@ -194,6 +215,16 @@ export default function SlotMatrix({
           </div>
         ))
       )}
+
+      {/* Internal Bay Visual Preview Modal */}
+      <BayPreviewModal
+        slot={previewingSlot}
+        onClose={() => setPreviewingSlot(null)}
+        onSelectSlot={onSelectSlot}
+        isManager={isManager}
+        facilityName={facilityName}
+        facilityPrice={facilityPrice}
+      />
     </div>
   );
 }

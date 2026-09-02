@@ -28,7 +28,7 @@ import {
 import GPSPromptModal from "@/components/location/GPSPromptModal";
 
 export default function UserDashboard() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [activeBookings, setActiveBookings] = useState<Booking[]>([]);
   const [nearbyParkings, setNearbyParkings] = useState<ParkingLocation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,12 +47,22 @@ export default function UserDashboard() {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
-        const [bookingsRes, parkingsRes] = await Promise.all([
-          api.get<Booking[]>("/bookings?limit=5"),
-          api.get<ParkingLocation[]>("/parking?limit=4"),
-        ]);
-        setActiveBookings(bookingsRes.data);
-        setNearbyParkings(parkingsRes.data);
+        const parkingsPromise = api.get<ParkingLocation[]>("/parking?limit=4").catch((err) => {
+          console.warn("Parking fetch error:", err);
+          return { data: [] };
+        });
+
+        // Only fetch user bookings if authenticated
+        const bookingsPromise = isAuthenticated
+          ? api.get<Booking[]>("/bookings?limit=5").catch((err) => {
+              console.warn("Bookings fetch error:", err);
+              return { data: [] };
+            })
+          : Promise.resolve({ data: [] });
+
+        const [bookingsRes, parkingsRes] = await Promise.all([bookingsPromise, parkingsPromise]);
+        setActiveBookings(bookingsRes.data || []);
+        setNearbyParkings(parkingsRes.data || []);
       } catch (err) {
         console.error("Dashboard data load error:", err);
       } finally {
@@ -60,7 +70,7 @@ export default function UserDashboard() {
       }
     };
     loadDashboardData();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] bg-[#F8F9FE]">

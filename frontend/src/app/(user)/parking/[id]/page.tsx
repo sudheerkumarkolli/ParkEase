@@ -227,6 +227,8 @@ export default function ParkingDetailPage({ params }: { params: Promise<{ id: st
           <SlotMatrix
             slots={parking.slots || []}
             selectedSlotId={selectedSlotId}
+            facilityName={parking.name}
+            facilityPrice={parking.price_per_hour}
             onSelectSlot={(slot) => {
               setSelectedSlotId(slot.id);
             }}

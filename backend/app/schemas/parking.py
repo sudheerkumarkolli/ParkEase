@@ -1,7 +1,12 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+import re
+from pydantic import BaseModel, field_validator
 from app.schemas.slot import SlotResponse
+
+class ParkingLocationRequest(BaseModel):
+    latitude: float
+    longitude: float
 
 class ParkingLocationBase(BaseModel):
     name: str
@@ -20,7 +25,15 @@ class ParkingLocationBase(BaseModel):
     status: Optional[str] = "ACTIVE"  # ACTIVE, PENDING, INACTIVE
 
 class ParkingLocationCreate(ParkingLocationBase):
-    pass
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        v_clean = v.strip()
+        if not v_clean:
+            raise ValueError("Facility name cannot be empty")
+        if not re.match(r"^[a-zA-Z\s]+$", v_clean):
+            raise ValueError("Facility name must contain only alphabets (letters and spaces)")
+        return v_clean
 
 class ParkingLocationUpdate(BaseModel):
     name: Optional[str] = None
@@ -36,6 +49,18 @@ class ParkingLocationUpdate(BaseModel):
     description: Optional[str] = None
     image_url: Optional[str] = None
     status: Optional[str] = None
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None:
+            v_clean = v.strip()
+            if not v_clean:
+                raise ValueError("Facility name cannot be empty")
+            if not re.match(r"^[a-zA-Z\s]+$", v_clean):
+                raise ValueError("Facility name must contain only alphabets (letters and spaces)")
+            return v_clean
+        return v
 
 class ParkingLocationResponse(ParkingLocationBase):
     id: int

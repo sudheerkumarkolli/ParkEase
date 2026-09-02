@@ -53,6 +53,9 @@ class ParkingSlot(Base):
     slot_number = Column(String(50), nullable=False)
     vehicle_type = Column(String(50), default="Car", nullable=False)
     status = Column(String(50), default="AVAILABLE", nullable=False)  # AVAILABLE, OCCUPIED, RESERVED, MAINTENANCE
+    floor_level = Column(String(50), default="Level 1", nullable=True)
+    description = Column(String(500), nullable=True)
+    image_url = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 

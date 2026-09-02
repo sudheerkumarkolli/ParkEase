@@ -46,7 +46,10 @@ def add_parking_slot(
         parking_id=parking_id,
         slot_number=req.slot_number.upper(),
         vehicle_type=req.vehicle_type,
-        status=req.status or SlotStatus.AVAILABLE.value
+        status=req.status or SlotStatus.AVAILABLE.value,
+        floor_level=req.floor_level or "Level 1",
+        description=req.description,
+        image_url=req.image_url
     )
     db.add(slot)
 
@@ -85,7 +88,9 @@ def add_batch_slots(
                 parking_id=parking_id,
                 slot_number=slot_num,
                 vehicle_type=req.vehicle_type,
-                status=SlotStatus.AVAILABLE.value
+                status=SlotStatus.AVAILABLE.value,
+                floor_level=req.floor_level or "Level 1",
+                image_url=req.image_url
             )
             db.add(slot)
             created_slots.append(slot)
@@ -118,6 +123,12 @@ def update_slot(
         slot.slot_number = req.slot_number.upper()
     if req.vehicle_type:
         slot.vehicle_type = req.vehicle_type
+    if req.floor_level is not None:
+        slot.floor_level = req.floor_level
+    if req.description is not None:
+        slot.description = req.description
+    if req.image_url is not None:
+        slot.image_url = req.image_url
     if req.status:
         slot.status = req.status
 

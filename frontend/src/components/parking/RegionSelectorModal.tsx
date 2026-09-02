@@ -33,6 +33,13 @@ const REGIONS = [
   { id: "Visakhapatnam", name: "Visakhapatnam", state: "Andhra Pradesh", badge: "Coastal Hub", icon: "🌊" },
   { id: "Guntur", name: "Guntur", state: "Andhra Pradesh", badge: "Commercial Core", icon: "🏛️" },
   { id: "Tirupati", name: "Tirupati", state: "Andhra Pradesh", badge: "Heritage Zone", icon: "⛩️" },
+  { id: "Kurnool", name: "Kurnool", state: "Andhra Pradesh", badge: "Rayalaseema Gate", icon: "🏰" },
+  { id: "Nellore", name: "Nellore", state: "Andhra Pradesh", badge: "Coastal Trade", icon: "🌴" },
+  { id: "Rajahmundry", name: "Rajahmundry", state: "Andhra Pradesh", badge: "Cultural Capital", icon: "🛕" },
+  { id: "Kakinada", name: "Kakinada", state: "Andhra Pradesh", badge: "Port & Smart City", icon: "⚓" },
+  { id: "Kadapa", name: "Kadapa", state: "Andhra Pradesh", badge: "Central Hub", icon: "⛰️" },
+  { id: "Anantapur", name: "Anantapur", state: "Andhra Pradesh", badge: "Granite City", icon: "🕰️" },
+  { id: "Warangal", name: "Warangal", state: "Telangana", badge: "Heritage Center", icon: "🏛️" },
 ];
 
 export default function RegionSelectorModal({

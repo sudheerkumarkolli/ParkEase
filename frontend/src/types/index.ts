@@ -68,6 +68,9 @@ export interface ParkingSlot {
   slot_number: string;
   vehicle_type: VehicleType;
   status: SlotStatus;
+  floor_level?: string;
+  description?: string;
+  image_url?: string;
   created_at: string;
   updated_at: string;
 }
