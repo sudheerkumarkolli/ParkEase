@@ -6,7 +6,9 @@ from app.schemas.slot import SlotResponse
 class ParkingLocationBase(BaseModel):
     name: str
     address: str
+    state: Optional[str] = None
     city: Optional[str] = None
+    area: Optional[str] = None
     latitude: float
     longitude: float
     total_slots: Optional[int] = 0
@@ -25,7 +27,9 @@ class ParkingLocationCreate(ParkingLocationBase):
 class ParkingLocationUpdate(BaseModel):
     name: Optional[str] = None
     address: Optional[str] = None
+    state: Optional[str] = None
     city: Optional[str] = None
+    area: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     price_per_hour: Optional[int] = None

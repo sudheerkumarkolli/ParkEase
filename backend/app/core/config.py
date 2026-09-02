@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     MONGODB_URL: str = "mongodb://localhost:27017/parkease"
     
     # Fallback to SQLite if PostgreSQL connection fails locally during dev
-    SQLITE_FALLBACK_URL: str = "sqlite:///./parkease.db"
+    SQLITE_FALLBACK_URL: str = f"sqlite:///{os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'parkease.db')).replace('\\', '/')}"
 
     
     # Welcome Credits

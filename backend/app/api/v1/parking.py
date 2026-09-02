@@ -23,7 +23,8 @@ router = APIRouter()
 
 @router.get("", response_model=List[ParkingLocationResponse])
 def get_all_parkings(
-    query: Optional[str] = Query(None, description="Search by name, address, or city"),
+    query: Optional[str] = Query(None, description="Search by name, address, state, or city"),
+    state: Optional[str] = Query(None),
     city: Optional[str] = Query(None),
     vehicle_type: Optional[str] = Query(None),
     min_price: Optional[int] = Query(None),
@@ -43,11 +44,15 @@ def get_all_parkings(
             or_(
                 ParkingLocation.name.ilike(pattern),
                 ParkingLocation.address.ilike(pattern),
+                ParkingLocation.state.ilike(pattern),
                 ParkingLocation.city.ilike(pattern)
             )
         )
 
-    if city:
+    if state and state != "ALL":
+        q = q.filter(ParkingLocation.state.ilike(f"%{state}%"))
+
+    if city and city != "ALL":
         q = q.filter(ParkingLocation.city.ilike(f"%{city}%"))
 
     if vehicle_type:
@@ -80,6 +85,7 @@ def get_all_parkings(
             "manager_id": p.manager_id,
             "name": p.name,
             "address": p.address,
+            "state": p.state,
             "city": p.city,
             "latitude": p.latitude,
             "longitude": p.longitude,
@@ -131,6 +137,7 @@ def get_nearby_parkings(
             "manager_id": p.manager_id,
             "name": p.name,
             "address": p.address,
+            "state": p.state,
             "city": p.city,
             "latitude": p.latitude,
             "longitude": p.longitude,
@@ -173,6 +180,7 @@ def get_parking_by_id(parking_id: int, db: Session = Depends(get_db)):
         "manager_id": parking.manager_id,
         "name": parking.name,
         "address": parking.address,
+        "state": parking.state,
         "city": parking.city,
         "latitude": parking.latitude,
         "longitude": parking.longitude,
@@ -209,6 +217,7 @@ def create_parking(
         manager_id=manager_id,
         name=req.name,
         address=req.address,
+        state=req.state or "Andhra Pradesh",
         city=req.city,
         latitude=req.latitude,
         longitude=req.longitude,

@@ -67,7 +67,7 @@ export default function LandingPage() {
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1 text-xs font-bold text-white backdrop-blur-md border border-white/20">
               <MapPin className="h-3.5 w-3.5 text-white" />
-              <span>Vijayawada, MG Road & Hyderabad Hubs</span>
+              <span>Pan-India Coverage • All States & UTs</span>
             </div>
             <div className="inline-flex items-center gap-1 rounded-full bg-[#F0635A] px-3 py-1 text-[11px] font-black text-white shadow-md">
               <Sparkles className="h-3 w-3" />

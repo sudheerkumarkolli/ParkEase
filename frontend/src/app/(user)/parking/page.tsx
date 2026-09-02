@@ -6,13 +6,16 @@ import { ParkingLocation } from "@/types";
 import { api } from "@/lib/api";
 import FilterBar from "@/components/parking/FilterBar";
 import ParkingCard from "@/components/parking/ParkingCard";
-import { MapPin, Navigation, Sparkles, AlertCircle } from "lucide-react";
+import { ALL_INDIAN_STATES, getCitiesForState } from "@/lib/indiaLocations";
+import { useLocation } from "@/context/LocationContext";
+import { MapPin, Navigation, AlertCircle, Building } from "lucide-react";
 
 export default function ParkingSearchPage() {
   const [parkings, setParkings] = useState<ParkingLocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCity, setSelectedCity] = useState("ALL");
+  
+  const { selectedState, setSelectedState, selectedCity, setSelectedCity } = useLocation();
   const [selectedVehicle, setSelectedVehicle] = useState("ALL");
   const [sortBy, setSortBy] = useState("name");
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
@@ -20,11 +23,15 @@ export default function ParkingSearchPage() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
 
+  // Compute dynamic cities array based on selectedState
+  const cities = getCitiesForState(selectedState);
+
   const fetchParkings = async () => {
     try {
       setLoading(true);
       let url = `/parking?sort_by=${sortBy}`;
       if (searchQuery) url += `&query=${encodeURIComponent(searchQuery)}`;
+      if (selectedState && selectedState !== "ALL") url += `&state=${encodeURIComponent(selectedState)}`;
       if (selectedCity && selectedCity !== "ALL") url += `&city=${encodeURIComponent(selectedCity)}`;
       if (selectedVehicle && selectedVehicle !== "ALL") url += `&vehicle_type=${encodeURIComponent(selectedVehicle)}`;
       if (maxPrice !== null) url += `&max_price=${maxPrice}`;
@@ -47,7 +54,17 @@ export default function ParkingSearchPage() {
 
   useEffect(() => {
     fetchParkings();
-  }, [searchQuery, selectedCity, selectedVehicle, sortBy, maxPrice, userLocation]);
+  }, [searchQuery, selectedState, selectedCity, selectedVehicle, sortBy, maxPrice, userLocation]);
+
+  const handleStateChange = (stateName: string) => {
+    setSelectedState(stateName);
+    setUserLocation(null); // Reset GPS filter
+  };
+
+  const handleCityChange = (cityName: string) => {
+    setSelectedCity(cityName);
+    setUserLocation(null);
+  };
 
   const detectLocation = () => {
     if (!navigator.geolocation) {
@@ -65,14 +82,12 @@ export default function ParkingSearchPage() {
       },
       (err) => {
         console.error("Location error:", err);
-        alert("Could not access location. Showing default city directory.");
+        alert("Could not access location. Showing state & city directory.");
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
-
-  const cities = ["Vijayawada", "Guntur", "Hyderabad", "Tirupati", "Visakhapatnam"];
 
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto space-y-8">
@@ -80,12 +95,17 @@ export default function ParkingSearchPage() {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
         <div>
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400">
-            Real-Time Directory
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400">
+              Pan-India Directory
+            </span>
+            <span className="text-[10px] font-bold bg-violet-500/10 text-violet-400 px-2 py-0.5 rounded-full border border-violet-500/20">
+              28 States & UTs Covered
+            </span>
+          </div>
           <h1 className="text-3xl font-black text-slate-800 mt-1">Smart Parking Finder</h1>
           <p className="text-xs text-slate-500 mt-1">
-            Browse, filter, and lock your spot across multi-level commercial hubs
+            Browse state-by-state multi-level parking hubs with guaranteed real-time bay allocation
           </p>
         </div>
 
@@ -113,17 +133,17 @@ export default function ParkingSearchPage() {
       <FilterBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        selectedState={selectedState}
+        onStateChange={handleStateChange}
         selectedCity={selectedCity}
-        onCityChange={(c) => {
-          setSelectedCity(c);
-          setUserLocation(null); // Clear custom GPS if picking manual city
-        }}
+        onCityChange={handleCityChange}
         selectedVehicle={selectedVehicle}
         onVehicleChange={setSelectedVehicle}
         sortBy={sortBy}
         onSortChange={setSortBy}
         maxPrice={maxPrice}
         onMaxPriceChange={setMaxPrice}
+        states={ALL_INDIAN_STATES}
         cities={cities}
       />
 
@@ -131,14 +151,25 @@ export default function ParkingSearchPage() {
       <div className="flex items-center justify-between text-xs text-slate-500 px-2">
         <span>
           Showing <span className="font-bold text-white">{parkings.length}</span> parking locations
+          {selectedState !== "ALL" && (
+            <span> in <span className="font-bold text-emerald-400">{selectedState}</span></span>
+          )}
+          {selectedCity !== "ALL" && (
+            <span> (<span className="font-bold text-violet-400">{selectedCity}</span>)</span>
+          )}
           {userLocation ? " sorted by nearest distance (GPS)" : ""}
         </span>
-        {userLocation && (
+        {(userLocation || selectedState !== "ALL" || selectedCity !== "ALL" || searchQuery) && (
           <button
-            onClick={() => setUserLocation(null)}
+            onClick={() => {
+              setSelectedState("ALL");
+              setSelectedCity("ALL");
+              setSearchQuery("");
+              setUserLocation(null);
+            }}
             className="text-xs text-emerald-400 hover:underline"
           >
-            Reset GPS Filter
+            Reset All Filters
           </button>
         )}
       </div>
@@ -155,11 +186,12 @@ export default function ParkingSearchPage() {
           <AlertCircle className="h-10 w-10 text-slate-500 mx-auto" />
           <h3 className="text-base font-bold text-white">No parking locations found</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            Try adjusting your search keywords, clearing vehicle filters, or broadening your price range.
+            No matching facilities found for your selected state, city, or search terms. Try selecting "All States" or clearing filters.
           </p>
           <button
             onClick={() => {
               setSearchQuery("");
+              setSelectedState("ALL");
               setSelectedCity("ALL");
               setSelectedVehicle("ALL");
               setMaxPrice(null);

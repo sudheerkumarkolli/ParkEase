@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { ALL_INDIAN_STATES, getCitiesForState } from "@/lib/indiaLocations";
 import Sidebar from "@/components/ui/Sidebar";
 import { Building2, ArrowLeft, Plus, MapPin, Clock, DollarSign, Car, Shield } from "lucide-react";
 
@@ -12,6 +13,7 @@ export default function AddParkingLocationPage() {
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [state, setState] = useState("Andhra Pradesh");
   const [city, setCity] = useState("Vijayawada");
   const [latitude, setLatitude] = useState(16.5062);
   const [longitude, setLongitude] = useState(80.6480);
@@ -27,6 +29,18 @@ export default function AddParkingLocationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const availableCities = getCitiesForState(state);
+
+  const handleStateChange = (st: string) => {
+    setState(st);
+    const cities = getCitiesForState(st);
+    if (cities.length > 0) {
+      setCity(cities[0]);
+    } else {
+      setCity("");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -36,6 +50,7 @@ export default function AddParkingLocationPage() {
       await api.post("/parking", {
         name,
         address,
+        state,
         city,
         latitude: parseFloat(latitude.toString()),
         longitude: parseFloat(longitude.toString()),
@@ -101,17 +116,35 @@ export default function AddParkingLocationPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">State</label>
+              <select
+                value={state}
+                onChange={(e) => handleStateChange(e.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 focus:border-teal-500 focus:bg-white focus:outline-none cursor-pointer"
+              >
+                {ALL_INDIAN_STATES.map((st) => (
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">City</label>
-              <input
-                type="text"
-                required
+              <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                placeholder="Vijayawada"
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 placeholder-slate-400 focus:border-teal-500 focus:bg-white focus:outline-none"
-              />
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 focus:border-teal-500 focus:bg-white focus:outline-none cursor-pointer"
+              >
+                {availableCities.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>

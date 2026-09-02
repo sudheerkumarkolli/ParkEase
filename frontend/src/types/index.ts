@@ -73,7 +73,9 @@ export interface ParkingLocation {
   manager_id?: number;
   name: string;
   address: string;
+  state?: string;
   city?: string;
+  area?: string;
   latitude: number;
   longitude: number;
   total_slots: number;

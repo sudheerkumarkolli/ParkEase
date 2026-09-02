@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
+import { useLocation } from "@/context/LocationContext";
 import {
   MapPin,
   Compass,
@@ -27,6 +28,7 @@ import {
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const { unreadCount, notifications, markAsRead } = useNotifications();
+  const { displayLocation } = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -54,9 +56,9 @@ export default function Navbar() {
 
 
           {/* Quick Location Chip */}
-          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F1F7] text-[11px] font-bold text-[#120D26]">
-            <MapPin className="h-3.5 w-3.5 text-[#5669FF]" />
-            <span>Vijayawada & Hyderabad</span>
+          <div className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F0F1F7] text-[11px] font-bold text-[#120D26] border border-slate-200/60 shadow-sm transition-all duration-200">
+            <MapPin className="h-3.5 w-3.5 text-[#5669FF] shrink-0" />
+            <span className="truncate max-w-[220px]">{displayLocation}</span>
           </div>
         </div>
 

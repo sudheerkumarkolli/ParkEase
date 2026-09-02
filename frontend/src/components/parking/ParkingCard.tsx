@@ -116,7 +116,10 @@ export default function ParkingCard({ parking }: ParkingCardProps) {
 
           <div className="flex items-center gap-1 text-xs text-[#747688]">
             <MapPin className="h-3.5 w-3.5 text-[#5669FF] shrink-0" />
-            <span className="truncate">{parking.address}</span>
+            <span className="truncate">
+              {parking.address}
+              {parking.city || parking.state ? ` • ${[parking.city, parking.state].filter(Boolean).join(", ")}` : ""}
+            </span>
           </div>
         </div>
       </div>

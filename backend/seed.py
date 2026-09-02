@@ -142,12 +142,14 @@ def seed_database():
                     status=TransactionStatus.COMPLETED.value
                 ))
 
-        # 4. Realistic Parking Locations across Vijayawada, Guntur, Hyderabad, Tirupati, Vizag
+        # 4. Realistic Parking Locations across multiple Indian States
         locations_data = [
+            # ANDHRA PRADESH
             {
                 "manager_id": mgr1.id,
                 "name": "MG Road Central Smart Parking",
                 "address": "MG Road, Opposite PVP Square Mall, Governorpet",
+                "state": "Andhra Pradesh",
                 "city": "Vijayawada",
                 "latitude": 16.5062,
                 "longitude": 80.6480,
@@ -162,6 +164,7 @@ def seed_database():
                 "manager_id": mgr1.id,
                 "name": "Benz Circle Express Park",
                 "address": "Near Benz Circle Flyover, Ring Road Junction",
+                "state": "Andhra Pradesh",
                 "city": "Vijayawada",
                 "latitude": 16.4981,
                 "longitude": 80.6558,
@@ -176,6 +179,7 @@ def seed_database():
                 "manager_id": mgr1.id,
                 "name": "Vijayawada Junction Multi-Level Parking",
                 "address": "Railway Station West Gate, Tarapet",
+                "state": "Andhra Pradesh",
                 "city": "Vijayawada",
                 "latitude": 16.5181,
                 "longitude": 80.6195,
@@ -188,8 +192,24 @@ def seed_database():
             },
             {
                 "manager_id": mgr1.id,
+                "name": "Beach Road Coastal Parking",
+                "address": "RK Beach Promenade, Pandurangapuram",
+                "state": "Andhra Pradesh",
+                "city": "Visakhapatnam",
+                "latitude": 17.7126,
+                "longitude": 83.3181,
+                "price_per_hour": 20,
+                "opening_time": "05:00",
+                "closing_time": "23:30",
+                "facilities": "CCTV,Lighting,Sea View,Bike Dedicated Bays,EV Points",
+                "description": "Scenic beachside parking lot with automated entry and dedicated motorcycle & EV bays.",
+                "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            },
+            {
+                "manager_id": mgr1.id,
                 "name": "Lakshmipuram Commercial Hub Parking",
                 "address": "Main Road, Lakshmipuram",
+                "state": "Andhra Pradesh",
                 "city": "Guntur",
                 "latitude": 16.3067,
                 "longitude": 80.4365,
@@ -201,9 +221,27 @@ def seed_database():
                 "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
             },
             {
+                "manager_id": mgr1.id,
+                "name": "Alipiri Transit & Pilgrim Parking",
+                "address": "Alipiri Foothills, Bypass Road",
+                "state": "Andhra Pradesh",
+                "city": "Tirupati",
+                "latitude": 13.6510,
+                "longitude": 79.3995,
+                "price_per_hour": 15,
+                "opening_time": "00:00",
+                "closing_time": "23:59",
+                "facilities": "24/7 Security,CCTV,Restrooms,Battery Top-Up,Covered Sheds",
+                "description": "Expansive safe pilgrim parking hub located at the Alipiri check-point with 24/7 security patrol.",
+                "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # TELANGANA
+            {
                 "manager_id": mgr2.id,
                 "name": "HITEC City Cyber Towers Smart Bay",
                 "address": "Cyber Towers Quad, HITEC City, Madhapur",
+                "state": "Telangana",
                 "city": "Hyderabad",
                 "latitude": 17.4504,
                 "longitude": 78.3808,
@@ -218,6 +256,7 @@ def seed_database():
                 "manager_id": mgr2.id,
                 "name": "Gachibowli Financial District Hub",
                 "address": "ISB Road, Near WaveRock, Financial District",
+                "state": "Telangana",
                 "city": "Hyderabad",
                 "latitude": 17.4200,
                 "longitude": 78.3378,
@@ -232,6 +271,7 @@ def seed_database():
                 "manager_id": mgr2.id,
                 "name": "Banjara Hills Road No 12 Plaza Parking",
                 "address": "Road No. 12, Banjara Hills",
+                "state": "Telangana",
                 "city": "Hyderabad",
                 "latitude": 17.4140,
                 "longitude": 78.4380,
@@ -244,30 +284,194 @@ def seed_database():
             },
             {
                 "manager_id": mgr2.id,
-                "name": "Alipiri Transit & Pilgrim Parking",
-                "address": "Alipiri Foothills, Bypass Road",
-                "city": "Tirupati",
-                "latitude": 13.6510,
-                "longitude": 79.3995,
+                "name": "Warangal Fort View Smart Lot",
+                "address": "Station Road, Near Warangal Fort",
+                "state": "Telangana",
+                "city": "Warangal",
+                "latitude": 17.9689,
+                "longitude": 79.5941,
                 "price_per_hour": 15,
-                "opening_time": "00:00",
+                "opening_time": "06:00",
+                "closing_time": "22:00",
+                "facilities": "CCTV,Security Guard,Covered Sheds",
+                "description": "Central city lot for heritage visitors and downtown shoppers in Warangal.",
+                "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # KARNATAKA
+            {
+                "manager_id": mgr2.id,
+                "name": "MG Road Metro Station Parking",
+                "address": "MG Road, Near Boulevard, Church Street Junction",
+                "state": "Karnataka",
+                "city": "Bengaluru",
+                "latitude": 12.9756,
+                "longitude": 77.6066,
+                "price_per_hour": 40,
+                "opening_time": "06:00",
+                "closing_time": "23:30",
+                "facilities": "Fast EV Charging,CCTV,Metro Transit Access,Security Guard",
+                "description": "Prime downtown Bengaluru parking facility connected directly to Namma Metro and MG Road shopping hub.",
+                "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            },
+            {
+                "manager_id": mgr2.id,
+                "name": "Koramangala 80ft Road Park Plaza",
+                "address": "80 Feet Road, 4th Block, Koramangala",
+                "state": "Karnataka",
+                "city": "Bengaluru",
+                "latitude": 12.9352,
+                "longitude": 77.6245,
+                "price_per_hour": 35,
+                "opening_time": "07:00",
                 "closing_time": "23:59",
-                "facilities": "24/7 Security,CCTV,Restrooms,Battery Top-Up,Covered Sheds",
-                "description": "Expansive safe pilgrim parking hub located at the Alipiri check-point with 24/7 security patrol.",
+                "facilities": "CCTV,Valet Parking,EV Charger,Covered Bays",
+                "description": "Automated parking deck in the vibrant cafe and startup hub of Koramangala.",
                 "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
             },
             {
                 "manager_id": mgr2.id,
-                "name": "Beach Road Coastal Parking",
-                "address": "RK Beach Promenade, Pandurangapuram",
-                "city": "Visakhapatnam",
-                "latitude": 17.7126,
-                "longitude": 83.3181,
+                "name": "Mysore Palace Visitor Smart Hub",
+                "address": "Palace South Gate, Sayyaji Rao Road",
+                "state": "Karnataka",
+                "city": "Mysore",
+                "latitude": 12.3052,
+                "longitude": 76.6552,
                 "price_per_hour": 20,
-                "opening_time": "05:00",
+                "opening_time": "06:00",
+                "closing_time": "22:00",
+                "facilities": "CCTV,Tourist Coach & Car Bays,Restrooms,EV Points",
+                "description": "Safe, spacious heritage parking lot right outside the main Mysore Palace gates.",
+                "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # TAMIL NADU
+            {
+                "manager_id": mgr2.id,
+                "name": "T. Nagar Shopping Hub Multi-Tier Park",
+                "address": "Usman Road, T. Nagar",
+                "state": "Tamil Nadu",
+                "city": "Chennai",
+                "latitude": 13.0418,
+                "longitude": 80.2341,
+                "price_per_hour": 35,
+                "opening_time": "07:00",
+                "closing_time": "23:00",
+                "facilities": "CCTV,Automated Elevators,Covered Parking,Valet",
+                "description": "Multi-tier automated smart parking building in Chennai's premier retail center.",
+                "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            },
+            {
+                "manager_id": mgr2.id,
+                "name": "OMR IT Corridor Express Parking",
+                "address": "Rajiv Gandhi Salai (OMR), Perungudi",
+                "state": "Tamil Nadu",
+                "city": "Chennai",
+                "latitude": 12.9654,
+                "longitude": 80.2486,
+                "price_per_hour": 30,
+                "opening_time": "00:00",
+                "closing_time": "23:59",
+                "facilities": "Fast EV Charging,CCTV,24/7 Guard,Covered Sheds",
+                "description": "Dedicated parking facility serving tech parks along Old Mahabalipuram Road.",
+                "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # MAHARASHTRA
+            {
+                "manager_id": mgr2.id,
+                "name": "BKC Executive Smart Hub",
+                "address": "G Block, Bandra Kurla Complex, Bandra East",
+                "state": "Maharashtra",
+                "city": "Mumbai",
+                "latitude": 19.0657,
+                "longitude": 72.8687,
+                "price_per_hour": 50,
+                "opening_time": "00:00",
+                "closing_time": "23:59",
+                "facilities": "Fast EV Supercharger,CCTV,Valet VIP Service,Boom Barrier",
+                "description": "State-of-the-art parking facility serving Mumbai's central business district.",
+                "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            },
+            {
+                "manager_id": mgr2.id,
+                "name": "Koregaon Park Central Smart Lot",
+                "address": "North Main Road, Koregaon Park",
+                "state": "Maharashtra",
+                "city": "Pune",
+                "latitude": 18.5362,
+                "longitude": 73.8940,
+                "price_per_hour": 30,
+                "opening_time": "07:00",
+                "closing_time": "23:59",
+                "facilities": "CCTV,Covered Bays,EV Point,Security Guard",
+                "description": "Boutique smart parking lot located in the prime dining and shopping district of Pune.",
+                "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # DELHI NCR
+            {
+                "manager_id": mgr2.id,
+                "name": "Connaught Place Inner Circle Deck",
+                "address": "Block C, Inner Circle, Connaught Place",
+                "state": "Delhi NCR",
+                "city": "New Delhi",
+                "latitude": 28.6315,
+                "longitude": 77.2167,
+                "price_per_hour": 45,
+                "opening_time": "06:00",
                 "closing_time": "23:30",
-                "facilities": "CCTV,Lighting,Sea View,Bike Dedicated Bays,EV Points",
-                "description": "Scenic beachside parking lot with automated entry and dedicated motorcycle & EV bays.",
+                "facilities": "Underground Covered,CCTV,EV Rapid Chargers,Security Guard",
+                "description": "Premier underground parking right under Connaught Place Inner Circle with metro link.",
+                "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            },
+            {
+                "manager_id": mgr2.id,
+                "name": "Cyber City Hub Parking",
+                "address": "DLF Cyber City, Phase 2",
+                "state": "Delhi NCR",
+                "city": "Gurgaon",
+                "latitude": 28.4950,
+                "longitude": 77.0895,
+                "price_per_hour": 40,
+                "opening_time": "00:00",
+                "closing_time": "23:59",
+                "facilities": "Fast EV Charging,CCTV,Valet,Multi-level Automated Deck",
+                "description": "Automated multi-level parking serving Gurgaon's Cyber Hub office and nightlife complex.",
+                "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # WEST BENGAL
+            {
+                "manager_id": mgr2.id,
+                "name": "Park Street Business District Deck",
+                "address": "Park Street, Near Flurys, Chowringhee",
+                "state": "West Bengal",
+                "city": "Kolkata",
+                "latitude": 22.5551,
+                "longitude": 88.3518,
+                "price_per_hour": 35,
+                "opening_time": "07:00",
+                "closing_time": "23:30",
+                "facilities": "CCTV,Covered Bays,Security Guard,EV Charger",
+                "description": "Secure parking facility in Kolkata's central heritage dining and retail boulevard.",
+                "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            },
+
+            # GUJARAT
+            {
+                "manager_id": mgr2.id,
+                "name": "CG Road Commerce Plaza",
+                "address": "CG Road, Navrangpura",
+                "state": "Gujarat",
+                "city": "Ahmedabad",
+                "latitude": 23.0333,
+                "longitude": 72.5631,
+                "price_per_hour": 25,
+                "opening_time": "08:00",
+                "closing_time": "23:00",
+                "facilities": "CCTV,Covered Bays,Automated Ticket Gate,EV Point",
+                "description": "Smart parking hub located on CG Road retail avenue in central Ahmedabad.",
                 "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
             }
         ]
@@ -279,6 +483,7 @@ def seed_database():
                 manager_id=loc["manager_id"],
                 name=loc["name"],
                 address=loc["address"],
+                state=loc["state"],
                 city=loc["city"],
                 latitude=loc["latitude"],
                 longitude=loc["longitude"],

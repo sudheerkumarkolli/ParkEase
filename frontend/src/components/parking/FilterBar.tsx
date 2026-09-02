@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
-import { Search, SlidersHorizontal, MapPin, Car, ArrowUpDown } from "lucide-react";
+import { Search, MapPin, Building, ArrowUpDown } from "lucide-react";
 
 interface FilterBarProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
+  selectedState: string;
+  onStateChange: (s: string) => void;
   selectedCity: string;
   onCityChange: (c: string) => void;
   selectedVehicle: string;
@@ -14,12 +16,15 @@ interface FilterBarProps {
   onSortChange: (s: string) => void;
   maxPrice: number | null;
   onMaxPriceChange: (p: number | null) => void;
+  states: string[];
   cities: string[];
 }
 
 export default function FilterBar({
   searchQuery,
   onSearchChange,
+  selectedState,
+  onStateChange,
   selectedCity,
   onCityChange,
   selectedVehicle,
@@ -28,6 +33,7 @@ export default function FilterBar({
   onSortChange,
   maxPrice,
   onMaxPriceChange,
+  states,
   cities,
 }: FilterBarProps) {
   return (
@@ -43,12 +49,30 @@ export default function FilterBar({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search by parking name, address, or landmark..."
+            placeholder="Search by parking name, address, state, or landmark..."
             className="w-full rounded-2xl border border-slate-100 bg-slate-950/80 pl-12 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition"
           />
         </div>
 
-        {/* City Filter */}
+        {/* State Filter Dropdown */}
+        <div className="relative w-full md:w-52">
+          <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+          <select
+            value={selectedState}
+            onChange={(e) => onStateChange(e.target.value)}
+            aria-label="Select State"
+            className="w-full rounded-2xl border border-slate-100 bg-slate-950/80 pl-10 pr-8 py-3 text-sm font-medium text-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 appearance-none cursor-pointer"
+          >
+            <option value="ALL">🇮🇳 All States</option>
+            {states.map((st) => (
+              <option key={st} value={st}>
+                {st}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* City Filter Dropdown */}
         <div className="relative w-full md:w-48">
           <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-violet-400" />
           <select
@@ -57,7 +81,9 @@ export default function FilterBar({
             aria-label="Select City"
             className="w-full rounded-2xl border border-slate-100 bg-slate-950/80 pl-10 pr-8 py-3 text-sm font-medium text-slate-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 appearance-none cursor-pointer"
           >
-            <option value="ALL">All Cities</option>
+            <option value="ALL">
+              {selectedState !== "ALL" ? `All Cities in ${selectedState}` : "All Cities"}
+            </option>
             {cities.map((city) => (
               <option key={city} value={city}>
                 {city}
@@ -67,16 +93,16 @@ export default function FilterBar({
         </div>
 
         {/* Sort Filter */}
-        <div className="relative w-full md:w-48">
+        <div className="relative w-full md:w-44">
           <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-teal-400" />
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value)}
             aria-label="Sort Options"
-            className="w-full rounded-2xl border border-slate-100 bg-slate-950/80 pl-10 pr-8 py-3 text-sm font-medium text-slate-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 appearance-none cursor-pointer"
+            className="w-full rounded-2xl border border-slate-100 bg-slate-950/80 pl-10 pr-8 py-3 text-sm font-medium text-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 appearance-none cursor-pointer"
           >
             <option value="name">Sort by Name</option>
-            <option value="slots_desc">Most Available Slots</option>
+            <option value="slots_desc">Most Slots Available</option>
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
             <option value="rating_desc">Highest Rated ⭐</option>
@@ -111,7 +137,7 @@ export default function FilterBar({
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-slate-500">Max Rate:</span>
           <div className="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-100">
-            {[null, 20, 30, 40].map((p, idx) => (
+            {[null, 20, 30, 40, 50].map((p, idx) => (
               <button
                 key={idx}
                 onClick={() => onMaxPriceChange(p)}
