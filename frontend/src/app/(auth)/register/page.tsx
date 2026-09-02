@@ -18,6 +18,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [vehicleType, setVehicleType] = useState("Car");
+  const [roleToken, setRoleToken] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,6 +90,7 @@ export default function RegisterPage() {
         vehicle_number: vehicleNumber.trim() || undefined,
         vehicle_type: vehicleType,
         otp: otp.trim(),
+        role_token: roleToken.trim() || undefined,
       });
     } catch (err: any) {
       setError(getErrorMessage(err, "Email verification failed. Please check the code and try again."));
@@ -238,6 +240,30 @@ export default function RegisterPage() {
                     <option value="EV">Electric Vehicle (EV)</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Optional Role Token */}
+              <div className="space-y-1.5 rounded-2xl bg-[#F8F9FE] p-3.5 border border-[#EBEAEE]">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-black text-[#120D26] flex items-center gap-1.5">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#5669FF]" />
+                    <span>Role Access Token</span>
+                    <span className="text-[10px] text-[#747688] font-normal">(Optional)</span>
+                  </label>
+                  <span className="text-[10px] text-[#5669FF] font-bold">
+                    No token = Driver
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={roleToken}
+                  onChange={(e) => setRoleToken(e.target.value)}
+                  placeholder="Enter Manager or Admin token (e.g. MANAGER2026)"
+                  className="w-full rounded-xl border border-[#EBEAEE] bg-white px-3.5 py-2.5 text-xs font-semibold text-[#120D26] placeholder-[#747688] focus:border-[#5669FF] focus:outline-none focus:ring-2 focus:ring-[#5669FF]/20"
+                />
+                <p className="text-[10px] text-[#747688] leading-tight font-medium">
+                  🔑 Leave empty for standard Driver account. Use <strong className="text-teal-700">MANAGER2026</strong> for Manager, or <strong className="text-purple-700">ADMIN2026</strong> for Admin.
+                </p>
               </div>
 
               {/* Password & Confirm Password */}

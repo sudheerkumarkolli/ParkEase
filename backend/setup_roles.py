@@ -92,6 +92,29 @@ def setup_exact_accounts():
         mgr2.is_active = True
     db.commit()
 
+    # 5. Setup Driver User (user@gmail.com / 12345678)
+    u_user = db.query(User).filter(User.email == "user@gmail.com").first()
+    if not u_user:
+        u_user = User(
+            full_name="Suresh Kumar (Default User)",
+            email="user@gmail.com",
+            phone="+91 98765 43210",
+            password_hash=get_password_hash("12345678"),
+            role=UserRole.USER.value,
+            vehicle_number="AP16BQ7788",
+            vehicle_type="Car",
+            is_active=True
+        )
+        db.add(u_user)
+        db.flush()
+        w = Wallet(user_id=u_user.id, balance=100)
+        db.add(w)
+    else:
+        u_user.password_hash = get_password_hash("12345678")
+        u_user.role = UserRole.USER.value
+        u_user.is_active = True
+    db.commit()
+
     # 5. Sync to MongoDB
     if mongo_users is not None:
         try:

@@ -45,7 +45,11 @@ export interface Payment {
   package_name: string;
   payment_method: string;
   transaction_id: string;
-  status: string;
+  qr_token?: string;
+  status: "PENDING_APPROVAL" | "COMPLETED" | "REJECTED" | string;
+  manager_id?: number;
+  parking_id?: number;
+  approved_at?: string;
   created_at: string;
 }
 

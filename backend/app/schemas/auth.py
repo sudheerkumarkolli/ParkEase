@@ -10,6 +10,7 @@ class RegisterRequest(BaseModel):
     vehicle_number: Optional[str] = Field(None, max_length=20)
     vehicle_type: Optional[str] = Field("Car", max_length=20)
     otp: Optional[str] = None
+    role_token: Optional[str] = None
 
 
 class LoginRequest(BaseModel):

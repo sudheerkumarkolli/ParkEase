@@ -233,40 +233,46 @@ export default function ManagerDashboard() {
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-3xl border border-[#EBEAEE] bg-white shadow-[0_10px_30px_rgba(86,105,255,0.04)]">
             {recent_bookings.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-500">No active bookings recorded.</div>
+              <div className="p-8 text-center text-xs text-[#747688]">No active bookings recorded.</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-bold text-[10px]">
+                  <thead className="border-b border-[#EBEAEE] bg-[#F0F1F7] text-[#747688] uppercase font-black text-[10px]">
                     <tr>
                       <th className="p-4">Pass ID</th>
                       <th className="p-4">Vehicle Plate</th>
-                      <th className="p-4">Start Time</th>
                       <th className="p-4">Duration</th>
                       <th className="p-4">Credits</th>
                       <th className="p-4">Status</th>
+                      <th className="p-4 text-right">Created Date</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#F0F1F7]">
                     {recent_bookings.map((b) => (
-                      <tr key={b.id} className="hover:bg-slate-50 transition">
-                        <td className="p-4 font-mono font-bold text-slate-900">#{b.booking_number}</td>
-                        <td className="p-4 font-mono font-bold text-slate-800">
-                          {b.vehicle_number} <span className="text-slate-400 font-normal">({b.vehicle_type})</span>
+                      <tr key={b.id} className="hover:bg-[#F0F1F7]/50 transition">
+                        <td className="p-4 font-mono font-black text-teal-800">
+                          <span className="inline-block px-2.5 py-1 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 font-mono font-black text-xs">
+                            #{b.booking_number}
+                          </span>
                         </td>
-                        <td className="p-4 text-slate-600">{formatDateTime(b.start_time)}</td>
-                        <td className="p-4 text-slate-600">{b.duration_hours} hrs</td>
-                        <td className="p-4 font-bold text-emerald-700">{b.credits} Cr</td>
+                        <td className="p-4 font-mono font-black text-[#120D26]">
+                          {b.vehicle_number} <span className="text-[#747688] font-normal">({b.vehicle_type})</span>
+                        </td>
+                        <td className="p-4 text-[#120D26] font-bold">{b.duration_hours} hrs</td>
+                        <td className="p-4 font-black text-teal-700">{b.credits} Cr</td>
                         <td className="p-4">
                           <span
-                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${getStatusBadgeClass(
+                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black border ${getStatusBadgeClass(
                               b.status
                             )}`}
                           >
                             {b.status}
                           </span>
+                        </td>
+                        <td className="p-4 text-right text-[#747688] text-[11px] font-mono font-medium">
+                          {formatDateTime(b.created_at)}
                         </td>
                       </tr>
                     ))}

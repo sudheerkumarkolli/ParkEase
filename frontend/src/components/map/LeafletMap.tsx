@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 import { ParkingLocation } from "@/types";
 import {
   MapPin,
@@ -14,6 +15,7 @@ import {
   ChevronRight,
   RotateCw,
   SlidersHorizontal,
+  Lock,
 } from "lucide-react";
 
 interface LeafletMapProps {
@@ -35,6 +37,7 @@ export default function LeafletMap({
   selectedParkingId,
   onSelectParking,
 }: LeafletMapProps) {
+  const { isAuthenticated } = useAuth();
   const [mapReady, setMapReady] = useState(false);
   const [locating, setLocating] = useState(false);
   const [activePopup, setActivePopup] = useState<ParkingLocation | null>(null);
@@ -282,10 +285,15 @@ export default function LeafletMap({
               View Details
             </Link>
             <Link
-              href={`/booking?parking_id=${activePopup.id}`}
+              href={
+                isAuthenticated
+                  ? `/booking?parking_id=${activePopup.id}`
+                  : `/login?redirect=${encodeURIComponent(`/booking?parking_id=${activePopup.id}`)}`
+              }
               className="flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-violet-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 transition shadow-md shadow-violet-500/20"
             >
-              Book Now
+              {!isAuthenticated && <Lock className="h-3 w-3 opacity-80" />}
+              <span>{isAuthenticated ? "Book Now" : "Login to Book"}</span>
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </div>

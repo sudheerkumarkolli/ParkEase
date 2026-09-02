@@ -47,7 +47,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+    // Prefetch all key application routes for instant navigation without loading lag
+    try {
+      router.prefetch("/dashboard");
+      router.prefetch("/manager/dashboard");
+      router.prefetch("/admin/dashboard");
+      router.prefetch("/parking");
+      router.prefetch("/booking");
+      router.prefetch("/login");
+    } catch (e) {
+      // Ignore in non-browser environments
+    }
+  }, [router]);
 
   const sendOtp = async (email: string) => {
     const res = await api.post("/auth/send-otp", { email });
@@ -105,7 +116,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
     const redirectUrl = searchParams?.get("redirect");
-    router.push(redirectUrl || "/dashboard");
+
+    if (registeredUser.role === "ADMIN") {
+      router.push(redirectUrl || "/admin/dashboard");
+    } else if (registeredUser.role === "PARKING_MANAGER") {
+      router.push(redirectUrl || "/manager/dashboard");
+    } else {
+      router.push(redirectUrl || "/dashboard");
+    }
     return registeredUser;
   };
 

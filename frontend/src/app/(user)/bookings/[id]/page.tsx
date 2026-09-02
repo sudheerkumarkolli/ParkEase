@@ -137,22 +137,65 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Cancellation Control */}
           {isCancellable && (
-            <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 space-y-3 shadow-sm">
-              <div className="flex items-center gap-2 text-rose-800 font-bold text-xs">
-                <AlertTriangle className="h-4 w-4 text-rose-600" />
-                <span>Cancel Reservation</span>
+            <div className="rounded-3xl border border-rose-200 bg-rose-50/70 p-6 space-y-3 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-rose-800 font-black text-xs">
+                  <AlertTriangle className="h-4 w-4 text-rose-600" />
+                  <span>Cancellation & Refund Policy</span>
+                </div>
+                {(() => {
+                  const created = new Date(booking.created_at).getTime();
+                  const now = Date.now();
+                  const elapsedMs = now - created;
+                  const fiveMinsMs = 5 * 60 * 1000;
+                  const remainingSec = Math.max(0, Math.floor((fiveMinsMs - elapsedMs) / 1000));
+                  const isWithin5Mins = remainingSec > 0;
+                  const mins = Math.floor(remainingSec / 60);
+                  const secs = remainingSec % 60;
+
+                  return (
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                      isWithin5Mins
+                        ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                        : "bg-amber-100 text-amber-900 border border-amber-300"
+                    }`}>
+                      {isWithin5Mins ? `Refund Window: ${mins}m ${secs}s` : "Non-Refundable"}
+                    </span>
+                  );
+                })()}
               </div>
-              <p className="text-xs text-slate-600">
-                Plans changed? Cancel before your session starts for an immediate 100% credit refund ({booking.credits} credits).
-              </p>
-              <button
-                onClick={handleCancel}
-                disabled={cancelling}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-bold text-rose-700 bg-white border border-rose-300 hover:bg-rose-100 transition disabled:opacity-50 shadow-xs"
-              >
-                <Ban className="h-4 w-4" />
-                {cancelling ? "Processing Refund..." : `Cancel & Refund ${booking.credits} Credits`}
-              </button>
+
+              {(() => {
+                const created = new Date(booking.created_at).getTime();
+                const now = Date.now();
+                const isWithin5Mins = (now - created) <= 5 * 60 * 1000;
+
+                return (
+                  <>
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                      {isWithin5Mins
+                        ? `Cancel within 5 minutes for an immediate 100% credit refund (${booking.credits} credits). The hub manager will receive an automated refund alert.`
+                        : `The 5-minute refund window has passed. You can still release your slot for other drivers, but credits will be retained as non-refundable and an alert will be sent to the administrator.`}
+                    </p>
+                    <button
+                      onClick={handleCancel}
+                      disabled={cancelling}
+                      className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black transition disabled:opacity-50 shadow-sm cursor-pointer ${
+                        isWithin5Mins
+                          ? "bg-rose-600 hover:bg-rose-700 text-white shadow-rose-600/20"
+                          : "bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/20"
+                      }`}
+                    >
+                      <Ban className="h-4 w-4" />
+                      {cancelling
+                        ? "Processing..."
+                        : isWithin5Mins
+                        ? `Cancel & Refund ${booking.credits} Credits`
+                        : "Cancel Reservation (No Refund)"}
+                    </button>
+                  </>
+                );
+              })()}
             </div>
           )}
 

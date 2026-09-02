@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Review } from "@/types";
-import { Star, MessageSquare, CheckCircle, User } from "lucide-react";
+import { Star, MessageSquare, CheckCircle, User, Sparkles } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface ReviewListProps {
@@ -44,29 +44,31 @@ export default function ReviewList({
     <div className="space-y-6">
       
       {/* Summary Score Card */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-slate-100 bg-white/60 p-6 backdrop-blur-xl">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-[#EBEAEE] bg-white p-6 shadow-[0_10px_30px_rgba(86,105,255,0.05)]">
         <div className="flex items-center gap-5">
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-violet-500/10 border border-violet-500/20 p-4 min-w-[90px]">
-            <span className="text-3xl font-extrabold text-violet-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-[#F0F1F7] border border-[#EBEAEE] p-4 min-w-[90px]">
+            <span className="text-3xl font-black text-[#120D26]">
               {averageRating ? averageRating.toFixed(1) : "5.0"}
             </span>
             <div className="flex items-center gap-0.5 mt-1 text-amber-400">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                   key={i}
-                  className={`h-3 w-3 ${
-                    i <= Math.round(averageRating || 5) ? "fill-amber-400" : "text-slate-700"
+                  className={`h-3.5 w-3.5 ${
+                    i <= Math.round(averageRating || 5)
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-slate-300"
                   }`}
                 />
               ))}
             </div>
-            <span className="text-[10px] text-slate-500 mt-1">{totalReviews} Verified</span>
+            <span className="text-[10px] font-bold text-[#747688] mt-1">{totalReviews} Verified</span>
           </div>
 
           <div>
-            <h4 className="text-base font-bold text-white">Customer Satisfaction</h4>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Verified drivers who reserved and parked at this location.
+            <h4 className="text-base font-black text-[#120D26]">Driver Satisfaction Score</h4>
+            <p className="text-xs text-[#747688] mt-0.5 font-medium">
+              Verified drivers who reserved bays and parked at this smart facility.
             </p>
           </div>
         </div>
@@ -74,10 +76,10 @@ export default function ReviewList({
         {canReview && onAddReview && (
           <button
             onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 rounded-xl bg-violet-500 px-4 py-2.5 text-xs font-bold text-slate-950 hover:bg-violet-400 transition shadow-lg shadow-violet-500/20"
+            className="flex items-center gap-2 rounded-2xl bg-[#5669FF] px-5 py-3 text-xs font-black text-white hover:bg-[#4657E5] transition shadow-md shadow-[#5669FF]/25 cursor-pointer active:scale-95"
           >
             <MessageSquare className="h-4 w-4" />
-            Write a Review
+            <span>Write a Review</span>
           </button>
         )}
       </div>
@@ -85,25 +87,25 @@ export default function ReviewList({
       {/* Reviews List */}
       <div className="space-y-3">
         {reviews.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-100 p-8 text-center text-slate-500 text-xs">
-            No reviews yet for this parking location.
+          <div className="rounded-3xl border-2 border-dashed border-[#EBEAEE] bg-white p-8 text-center text-[#747688] text-xs font-medium">
+            No driver reviews yet for this facility.
           </div>
         ) : (
           reviews.map((r) => (
             <div
               key={r.id}
-              className="rounded-2xl border border-slate-100/80 bg-slate-950/40 p-4 transition hover:border-slate-200"
+              className="rounded-3xl border border-[#EBEAEE] bg-white p-5 shadow-[0_4px_20px_rgba(86,105,255,0.04)] transition hover:border-[#5669FF]/40 space-y-2.5"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-slate-100 text-violet-400 font-bold text-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#5669FF]/10 text-[#5669FF] font-black text-xs">
                     <User className="h-4 w-4" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-slate-200">
+                    <span className="text-xs font-black text-[#120D26]">
                       {r.user_name || "Verified Driver"}
                     </span>
-                    <div className="flex items-center gap-1 text-[10px] text-violet-400 font-medium">
+                    <div className="flex items-center gap-1 text-[10px] text-emerald-600 font-bold">
                       <CheckCircle className="h-3 w-3" />
                       <span>Verified ParkEase Booking</span>
                     </div>
@@ -114,17 +116,17 @@ export default function ReviewList({
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star
                       key={i}
-                      className={`h-3 w-3 ${
-                        i <= r.rating ? "fill-amber-400 text-amber-400" : "text-slate-800"
+                      className={`h-3.5 w-3.5 ${
+                        i <= r.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"
                       }`}
                     />
                   ))}
-                  <span className="text-[10px] text-slate-500 ml-1.5">{formatDate(r.created_at)}</span>
+                  <span className="text-[11px] font-bold text-[#747688] ml-1.5">{formatDate(r.created_at)}</span>
                 </div>
               </div>
 
               {r.comment && (
-                <p className="text-xs text-slate-600 pl-10 leading-relaxed">{r.comment}</p>
+                <p className="text-xs text-[#120D26] pl-12 leading-relaxed font-medium">{r.comment}</p>
               )}
             </div>
           ))
@@ -133,31 +135,31 @@ export default function ReviewList({
 
       {/* Write Review Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md animate-in fade-in">
-          <div className="max-w-md w-full rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-white">Rate Your Parking Experience</h3>
-              <button onClick={() => setModalOpen(false)} className="text-slate-500 hover:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="max-w-md w-full rounded-3xl border border-[#EBEAEE] bg-white p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#F0F1F7] pb-3">
+              <h3 className="text-base font-black text-[#120D26]">Rate Your Parking Experience</h3>
+              <button onClick={() => setModalOpen(false)} className="text-[#747688] hover:text-[#120D26] font-bold text-sm cursor-pointer">
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-2">Rating</label>
+                <label className="block text-xs font-black text-[#120D26] mb-2">Rating</label>
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setSelectedRating(star)}
-                      className="p-1 hover:scale-110 transition-transform"
+                      className="p-1 hover:scale-110 transition-transform cursor-pointer"
                     >
                       <Star
                         className={`h-7 w-7 ${
                           star <= selectedRating
                             ? "fill-amber-400 text-amber-400"
-                            : "text-slate-700"
+                            : "text-slate-200"
                         }`}
                       />
                     </button>
@@ -166,13 +168,13 @@ export default function ReviewList({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-2">Your Feedback</label>
+                <label className="block text-xs font-black text-[#120D26] mb-2">Your Feedback</label>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
                   placeholder="Share your experience (e.g. ease of entry, cleanliness, security)..."
-                  className="w-full rounded-2xl border border-slate-100 bg-slate-950 p-3 text-xs text-white placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                  className="w-full rounded-2xl border border-[#EBEAEE] bg-[#F8F9FE] p-3 text-xs text-[#120D26] placeholder-[#747688] font-medium focus:border-[#5669FF] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#5669FF]/15"
                 />
               </div>
 
@@ -180,14 +182,14 @@ export default function ReviewList({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 rounded-xl bg-slate-50 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-700 transition"
+                  className="flex-1 rounded-xl bg-[#F0F1F7] py-3 text-xs font-bold text-[#747688] hover:bg-[#EBEAEE] hover:text-[#120D26] transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 rounded-xl bg-violet-500 py-2.5 text-xs font-bold text-slate-950 hover:bg-violet-400 transition shadow-lg shadow-violet-500/20"
+                  className="flex-1 rounded-xl bg-[#5669FF] py-3 text-xs font-black text-white hover:bg-[#4657E5] transition shadow-md shadow-[#5669FF]/20 cursor-pointer disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Post Review"}
                 </button>
@@ -199,3 +201,4 @@ export default function ReviewList({
     </div>
   );
 }
+
