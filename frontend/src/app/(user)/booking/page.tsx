@@ -346,6 +346,8 @@ function BookingFlow() {
             <SlotMatrix
               slots={slots}
               selectedSlotId={selectedSlotId}
+              facilityName={selectedParking?.name}
+              facilityPrice={selectedParking?.price_per_hour}
               onSelectSlot={(slot) => setSelectedSlotId(slot.id)}
             />
           </div>

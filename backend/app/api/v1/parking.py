@@ -6,12 +6,14 @@ from app.database.session import get_db
 from app.models.parking import ParkingLocation, ParkingSlot, ParkingStatus, SlotStatus
 from app.models.user import User, UserRole
 from app.models.booking import Booking, BookingStatus
+from app.models.notification import Notification
 from app.schemas.parking import (
     ParkingLocationResponse,
     ParkingLocationCreate,
     ParkingLocationUpdate,
     ParkingDetailResponse,
-    NearbyParkingResponse
+    NearbyParkingResponse,
+    ParkingLocationRequest
 )
 from app.schemas.slot import SlotResponse
 from app.services.auth_service import get_current_active_user, require_manager_or_admin
@@ -158,6 +160,32 @@ def get_nearby_parkings(
         max_radius_km=radius_km
     )
     return nearby
+
+@router.post("/nearby/request")
+def request_nearby_parking(
+    req: ParkingLocationRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    # Find all ADMIN users
+    admins = db.query(User).filter(User.role == UserRole.ADMIN.value).all()
+    
+    # Create notification for each admin
+    notifications = []
+    for admin in admins:
+        notif = Notification(
+            user_id=admin.id,
+            title="New Parking Location Request",
+            message=f"User {current_user.full_name} requested a new parking location near Latitude: {req.latitude}, Longitude: {req.longitude}.",
+            type="REQUEST"
+        )
+        notifications.append(notif)
+    
+    if notifications:
+        db.add_all(notifications)
+        db.commit()
+        
+    return {"message": "Request sent successfully to administrators."}
 
 @router.get("/{parking_id}", response_model=ParkingDetailResponse)
 def get_parking_by_id(parking_id: int, db: Session = Depends(get_db)):

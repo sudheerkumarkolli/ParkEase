@@ -31,6 +31,7 @@ import {
   ShieldCheck,
   PlusCircle,
 } from "lucide-react";
+import GPSPromptModal from "@/components/location/GPSPromptModal";
 
 export default function ManagerDashboard() {
   const { user } = useAuth();
@@ -73,6 +74,9 @@ export default function ManagerDashboard() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] bg-slate-50">
+      {/* GPS Location Prompt on Manager Login */}
+      <GPSPromptModal />
+
       <Sidebar type="manager" />
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl">
