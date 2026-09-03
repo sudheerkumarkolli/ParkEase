@@ -34,20 +34,40 @@ export default function ParkingDetailPage({ params }: { params: Promise<{ id: st
   const [parking, setParking] = useState<ParkingLocation | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const fetchDetails = async () => {
+    if (isNaN(parkingId)) {
+      setError("Invalid parking location ID.");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
-      const [pRes, rRes] = await Promise.all([
+      setError(null);
+      const [pRes, rRes] = await Promise.allSettled([
         api.get<ParkingLocation>(`/parking/${parkingId}`),
         api.get<Review[]>(`/reviews/parking/${parkingId}`),
       ]);
-      setParking(pRes.data);
-      setReviews(rRes.data);
-    } catch (err) {
+
+      if (pRes.status === "fulfilled") {
+        setParking(pRes.value.data);
+      } else {
+        const detail = (pRes.reason as any)?.response?.data?.detail || "Could not retrieve parking location details.";
+        setError(detail);
+      }
+
+      if (rRes.status === "fulfilled") {
+        setReviews(rRes.value.data || []);
+      } else {
+        setReviews([]);
+      }
+    } catch (err: any) {
       console.error("Failed to load parking details:", err);
+      setError(err?.response?.data?.detail || err?.message || "Failed to load parking facility details.");
     } finally {
       setLoading(false);
     }
@@ -57,11 +77,39 @@ export default function ParkingDetailPage({ params }: { params: Promise<{ id: st
     fetchDetails();
   }, [parkingId]);
 
-  if (loading || !parking) {
+  if (loading) {
     return (
       <div className="max-w-7xl mx-auto p-8 space-y-6">
         <div className="h-64 rounded-3xl bg-white animate-pulse border border-[#EBEAEE]" />
         <div className="h-96 rounded-3xl bg-white animate-pulse border border-[#EBEAEE]" />
+      </div>
+    );
+  }
+
+  if (error || !parking) {
+    return (
+      <div className="max-w-3xl mx-auto my-16 p-8 bg-white border border-rose-100 rounded-3xl shadow-sm text-center space-y-4">
+        <div className="inline-flex p-3 bg-rose-50 text-rose-600 rounded-2xl">
+          <ShieldCheck className="h-8 w-8 text-rose-500" />
+        </div>
+        <h2 className="text-xl font-bold text-gray-900">Parking Facility Not Found</h2>
+        <p className="text-sm text-gray-500 max-w-md mx-auto">
+          {error || "We couldn't locate this parking facility. It may have been removed or is temporarily unavailable."}
+        </p>
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <Link
+            href="/parking"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition"
+          >
+            Browse All Locations
+          </Link>
+          <button
+            onClick={() => fetchDetails()}
+            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#5669FF] hover:bg-[#4657E5] transition"
+          >
+            Retry Loading
+          </button>
+        </div>
       </div>
     );
   }
