@@ -85,6 +85,8 @@ export default function RegionSelectorModal({
     setSelectedCity(city);
     if (typeof window !== "undefined") {
       localStorage.setItem("parkease_selected_region", city);
+      localStorage.setItem("parkease_selected_city", city);
+      window.dispatchEvent(new Event("parkease_location_change"));
     }
     if (onSelectRegion) {
       onSelectRegion(city);
@@ -94,6 +96,8 @@ export default function RegionSelectorModal({
   const handleConfirmAndClose = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem("parkease_selected_region", selectedCity);
+      localStorage.setItem("parkease_selected_city", selectedCity);
+      window.dispatchEvent(new Event("parkease_location_change"));
     }
     if (onSelectRegion) {
       onSelectRegion(selectedCity);

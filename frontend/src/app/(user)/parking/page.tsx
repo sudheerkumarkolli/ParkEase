@@ -15,12 +15,14 @@ function ParkingSearchContent() {
   const { isAuthenticated } = useAuth();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("query") || "";
+  const initialState = searchParams.get("state") || "";
   const initialCity = searchParams.get("city") || "";
   const initialType = searchParams.get("type") || "ALL";
 
   const [parkings, setParkings] = useState<ParkingLocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [selectedState, setSelectedState] = useState(initialState || "ALL");
   const [selectedCity, setSelectedCity] = useState(initialCity || "ALL");
   const [selectedVehicle, setSelectedVehicle] = useState(initialType);
   const [sortBy, setSortBy] = useState("name");
@@ -31,18 +33,29 @@ function ParkingSearchContent() {
   const [locating, setLocating] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !initialCity) {
-      const saved = localStorage.getItem("parkease_selected_region");
-      if (saved) {
-        setSelectedCity(saved);
-      }
+    if (typeof window !== "undefined") {
+      const savedSt = localStorage.getItem("parkease_selected_state");
+      const savedCt = localStorage.getItem("parkease_selected_city");
+      if (savedSt && !initialState) setSelectedState(savedSt);
+      if (savedCt && !initialCity) setSelectedCity(savedCt);
     }
-  }, [initialCity]);
+  }, [initialState, initialCity]);
+
+  // Sync state & city with localStorage & notify Navbar
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("parkease_selected_state", selectedState);
+      localStorage.setItem("parkease_selected_city", selectedCity);
+      window.dispatchEvent(new Event("parkease_location_change"));
+    }
+  }, [selectedState, selectedCity]);
 
   // Keep search query in sync if URL query changes
   useEffect(() => {
     const q = searchParams.get("query");
     if (q !== null) setSearchQuery(q);
+    const s = searchParams.get("state");
+    if (s !== null) setSelectedState(s);
     const c = searchParams.get("city");
     if (c !== null) setSelectedCity(c);
     const t = searchParams.get("type");
@@ -54,6 +67,7 @@ function ParkingSearchContent() {
       setLoading(true);
       let url = `/parking?sort_by=${sortBy}`;
       if (searchQuery) url += `&query=${encodeURIComponent(searchQuery)}`;
+      if (selectedState && selectedState !== "ALL") url += `&state=${encodeURIComponent(selectedState)}`;
       if (selectedCity && selectedCity !== "ALL") url += `&city=${encodeURIComponent(selectedCity)}`;
       if (selectedVehicle && selectedVehicle !== "ALL") url += `&vehicle_type=${encodeURIComponent(selectedVehicle)}`;
       if (maxPrice !== null) url += `&max_price=${maxPrice}`;
@@ -76,7 +90,7 @@ function ParkingSearchContent() {
 
   useEffect(() => {
     fetchParkings();
-  }, [searchQuery, selectedCity, selectedVehicle, sortBy, maxPrice, userLocation]);
+  }, [searchQuery, selectedState, selectedCity, selectedVehicle, sortBy, maxPrice, userLocation]);
 
   const detectLocation = () => {
     if (!navigator.geolocation) {
@@ -189,6 +203,11 @@ function ParkingSearchContent() {
       <FilterBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        selectedState={selectedState}
+        onStateChange={(s) => {
+          setSelectedState(s);
+          setUserLocation(null);
+        }}
         selectedCity={selectedCity}
         onCityChange={(c) => {
           setSelectedCity(c);
@@ -200,7 +219,6 @@ function ParkingSearchContent() {
         onSortChange={setSortBy}
         maxPrice={maxPrice}
         onMaxPriceChange={setMaxPrice}
-        cities={cities}
       />
 
       {/* Results Header */}
@@ -236,6 +254,7 @@ function ParkingSearchContent() {
           <button
             onClick={() => {
               setSearchQuery("");
+              setSelectedState("ALL");
               setSelectedCity("ALL");
               setSelectedVehicle("ALL");
               setMaxPrice(null);

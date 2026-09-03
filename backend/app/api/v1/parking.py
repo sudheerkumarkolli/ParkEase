@@ -25,7 +25,8 @@ router = APIRouter()
 
 @router.get("", response_model=List[ParkingLocationResponse])
 def get_all_parkings(
-    query: Optional[str] = Query(None, description="Search by name, address, or city"),
+    query: Optional[str] = Query(None, description="Search by name, address, city, or state"),
+    state: Optional[str] = Query(None),
     city: Optional[str] = Query(None),
     vehicle_type: Optional[str] = Query(None),
     min_price: Optional[int] = Query(None),
@@ -45,11 +46,15 @@ def get_all_parkings(
             or_(
                 ParkingLocation.name.ilike(pattern),
                 ParkingLocation.address.ilike(pattern),
-                ParkingLocation.city.ilike(pattern)
+                ParkingLocation.city.ilike(pattern),
+                ParkingLocation.state.ilike(pattern)
             )
         )
 
-    if city:
+    if state and state != "ALL":
+        q = q.filter(ParkingLocation.state.ilike(f"%{state}%"))
+
+    if city and city != "ALL":
         q = q.filter(ParkingLocation.city.ilike(f"%{city}%"))
 
     if vehicle_type:
@@ -83,6 +88,7 @@ def get_all_parkings(
             "name": p.name,
             "address": p.address,
             "city": p.city,
+            "state": p.state,
             "latitude": p.latitude,
             "longitude": p.longitude,
             "total_slots": p.total_slots,
@@ -134,6 +140,7 @@ def get_nearby_parkings(
             "name": p.name,
             "address": p.address,
             "city": p.city,
+            "state": p.state,
             "latitude": p.latitude,
             "longitude": p.longitude,
             "total_slots": p.total_slots,
@@ -202,6 +209,7 @@ def get_parking_by_id(parking_id: int, db: Session = Depends(get_db)):
         "name": parking.name,
         "address": parking.address,
         "city": parking.city,
+        "state": parking.state,
         "latitude": parking.latitude,
         "longitude": parking.longitude,
         "total_slots": parking.total_slots,
@@ -238,6 +246,7 @@ def create_parking(
         name=req.name,
         address=req.address,
         city=req.city,
+        state=req.state,
         latitude=req.latitude,
         longitude=req.longitude,
         total_slots=req.total_slots or 0,

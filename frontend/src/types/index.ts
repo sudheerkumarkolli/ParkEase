@@ -81,6 +81,8 @@ export interface ParkingLocation {
   name: string;
   address: string;
   city?: string;
+  state?: string;
+  country?: string;
   latitude: number;
   longitude: number;
   total_slots: number;

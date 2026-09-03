@@ -23,6 +23,8 @@ class ParkingLocation(Base):
     name = Column(String(255), index=True, nullable=False)
     address = Column(String(500), nullable=False)
     city = Column(String(100), nullable=True)
+    state = Column(String(100), nullable=True)
+    country = Column(String(100), default="India", nullable=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     total_slots = Column(Integer, default=0, nullable=False)

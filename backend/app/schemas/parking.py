@@ -12,6 +12,8 @@ class ParkingLocationBase(BaseModel):
     name: str
     address: str
     city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = "India"
     latitude: float
     longitude: float
     total_slots: Optional[int] = 0
@@ -39,6 +41,8 @@ class ParkingLocationUpdate(BaseModel):
     name: Optional[str] = None
     address: Optional[str] = None
     city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     price_per_hour: Optional[int] = None

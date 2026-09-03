@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { ParkingLocation, Review } from "@/types";
 import { api } from "@/lib/api";
 import SlotMatrix from "@/components/parking/SlotMatrix";
+import ParkingStylesGallery from "@/components/parking/ParkingStylesGallery";
 import ReviewList from "@/components/parking/ReviewList";
 import LoginModal from "@/components/auth/LoginModal";
 import {
@@ -205,6 +206,9 @@ export default function ParkingDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
         </div>
+
+        {/* Visual Multi-Angle Parking Styles Showcase */}
+        <ParkingStylesGallery />
 
         {/* Visual Slot Layout */}
         <div className="space-y-4">

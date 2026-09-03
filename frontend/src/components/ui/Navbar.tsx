@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Notification } from "@/types";
+import RegionSelectorModal from "@/components/parking/RegionSelectorModal";
 import {
   MapPin,
   Compass,
@@ -31,6 +32,7 @@ import {
   CreditCard,
   TrendingUp,
   ArrowRight,
+  ChevronDown,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -40,7 +42,43 @@ export default function Navbar() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [locationLabel, setLocationLabel] = useState<string>("All Locations");
+  const [isRegionModalOpen, setIsRegionModalOpen] = useState(false);
   const pathname = usePathname();
+
+  React.useEffect(() => {
+    const updateLabel = () => {
+      if (typeof window !== "undefined") {
+        const savedState = localStorage.getItem("parkease_selected_state");
+        const savedCity = localStorage.getItem("parkease_selected_city") || localStorage.getItem("parkease_selected_region");
+
+        const st = savedState && savedState !== "ALL" ? savedState : "";
+        const ct = savedCity && savedCity !== "ALL" ? savedCity : "";
+
+        if (ct && st) {
+          setLocationLabel(`${ct}, ${st}`);
+        } else if (ct) {
+          setLocationLabel(ct);
+        } else if (st) {
+          setLocationLabel(`${st} State`);
+        } else {
+          setLocationLabel("All Locations");
+        }
+      }
+    };
+
+    const handleOpenModal = () => setIsRegionModalOpen(true);
+
+    updateLabel();
+    window.addEventListener("storage", updateLabel);
+    window.addEventListener("parkease_location_change", updateLabel);
+    window.addEventListener("open_region_modal", handleOpenModal);
+    return () => {
+      window.removeEventListener("storage", updateLabel);
+      window.removeEventListener("parkease_location_change", updateLabel);
+      window.removeEventListener("open_region_modal", handleOpenModal);
+    };
+  }, []);
 
   const role = user?.role;
   const isAdmin = role === "ADMIN";
@@ -111,6 +149,18 @@ export default function Navbar() {
               </span>
             </div>
           </Link>
+
+          {/* Interactive Location Badge Pill */}
+          <button
+            type="button"
+            onClick={() => setIsRegionModalOpen(true)}
+            title="Click to select region or city"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F0F1F7] hover:bg-[#E4E6F1] border border-[#EBEAEE] text-xs font-bold text-[#120D26] shadow-xs transition-all hover:scale-102 active:scale-98 cursor-pointer group"
+          >
+            <MapPin className="h-3.5 w-3.5 text-[#5669FF] group-hover:animate-bounce" />
+            <span>{locationLabel}</span>
+            <ChevronDown className="h-3 w-3 text-slate-400 group-hover:text-slate-700 transition-transform group-hover:translate-y-0.5" />
+          </button>
         </div>
 
         {/* ======================================================== */}
@@ -750,6 +800,19 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Global Region Selector Modal triggered from Navbar location pill */}
+      <RegionSelectorModal
+        isOpen={isRegionModalOpen}
+        onClose={() => setIsRegionModalOpen(false)}
+        onSelectRegion={(region) => {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("parkease_selected_city", region);
+            localStorage.setItem("parkease_selected_region", region);
+            window.dispatchEvent(new Event("parkease_location_change"));
+          }
+        }}
+      />
     </header>
   );
 }

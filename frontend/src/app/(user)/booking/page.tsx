@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { ParkingLocation, ParkingSlot } from "@/types";
 import { api } from "@/lib/api";
 import SlotMatrix from "@/components/parking/SlotMatrix";
+import ParkingStylesGallery from "@/components/parking/ParkingStylesGallery";
 import PaymentModal from "@/components/wallet/PaymentModal";
 import {
   Calendar,
@@ -328,6 +329,9 @@ function BookingFlow() {
               </div>
             </div>
           </div>
+
+          {/* Interactive Multi-Angle Parking Styles & Layout Gallery */}
+          <ParkingStylesGallery onSelectVehicleFilter={(type) => setVehicleType(type)} />
 
           {/* STEP 3: Slot Matrix Selection */}
           <div className="rounded-3xl border border-[#EBEAEE] bg-white p-6 shadow-[0_10px_30px_rgba(86,105,255,0.04)] space-y-4">

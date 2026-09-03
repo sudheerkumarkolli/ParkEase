@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 import logging
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.database.session import SessionLocal, engine, Base
 from app.database.init_db import init_db
@@ -30,7 +31,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:30",
             "facilities": "CCTV,EV Charging,Covered Parking,Security Guard,Automated Boom Barrier",
             "description": "Multi-tier automated smart parking right on MG Road with ultra-fast access to shopping and commercial hubs.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -44,7 +45,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Access,CCTV,Valet Assistance,EV Rapid Charger",
             "description": "24/7 accessible smart lot situated at the premier commercial intersection of Benz Circle.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -58,7 +59,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "Covered Multi-level,CCTV,Luggage Trolleys,Security Guard",
             "description": "Dedicated multi-level station parking facility offering effortless transit connection and long-stay security.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=80"
         },
         # Guntur
         {
@@ -73,7 +74,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Bays,EV Charging,Disabled Access",
             "description": "Spacious commercial parking in the bustling retail area of Lakshmipuram Guntur.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -87,7 +88,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "22:00",
             "facilities": "CCTV,Covered Parking,Security Guard",
             "description": "Affordable city center parking in Brodipet retail zone.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1470224114660-3f6686c562eb?w=800&auto=format&fit=crop&q=80"
         },
         # Hyderabad
         {
@@ -102,7 +103,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "Fast EV Superchargers,CCTV,Shuttle Cart,24/7 Security,Covered Multi-tier",
             "description": "High-tech smart parking for IT professionals and corporate visitors in the heart of Hyderabad Cyber City.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1545179605-1296651e9d43?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -116,7 +117,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Parking,EV Charging,Security Guard",
             "description": "Premium paved parking slots designed for daily office commutes and enterprise visitors.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -130,7 +131,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "Valet Service,CCTV,Covered Bays,Luxury Vehicle Support",
             "description": "High-end parking for restaurants, medical centres, and boutiques on Banjara Hills Road 12.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop&q=80"
         },
         # Tirupati
         {
@@ -145,7 +146,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Security,CCTV,Restrooms,Battery Top-Up,Covered Sheds",
             "description": "Expansive safe pilgrim parking hub located at the Alipiri check-point with 24/7 security patrol.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -159,7 +160,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "CCTV,Security Guard,Covered Bays,Rest Areas",
             "description": "Convenient and secure parking near the pilgrim hills corridor.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&auto=format&fit=crop&q=80"
         },
         # Visakhapatnam
         {
@@ -174,7 +175,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:30",
             "facilities": "CCTV,Lighting,Sea View,Bike Dedicated Bays,EV Points",
             "description": "Scenic beachside parking lot with automated entry and dedicated motorcycle & EV bays.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -188,7 +189,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,EV Charging,Covered Multi-tier,Security Guard",
             "description": "Modern smart facility serving MVP Colony's vibrant dining and commercial district.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1519643381401-22c77e60520e?w=800&auto=format&fit=crop&q=80"
         },
         # Kurnool
         {
@@ -203,7 +204,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Parking,Security Guard,Automated Entry",
             "description": "Centrally located parking at the premier commercial intersection in Kurnool.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -217,7 +218,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Access,CCTV,Luggage Assistance,EV Points",
             "description": "24/7 accessible station parking with round-the-clock security.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&auto=format&fit=crop&q=80"
         },
         # Nellore
         {
@@ -232,7 +233,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Parking,EV Charging",
             "description": "Modern plaza parking on Trunk Road with easy access to banks and shopping centers.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -246,7 +247,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "22:30",
             "facilities": "CCTV,Security Guard,Spacious Bays",
             "description": "Convenient neighborhood smart parking in upscale Magunta Layout.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=800&auto=format&fit=crop&q=80"
         },
         # Rajahmundry (East Godavari)
         {
@@ -261,7 +262,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:30",
             "facilities": "CCTV,Riverside View,EV Charging,Security Guard",
             "description": "Scenic parking near the sacred Godavari River ghats and temples.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -275,7 +276,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Bays,Automated Barrier",
             "description": "Primary commercial smart parking in the Danavaipeta business zone.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=80"
         },
         # Kakinada
         {
@@ -290,7 +291,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "CCTV,EV Fast Charger,Valet Service",
             "description": "High-traffic parking near Kakinada entertainment and shopping centers.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr1_id,
@@ -304,7 +305,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Security,CCTV,Heavy Vehicle Support",
             "description": "Spacious and secured lot close to Kakinada port and commercial corridors.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1508873696983-2df515122519?w=800&auto=format&fit=crop&q=80"
         },
         # Kadapa (YSR District)
         {
@@ -319,7 +320,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Bays,Security Guard",
             "description": "Centrally located smart facility at the prominent Seven Roads intersection.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1520105072000-f44fc083e508?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -333,7 +334,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Security,CCTV,EV Charging",
             "description": "Round-the-clock transit parking located directly opposite the Central Bus Stand.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&auto=format&fit=crop&q=80"
         },
         # Anantapur
         {
@@ -348,7 +349,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "22:30",
             "facilities": "CCTV,Automated Entry,Security Guard",
             "description": "Premier parking at the historical Clock Tower marketplace.",
-            "image_url": "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
@@ -362,7 +363,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,Covered Bays,EV Points",
             "description": "Spacious parking bays on Subhash Road supporting hospital and market visitors.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80"
         },
         # Warangal
         {
@@ -370,6 +371,8 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "name": "Hanamkonda City Center Parking",
             "address": "Nakkalagutta Main Road, Hanamkonda",
             "city": "Warangal",
+            "state": "Telangana",
+            "country": "India",
             "latitude": 17.9995,
             "longitude": 79.5550,
             "price_per_hour": 20,
@@ -377,13 +380,15 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:00",
             "facilities": "CCTV,EV Fast Charger,Covered Bays",
             "description": "Smart facility in the prime shopping and commercial hub of Hanamkonda.",
-            "image_url": "https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&auto=format&fit=crop&q=80"
         },
         {
             "manager_id": mgr2_id,
             "name": "Kazipet Junction Railway Parking",
             "address": "Kazipet Railway Station Complex",
             "city": "Warangal",
+            "state": "Telangana",
+            "country": "India",
             "latitude": 17.9750,
             "longitude": 79.5150,
             "price_per_hour": 15,
@@ -391,7 +396,7 @@ def get_locations_data(mgr1_id: int, mgr2_id: int):
             "closing_time": "23:59",
             "facilities": "24/7 Security,CCTV,Luggage Assistance",
             "description": "24/7 accessible transit parking serving Kazipet Junction passengers.",
-            "image_url": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"
+            "image_url": "https://images.unsplash.com/photo-1470224114660-3f6686c562eb?w=800&auto=format&fit=crop&q=80"
         }
     ]
 
@@ -403,20 +408,60 @@ def seed_database():
     try:
         # Check if already seeded
         existing_admin = db.query(User).filter(User.email == settings.SEED_ADMIN_EMAIL).first()
+        state_map = {
+            "Vijayawada": "Andhra Pradesh",
+            "Guntur": "Andhra Pradesh",
+            "Visakhapatnam": "Andhra Pradesh",
+            "Tirupati": "Andhra Pradesh",
+            "Kurnool": "Andhra Pradesh",
+            "Nellore": "Andhra Pradesh",
+            "Rajahmundry": "Andhra Pradesh",
+            "Kakinada": "Andhra Pradesh",
+            "Kadapa": "Andhra Pradesh",
+            "Anantapur": "Andhra Pradesh",
+            "Hyderabad": "Telangana",
+            "Warangal": "Telangana",
+        }
         if existing_admin:
             logger.info("Database already seeded with default admin. Syncing any missing parking locations...")
+            # Backfill state column, country column, and slots columns for existing tables if missing
+            for alter_cmd in [
+                "ALTER TABLE parking_locations ADD COLUMN state VARCHAR(100)",
+                "ALTER TABLE parking_locations ADD COLUMN country VARCHAR(100)",
+                "ALTER TABLE parking_slots ADD COLUMN floor_level VARCHAR(50)",
+                "ALTER TABLE parking_slots ADD COLUMN description VARCHAR(500)",
+                "ALTER TABLE parking_slots ADD COLUMN image_url VARCHAR(500)"
+            ]:
+                try:
+                    db.execute(text(alter_cmd))
+                    db.commit()
+                except Exception:
+                    db.rollback()
+
+            db.execute(text("UPDATE parking_locations SET state = 'Telangana' WHERE city IN ('Hyderabad', 'Warangal') AND (state IS NULL OR state = '')"))
+            db.execute(text("UPDATE parking_locations SET state = 'Andhra Pradesh' WHERE city NOT IN ('Hyderabad', 'Warangal') AND (state IS NULL OR state = '')"))
+            db.execute(text("UPDATE parking_locations SET country = 'India' WHERE country IS NULL OR country = ''"))
+            db.execute(text("DELETE FROM parking_locations WHERE country != 'India' AND country IS NOT NULL"))
+            db.commit()
+
             mgr1_user = db.query(User).filter(User.role == UserRole.PARKING_MANAGER.value).first() or existing_admin
             mgr2_user = db.query(User).filter(User.email == "manager2@parkease.com").first() or mgr1_user
             locations_data = get_locations_data(mgr1_user.id, mgr2_user.id)
             for loc in locations_data:
                 existing_loc = db.query(ParkingLocation).filter(ParkingLocation.name == loc["name"]).first()
-                if not existing_loc:
+                if existing_loc:
+                    existing_loc.image_url = loc["image_url"]
+                    existing_loc.country = loc.get("country", "India")
+                    existing_loc.state = loc.get("state", existing_loc.state)
+                else:
                     total_slots = 24
                     p = ParkingLocation(
                         manager_id=loc["manager_id"],
                         name=loc["name"],
                         address=loc["address"],
                         city=loc["city"],
+                        state=loc.get("state", state_map.get(loc["city"], "Andhra Pradesh")),
+                        country=loc.get("country", "India"),
                         latitude=loc["latitude"],
                         longitude=loc["longitude"],
                         total_slots=total_slots,
@@ -584,6 +629,8 @@ def seed_database():
                 name=loc["name"],
                 address=loc["address"],
                 city=loc["city"],
+                state=loc.get("state", state_map.get(loc["city"], "Andhra Pradesh")),
+                country=loc.get("country", "India"),
                 latitude=loc["latitude"],
                 longitude=loc["longitude"],
                 total_slots=total_slots,

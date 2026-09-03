@@ -36,6 +36,26 @@ export default function ParkingCard({ parking }: ParkingCardProps) {
     }
   };
 
+  const getFacilityCategoryBadge = (name: string, facilities: string = "") => {
+    const lname = (name + " " + facilities).toLowerCase();
+    if (lname.includes("ev") || lname.includes("supercharger")) {
+      return { label: "EV Supercharger", bg: "bg-emerald-600", icon: "⚡" };
+    } else if (lname.includes("cyber") || lname.includes("hitec") || lname.includes("financial") || lname.includes("tech")) {
+      return { label: "IT Tech Hub", bg: "bg-indigo-600", icon: "🏢" };
+    } else if (lname.includes("railway") || lname.includes("station") || lname.includes("junction") || lname.includes("bus stand")) {
+      return { label: "Transit Hub", bg: "bg-amber-600", icon: "🚆" };
+    } else if (lname.includes("beach") || lname.includes("coastal")) {
+      return { label: "Coastal Hub", bg: "bg-cyan-600", icon: "🌊" };
+    } else if (lname.includes("mall") || lname.includes("plaza") || lname.includes("bazaar") || lname.includes("market")) {
+      return { label: "Shopping Plaza", bg: "bg-rose-500", icon: "🛒" };
+    } else if (lname.includes("pilgrim") || lname.includes("temple") || lname.includes("hills")) {
+      return { label: "Pilgrim Zone", bg: "bg-purple-600", icon: "🛕" };
+    }
+    return { label: "Smart Facility", bg: "bg-[#5669FF]", icon: "🅿️" };
+  };
+
+  const categoryBadge = getFacilityCategoryBadge(parking.name, parking.facilities);
+
   return (
     <>
       <div className="group relative flex flex-col justify-between rounded-3xl border border-[#EBEAEE] bg-white p-3.5 shadow-[0_10px_30px_rgba(86,105,255,0.05)] transition-all duration-300 hover:border-[#5669FF]/50 hover:shadow-[0_15px_40px_rgba(86,105,255,0.12)] hover:-translate-y-1">
@@ -44,7 +64,7 @@ export default function ParkingCard({ parking }: ParkingCardProps) {
         <div>
           <Link href={`/parking/${parking.id}`} className="block relative h-44 w-full overflow-hidden rounded-2xl bg-[#F0F1F7] group/img">
             <img
-              src={parking.image_url || "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=60"}
+              src={parking.image_url || "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=80"}
               alt={parking.name}
               className="h-full w-full object-cover transition-transform duration-500 group-hover/img:scale-105"
             />
@@ -59,6 +79,12 @@ export default function ParkingCard({ parking }: ParkingCardProps) {
                 {parking.available_slots}
               </span>
               <span className="text-[9px] font-bold text-[#747688]">BAYS</span>
+            </div>
+
+            {/* Category Logo Badge (Top-Right) */}
+            <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-black text-white shadow-md backdrop-blur-md ${categoryBadge.bg}`}>
+              <span>{categoryBadge.icon}</span>
+              <span>{categoryBadge.label}</span>
             </div>
 
             {/* Rating Tag (Bottom-Right) */}

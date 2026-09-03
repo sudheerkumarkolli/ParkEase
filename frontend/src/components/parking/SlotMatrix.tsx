@@ -43,13 +43,33 @@ export default function SlotMatrix({
   const getVehicleIcon = (type: VehicleType) => {
     switch (type) {
       case "Bike":
-        return <Bike className="h-4 w-4" />;
+        return (
+          <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-purple-500/15 text-purple-700 text-[9px] font-black" title="Two-Wheeler / Bike Bay">
+            <Bike className="h-3 w-3" />
+            <span>BIKE</span>
+          </span>
+        );
       case "EV":
-        return <Zap className="h-4 w-4 text-amber-400" />;
+        return (
+          <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 text-[9px] font-black" title="EV Supercharger Bay">
+            <Zap className="h-3 w-3 text-amber-500 fill-amber-400" />
+            <span>EV</span>
+          </span>
+        );
       case "SUV":
-        return <Car className="h-4 w-4 scale-110" />;
+        return (
+          <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-rose-500/15 text-rose-700 text-[9px] font-black" title="Wide SUV Bay">
+            <Car className="h-3 w-3 scale-105" />
+            <span>SUV</span>
+          </span>
+        );
       default:
-        return <Car className="h-4 w-4" />;
+        return (
+          <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-indigo-500/15 text-indigo-700 text-[9px] font-black" title="Standard Car Bay">
+            <Car className="h-3 w-3" />
+            <span>CAR</span>
+          </span>
+        );
     }
   };
 
